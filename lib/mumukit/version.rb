@@ -1,3 +1,3 @@
-module Mumuki
+module Mumukit
   VERSION = "0.0.1"
 end

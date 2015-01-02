@@ -1,6 +1,6 @@
 require 'tempfile'
 
-module Mumuki::FileTestCompiler
+module Mumukit::FileTestCompiler
 
   def create_compilation_file!(test, content)
     file = Tempfile.new('mumuki.compile')
