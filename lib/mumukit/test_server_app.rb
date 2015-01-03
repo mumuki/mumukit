@@ -2,9 +2,6 @@ require 'sinatra/base'
 require 'yaml'
 require 'json'
 
-require_relative './lib/test_compiler'
-require_relative './lib/test_runner'
-
 class Mumukit::TestServerApp < Sinatra::Base
   configure do
     set :mumuki_url, 'http://mumuki.herokuapp.com'
@@ -19,8 +16,8 @@ class Mumukit::TestServerApp < Sinatra::Base
   end
 
   config = YAML.load_file(settings.config_filename)
-  compiler = ::TestCompiler.new(config)
-  runner = ::TestRunner.new(config)
+  compiler = TestCompiler.new(config)
+  runner = TestRunner.new(config)
 
   helpers do
     def parse_test_body(request)

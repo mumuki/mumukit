@@ -1,6 +1,8 @@
 module Mumukit
 end
 
+require_relative 'test_compiler'
+require_relative 'test_runner'
 
 require_relative 'mumukit/version'
 require_relative 'mumukit/command_line_test_runner'
