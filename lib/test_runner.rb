@@ -1,5 +1,3 @@
-require 'mumukit'
-
 class TestRunner
   include Mumukit::CommandLineTestRunner
   def initialize(config)

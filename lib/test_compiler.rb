@@ -1,5 +1,3 @@
-require 'mumukit'
-
 class TestCompiler
   include Mumukit::FileTestCompiler
   def initialize(config)
