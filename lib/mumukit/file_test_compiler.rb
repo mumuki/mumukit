@@ -2,9 +2,9 @@ require 'tempfile'
 
 module Mumukit::FileTestCompiler
 
-  def create_compilation_file!(test, content)
+  def create_compilation_file!(test, extra, content)
     file = Tempfile.new('mumuki.compile')
-    file.write(compile(test, content))
+    file.write(compile(test, extra, content))
     file.close
     file
   end

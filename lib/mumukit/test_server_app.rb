@@ -22,14 +22,14 @@ class Mumukit::TestServerApp < Sinatra::Base
   helpers do
     def parse_test_body(request)
       compilation = JSON.parse request.body.read
-      [compilation['test'], compilation['content']]
+      [compilation['test'], compilation['extra'], compilation['content']]
     end
   end
 
   post '/test' do
     begin
-      test, content = parse_test_body request
-      file = compiler.create_compilation_file!(test, content)
+      req = parse_test_body request
+      file = compiler.create_compilation_file!(*req)
       results = runner.run_test_file!(file)
       file.unlink
       JSON.generate(exit: results[1], out: results[0])
