@@ -4,7 +4,7 @@ require 'json'
 
 class Mumukit::TestServerApp < Sinatra::Base
   configure do
-    set :mumuki_url, 'http://mumuki.herokuapp.com'
+    set :mumuki_url, 'http://mumuki.io'
   end
 
   configure :development do
