@@ -1,4 +1,4 @@
-# Mumuki
+# Mumukit
 
 TODO: Write a gem description
 
@@ -7,7 +7,7 @@ TODO: Write a gem description
 Add this line to your application's Gemfile:
 
 ```ruby
-gem 'mumuki'
+gem 'mumukit'
 ```
 
 And then execute:
@@ -16,7 +16,7 @@ And then execute:
 
 Or install it yourself as:
 
-    $ gem install mumuki
+    $ gem install mumukit
 
 ## Usage
 
