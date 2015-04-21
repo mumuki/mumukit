@@ -1,6 +1,3 @@
-class TestRunner
+class TestRunner < Mumukit::Stub
   include Mumukit::CommandLineTestRunner
-  def initialize(config=nil)
-    @config = config
-  end
 end

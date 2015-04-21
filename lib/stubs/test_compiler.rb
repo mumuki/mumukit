@@ -1,6 +1,3 @@
-class TestCompiler
+class TestCompiler < Mumukit::Stub
   include Mumukit::FileTestCompiler
-  def initialize(config = nil)
-    @config = config
-  end
 end
