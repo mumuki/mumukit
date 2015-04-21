@@ -20,7 +20,7 @@ class Mumukit::TestServerApp < Sinatra::Base
 
   helpers do
     def parse_test_body(request)
-      body = JSON.parse request.body.read
+      JSON.parse request.body.read
     end
 
     def run_tests!(config, test, extra, content)
