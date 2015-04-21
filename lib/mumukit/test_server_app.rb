@@ -16,23 +16,43 @@ class Mumukit::TestServerApp < Sinatra::Base
   end
 
   config = YAML.load_file(settings.config_filename)
-  compiler = TestCompiler.new(config)
-  runner = TestRunner.new(config)
+
 
   helpers do
     def parse_test_body(request)
-      compilation = JSON.parse request.body.read
-      [compilation['test'], compilation['extra'], compilation['content']]
+      JSON.parse request.body.read
+    end
+
+    def run_tests!(config, test, extra, content)
+      compiler = TestCompiler.new(config)
+      runner = TestRunner.new(config)
+
+      file = compiler.create_compilation_file!(test, extra, content)
+      runner.run_test_file!(file)
+    ensure
+      file.unlink if file
+    end
+
+    def run_expectations!(config, expectations, content)
+      expectations_runner = ExpectationsRunner.new(config)
+
+      if expectations
+        expectations_runner.run_expectations!(expectations, content)
+      else
+        []
+      end
     end
   end
 
   post '/test' do
     begin
       req = parse_test_body request
-      file = compiler.create_compilation_file!(*req)
-      results = runner.run_test_file!(file)
-      file.unlink
-      JSON.generate(exit: results[1], out: results[0])
+      content = req['content']
+
+      test_results = run_tests! config, body['test'], body['extra'], content
+      expectation_results = run_expectations! config, req['expectations'], content
+
+      JSON.generate(exit: test_results[1], out: test_results[0], expectationResults: expectation_results)
     rescue Exception => e
       JSON.generate(exit: 'failed', out: e.message)
     end

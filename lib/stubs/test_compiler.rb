@@ -1,6 +1,7 @@
-class TestCompiler
+class TestCompiler < Mumukit::Stub
   include Mumukit::FileTestCompiler
-  def initialize(config = nil)
-    @config = config
+
+  def compile(test, extra, content)
+    raise 'You need to implement this method'
   end
 end
