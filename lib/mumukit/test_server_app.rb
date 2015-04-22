@@ -49,7 +49,7 @@ class Mumukit::TestServerApp < Sinatra::Base
       req = parse_test_body request
       content = req['content']
 
-      test_results = run_tests! config, body['test'], body['extra'], content
+      test_results = run_tests! config, req['test'], req['extra'], content
       expectation_results = run_expectations! config, req['expectations'], content
 
       JSON.generate(exit: test_results[1], out: test_results[0], expectationResults: expectation_results)
