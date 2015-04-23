@@ -52,7 +52,7 @@ class Mumukit::TestServerApp < Sinatra::Base
       test_results = run_tests! config, req['test'], req['extra'], content
       expectation_results = run_expectations! config, req['expectations'], content
 
-      JSON.generate(exit: test_results[1], out: test_results[0], expectationResults: expectation_results)
+      JSON.generate({exit: test_results[1], out: test_results[0]}.merge(expectation_results))
     rescue Exception => e
       JSON.generate(exit: 'failed', out: e.message)
     end
