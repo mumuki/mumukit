@@ -54,7 +54,7 @@ class Mumukit::TestServerApp < Sinatra::Base
 
       JSON.generate({exit: test_results[1], out: test_results[0]}.merge(expectation_results))
     rescue Exception => e
-      JSON.generate(exit: 'failed', out: e.message)
+      JSON.generate(exit: 'failed', out: "#{e.message}:\n#{e.backtrace.join("\n")}")
     end
   end
 
