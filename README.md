@@ -9,7 +9,7 @@ Gem for quickly implement mumuki runners
     2. add an empty Gemfile - you can use bundle init
     3. add a Rakefile if you want - usefull for running tests
     4. and a .ruby-version, so that tools like rvm or rbenv know the version of ruby
-2. Add mumukit as dependency in the Gemfile: `gem 'mumukit'`
+2. Add mumukit as dependency in the Gemfile: `gem 'mumukit', github: 'uqbar-project/mumukit', tag: 'v0.1.0'`
 3. Add a test runner in lib/test_runner. It must be a class that at implements at least a `run_test_command` method [Example](https://github.com/uqbar-project/mumuki-plunit-server/blob/master/lib/test_runner.rb)
 4. Add a test compiler in lib/test_compiler. It must be a class that at least implements a `compile` method.  [Example](https://github.com/uqbar-project/mumuki-plunit-server/blob/master/lib/test_compiler.rb)
 5. Add the following config.ru:
