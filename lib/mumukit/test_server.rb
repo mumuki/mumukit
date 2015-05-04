@@ -15,7 +15,7 @@ class Mumukit::TestServer
 
     {exit: test_results[1], out: test_results[0], expectationResults: expectation_results}
   rescue Exception => e
-    {exit: 'failed', out: "#{e.message}:\n#{e.backtrace.join("\n")}"}
+    {exit: :failed, out: "#{e.message}:\n#{e.backtrace.join("\n")}"}
   end
 
 
