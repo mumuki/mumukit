@@ -24,6 +24,14 @@ run Mumukit::TestServerApp
 
 And run as `bundle exec rackup`
 
+## Testing
+
+You can unit test any runner developed with mumukit since you are just extending plain ruby classes. 
+
+You can also do integration testing. There are two options: 
+
+* Running a local mumuki-platform instance
+* Or using mumukit-bridge, wich is the standalone component that is used by the platform to interact with the runners. Here there is a test template: https://gist.github.com/flbulgarelli/defdc7adbd115481d4bc
 
 ## Contributing
 
