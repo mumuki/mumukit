@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/uqbar-project/mumukit.svg)](https://travis-ci.org/uqbar-project/mumukit)
+
 # Mumukit
 
 Gem for quickly implement mumuki runners
