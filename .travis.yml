@@ -1,0 +1,4 @@
+language: ruby
+env: RACK_ENV=development
+rvm:
+ - 2.0.0
