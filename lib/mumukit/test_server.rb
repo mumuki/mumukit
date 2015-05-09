@@ -14,7 +14,7 @@ class Mumukit::TestServer
     expectation_results = run_expectations! config, request['expectations'], content
 
     response = {exit: test_results[1], out: test_results[0], expectationResults: expectation_results}
-    response[:feedback] = test_results[2] if not test_results[2].nil?
+    response[:feedback] = test_results[2] if test_results[2]
 
     response
   rescue Exception => e
