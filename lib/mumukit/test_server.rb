@@ -13,7 +13,10 @@ class Mumukit::TestServer
     test_results = run_tests! config, request['test'], request['extra'], content
     expectation_results = run_expectations! config, request['expectations'], content
 
-    {exit: test_results[1], out: test_results[0], expectationResults: expectation_results}
+    response = {exit: test_results[1], out: test_results[0], expectationResults: expectation_results}
+    response[:feedback] = test_results[2] if not test_results[2].nil?
+
+    response
   rescue Exception => e
     {exit: :failed, out: "#{e.message}:\n#{e.backtrace.join("\n")}"}
   end

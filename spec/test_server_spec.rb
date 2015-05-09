@@ -48,4 +48,9 @@ describe TestServer do
     it { expect(result[:exit]).to eq(:failed) }
     it { expect(result[:out]).to include('ups!') }
   end
+
+  context 'when feedback is given by the runner' do
+    before { allow_any_instance_of(TestRunner).to receive(:run_test_file!).and_return(['ok', :passed, 'Keep up the good work!']) }
+    it { expect(result[:feedback]).to eq('Keep up the good work!') }
+  end
 end
