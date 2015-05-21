@@ -1,16 +1,14 @@
-require 'tempfile'
+module Mumukit
+  class FileTestCompiler < Mumukit::Stub
+    include Mumukit::WithTempfile
 
-module Mumukit::FileTestCompiler
+    def compile(test, extra, content)
+      raise 'You need to implement this method'
+    end
 
-  def create_tempfile
-    Tempfile.new('mumuki.compile')
+    def create_compilation!(test, extra, content)
+      write_tempfile! compile(test, extra, content)
+    end
+
   end
-
-  def create_compilation_file!(test, extra, content)
-    file = create_tempfile
-    file.write(compile(test, extra, content))
-    file.close
-    file
-  end
-
 end
