@@ -2,13 +2,18 @@ require 'rspec'
 
 require_relative '../lib/mumukit'
 
-class TestCompiler
+include Mumukit
+
+
+class TestCompiler < FileTestCompiler
   def compile(x, y, z)
     "#{x}  #{y}  #{z}"
   end
 end
 
-include Mumukit
+class TestRunner < Stub
+
+end
 
 describe TestServer do
   let(:server) { TestServer.new(nil) }
