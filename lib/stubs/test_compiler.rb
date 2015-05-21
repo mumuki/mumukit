@@ -1,7 +1,3 @@
-class TestCompiler < Mumukit::Stub
-  include Mumukit::FileTestCompiler
+class TestCompiler
 
-  def compile(test, extra, content)
-    raise 'You need to implement this method'
-  end
 end
