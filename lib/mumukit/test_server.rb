@@ -26,10 +26,8 @@ class Mumukit::TestServer
     compiler = TestCompiler.new(config)
     runner = TestRunner.new(config)
 
-    file = compiler.create_compilation_file!(test, extra, content)
-    runner.run_test_file!(file)
-  ensure
-    file.unlink if file
+    compilation = compiler.create_compilation!(test, extra, content)
+    runner.run_compilation!(compilation)
   end
 
   def run_expectations!(config, expectations, content)
