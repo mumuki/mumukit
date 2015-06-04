@@ -1,9 +1,6 @@
-require 'rspec'
-
-require_relative '../lib/mumukit'
+require_relative './spec_helper.rb'
 
 include Mumukit
-
 
 class TestCompiler < FileTestCompiler
   def compile(x, y, z)
