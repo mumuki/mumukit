@@ -9,9 +9,10 @@ class Mumukit::TestServer
 
   def run!(request)
     content = request['content']
+    extra = request['extra']
 
-    test_results = run_tests! config, request['test'], request['extra'], content
-    expectation_results = run_expectations! config, request['expectations'], content
+    test_results = run_tests! config, request['test'], extra, content
+    expectation_results = run_expectations! config, request['expectations'], content, extra
 
     response = {exit: test_results[1], out: test_results[0], expectationResults: expectation_results}
     response[:feedback] = test_results[2] if test_results[2]
@@ -30,11 +31,11 @@ class Mumukit::TestServer
     runner.run_compilation!(compilation)
   end
 
-  def run_expectations!(config, expectations, content)
+  def run_expectations!(config, expectations, content, extra)
     expectations_runner = ExpectationsRunner.new(config)
 
     if expectations
-      expectations_runner.run_expectations!(expectations, content)
+      expectations_runner.run_expectations!(expectations, content, extra)
     else
       []
     end
