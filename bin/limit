@@ -1,0 +1,10 @@
+#!/bin/bash
+
+SIZE=$1
+shift
+TIME=$1
+shift
+COMMAND=$@
+
+ulimit -Sv $(expr 1024 \* $SIZE) -St $TIME
+sh -c "$COMMAND"
