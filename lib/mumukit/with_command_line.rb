@@ -1,5 +1,9 @@
 module Mumukit
   module WithCommandLine
+    SIGINT = 2
+    SIGSEGV = 11
+    SIGXCPU = 24
+
     def command_size_limit
       1024
     end
@@ -19,10 +23,17 @@ EOLIMIT
 )}
       case $?.exitstatus
         when 0 then [out, :passed]
-        when 152 then ["Time exceeded #{command_time_limit}", :aborted]
-        when 130..139 then ['Memory exceeded', :aborted]
+        when signal_status(SIGINT)  then ['Memory exceeded', :aborted]
+        when signal_status(SIGSEGV) then ['Memory exceeded', :aborted]
+        when signal_status(SIGXCPU) then ["Time exceeded #{command_time_limit}", :aborted]
         else [out, :failed]
       end
     end
+
+    def signal_status(signal)
+      # see http://tldp.org/LDP/abs/html/exitcodes.html
+      128 + signal
+    end
+
   end
 end
