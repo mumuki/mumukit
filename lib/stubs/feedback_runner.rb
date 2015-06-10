@@ -1,5 +1,5 @@
 class FeedbackRunner < Mumukit::Stub
-  def run_feedback!(params)
+  def run_feedback!(request, results)
     ''
   end
 end

@@ -1,5 +1,5 @@
 class ExpectationsRunner < Mumukit::Stub
-  def run_expectations!(expectations, content, extra)
+  def run_expectations!(request)
     []
   end
 end
