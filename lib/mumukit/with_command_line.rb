@@ -23,9 +23,9 @@ EOLIMIT
 )}
       case $?.exitstatus
         when 0 then [out, :passed]
-        when signal_status(SIGINT)  then ['Memory exceeded', :aborted]
-        when signal_status(SIGSEGV) then ['Memory exceeded', :aborted]
-        when signal_status(SIGXCPU) then ["Time exceeded #{command_time_limit}", :aborted]
+        when signal_status(SIGINT)  then [I18n.t('mumukit.memory_exceeded'), :aborted]
+        when signal_status(SIGSEGV) then [I18n.t('mumukit.memory_exceeded'), :aborted]
+        when signal_status(SIGXCPU) then [I18n.t('mumukit.time_exceeded', limit: command_time_limit), :aborted]
         else [out, :failed]
       end
     end
