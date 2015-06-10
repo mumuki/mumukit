@@ -23,5 +23,6 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency 'codeclimate-test-reporter'
 
   spec.add_dependency 'sinatra', '~> 1.4'
+  spec.add_dependency 'i18n', '~> 0.7'
 
 end
