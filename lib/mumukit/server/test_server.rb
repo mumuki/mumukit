@@ -2,7 +2,8 @@ require 'yaml'
 require 'ostruct'
 
 class Mumukit::TestServer < Mumukit::Stub
-  def run!(request)
+
+  def test!(request)
     r = OpenStruct.new(request)
 
     validate_request! r
@@ -28,6 +29,16 @@ class Mumukit::TestServer < Mumukit::Stub
 
   def validate_request!(request)
     RequestValidator.new(config).validate! request
+  end
+
+  def query!(request)
+    r = OpenStruct.new(request)
+    runner = QueryRunner.new(config)
+    results = runner.run_query! r
+    {exit: results[1],
+     out: results[0]}
+  rescue Exception => e
+    {exit: :failed, out: "#{e.message}:\n#{e.backtrace.join("\n")}"}
   end
 
 

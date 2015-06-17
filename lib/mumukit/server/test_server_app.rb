@@ -22,7 +22,11 @@ class Mumukit::TestServerApp < Sinatra::Base
   post '/test' do
     r = JSON.parse(request.body.read)
     I18n.locale = r['locale'] || :en
-    JSON.generate(server.run!(r))
+    JSON.generate(server.test!(r))
+  end
+
+  post '/query' do
+    JSON.generate(server.query!(JSON.parse(request.body.read)))
   end
 
   get '/*' do
