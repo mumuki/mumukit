@@ -2,16 +2,10 @@ require 'sinatra/base'
 require 'yaml'
 require 'json'
 
-require 'i18n'
-require 'i18n/backend/fallbacks'
 
 class Mumukit::TestServerApp < Sinatra::Base
   configure do
     set :mumuki_url, 'http://mumuki.io'
-
-    I18n::Backend::Simple.send(:include, I18n::Backend::Fallbacks)
-    I18n.load_path = Dir[File.join(settings.root, 'locales', '*.yml')]
-    I18n.backend.load_translations
   end
 
   configure :development do

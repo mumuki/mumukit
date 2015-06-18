@@ -1,5 +1,16 @@
+require 'i18n'
+require 'i18n/backend/fallbacks'
+
+pwd = File.expand_path(File.dirname(__FILE__))
+
+I18n::Backend::Simple.send(:include, I18n::Backend::Fallbacks)
+I18n.load_path += Dir[File.join(pwd, 'locales', '*.yml')]
+
+I18n.backend.load_translations
+
 module Mumukit
 end
+
 
 require_relative 'mumukit/version'
 require_relative 'mumukit/stub'
