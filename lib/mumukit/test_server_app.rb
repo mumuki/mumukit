@@ -2,6 +2,7 @@ require 'sinatra/base'
 require 'yaml'
 require 'json'
 
+
 class Mumukit::TestServerApp < Sinatra::Base
   configure do
     set :mumuki_url, 'http://mumuki.io'
@@ -19,7 +20,9 @@ class Mumukit::TestServerApp < Sinatra::Base
   server = Mumukit::TestServer.new(config)
 
   post '/test' do
-    JSON.generate(server.run!(JSON.parse(request.body.read)))
+    r = JSON.parse(request.body.read)
+    I18n.locale = r['locale'] || :en
+    JSON.generate(server.run!(r))
   end
 
   get '/*' do

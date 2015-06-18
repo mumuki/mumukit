@@ -13,7 +13,7 @@ Gem::Specification.new do |spec|
   spec.homepage      = 'https://github.com/flbulgarelli/mumukit'
   spec.license       = 'MIT'
 
-  spec.files         = Dir['lib/**/*']
+  spec.files         = Dir['lib/**/*', 'locales/**']
   spec.test_files    = spec.files.grep(%r{^(test|spec|features)/})
   spec.require_paths = ['lib']
 
@@ -23,5 +23,6 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency 'codeclimate-test-reporter'
 
   spec.add_dependency 'sinatra', '~> 1.4'
+  spec.add_dependency 'i18n', '~> 0.7'
 
 end

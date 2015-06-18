@@ -1,0 +1,4 @@
+en:
+  mumukit:
+    memory_exceeded: Memory limit exceeded. Is your program trying to allocate to much memory?
+    time_exceeded:  Execution time limit of %{limit}s exceeded. Is your program performing an infinite loop or recursion?
