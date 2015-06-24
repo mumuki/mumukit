@@ -1,5 +1,6 @@
 require 'i18n'
 require 'i18n/backend/fallbacks'
+require 'active_support/all'
 
 pwd = File.expand_path(File.dirname(__FILE__))
 
