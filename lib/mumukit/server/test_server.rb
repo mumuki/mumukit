@@ -19,7 +19,7 @@ class Mumukit::TestServer < Mumukit::Stub
      expectationResults: expectation_results,
      feedback: feedback}
   rescue Exception => e
-    {exit: :failed, out: format_exception(e)}
+    {exit: :failed, out: content_type.format_exception(e)}
   end
 
 
@@ -41,9 +41,4 @@ class Mumukit::TestServer < Mumukit::Stub
     FeedbackRunner.new(config).run_feedback!(request, results)
   end
 
-  private
-
-  def format_exception(e)
-    "#{content_type.title e.message}\n#{content_type.code e.backtrace.join("\n")}"
-  end
 end
