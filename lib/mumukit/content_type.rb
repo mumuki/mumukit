@@ -29,5 +29,11 @@ module Mumukit
         "<pre>#{code}<pre>"
       end
     end
+
+    def self.parse(s)
+      Kernel.const_get "Mumukit::ContentType::#{s.to_s.titlecase}"
+    rescue raise
+      "unknown content_type #{config['content_type']}"
+    end
   end
 end
