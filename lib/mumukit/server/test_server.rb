@@ -1,13 +1,7 @@
 require 'yaml'
 require 'ostruct'
 
-class Mumukit::TestServer
-  attr_reader :config
-
-  def initialize(config)
-    @config = config
-  end
-
+class Mumukit::TestServer < Mumukit::Stub
   def run!(request)
     r = OpenStruct.new(request)
 
@@ -25,7 +19,7 @@ class Mumukit::TestServer
      expectationResults: expectation_results,
      feedback: feedback}
   rescue Exception => e
-    {exit: :failed, out: "#{e.message}:\n#{e.backtrace.join("\n")}"}
+    {exit: :failed, out: content_type.format_exception(e)}
   end
 
 
@@ -46,4 +40,5 @@ class Mumukit::TestServer
   def run_feedback!(config, request, results)
     FeedbackRunner.new(config).run_feedback!(request, results)
   end
+
 end

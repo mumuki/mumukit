@@ -13,7 +13,7 @@ class TestRunner < Stub
 end
 
 describe TestServer do
-  let(:server) { TestServer.new(nil) }
+  let(:server) { TestServer.new }
   let(:result) { server.run!({'content' => 'foo', 'test' => 'bar', 'expectations' => []}) }
 
 
