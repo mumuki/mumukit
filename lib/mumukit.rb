@@ -14,6 +14,7 @@ end
 
 
 require_relative 'mumukit/version'
+require_relative 'mumukit/content_type'
 require_relative 'mumukit/stub'
 require_relative 'mumukit/with_tempfile'
 require_relative 'mumukit/with_command_line'
