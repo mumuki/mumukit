@@ -40,11 +40,7 @@ class Mumukit::TestServer
   def run_expectations!(config, request)
     expectations_runner = ExpectationsRunner.new(config)
 
-    if request.expectations
-      expectations_runner.run_expectations!(request)
-    else
-      []
-    end
+    request.expectations ?  expectations_runner.run_expectations!(request) :  []
   end
 
   def run_feedback!(config, request, results)
