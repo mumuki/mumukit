@@ -1,13 +1,7 @@
 require 'yaml'
 require 'ostruct'
 
-class Mumukit::TestServer
-  attr_reader :config
-
-  def initialize(config)
-    @config = config
-  end
-
+class Mumukit::TestServer < Mumukit::Stub
   def run!(request)
     r = OpenStruct.new(request)
 
