@@ -29,6 +29,12 @@ describe TestServer do
     it { expect(result).to eq({out: 'nok', exit: :failed}) }
   end
 
+  context 'when test is aborted' do
+    before { allow_any_instance_of(TestRunner).to receive(:run_compilation!).and_return(['out of memory error', :aborted]) }
+
+    it { expect(result).to eq({out: 'out of memory error', exit: :aborted}) }
+  end
+
   context 'when expectations is implemented and passes' do
     let(:expectation_results) { [{expectation: {binding: :foo, inspection: :HasUsage}, result: true}] }
     before { allow_any_instance_of(TestRunner).to receive(:run_compilation!).and_return(['ok', :passed]) }
@@ -53,7 +59,7 @@ describe TestServer do
 
   context 'when feedback is given by the feedback runner' do
     before { allow_any_instance_of(TestRunner).to receive(:run_compilation!).and_return(['ok', :passed]) }
-    before { allow_any_instance_of(FeedbackRunner).to receive(:run_feedback!).and_return('Keep up the good work!')}
+    before { allow_any_instance_of(FeedbackRunner).to receive(:run_feedback!).and_return('Keep up the good work!') }
     it { expect(result[:feedback]).to eq('Keep up the good work!') }
   end
 end
