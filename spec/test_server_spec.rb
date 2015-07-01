@@ -41,13 +41,13 @@ describe TestServer do
     before { allow_any_instance_of(TestRunner).to receive(:run_compilation!).and_return(['ok', :passed]) }
     before { allow_any_instance_of(ExpectationsRunner).to receive(:run_expectations!).and_raise('ups!') }
 
-    it { expect(result[:exit]).to eq(:failed) }
+    it { expect(result[:exit]).to eq(:errored) }
     it { expect(result[:out]).to include('ups!') }
   end
 
   context 'when test runner crashes' do
     before { allow_any_instance_of(TestRunner).to receive(:run_compilation!).and_raise('ups!') }
-    it { expect(result[:exit]).to eq(:failed) }
+    it { expect(result[:exit]).to eq(:errored) }
     it { expect(result[:out]).to include('ups!') }
   end
 

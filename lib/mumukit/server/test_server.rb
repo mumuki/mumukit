@@ -19,7 +19,7 @@ class Mumukit::TestServer < Mumukit::Stub
      expectationResults: expectation_results,
      feedback: feedback}
   rescue Exception => e
-    {exit: :failed, out: content_type.format_exception(e)}
+    {exit: :errored, out: content_type.format_exception(e)}
   end
 
 
