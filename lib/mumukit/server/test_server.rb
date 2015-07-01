@@ -22,11 +22,13 @@ class Mumukit::TestServer < Mumukit::Stub
   end
 
   def base_response(test_results)
-    if test_results[0].is_a? Array
-      {testResults: test_results[0]}
-    else
+    if test_results.size == 1 && test_results[0].is_a?(Array)
+      {testResults: test_results[0].map { |title, status, result| {title: title, status: status, result: result} }}
+    elsif test_results.size == 2 && test_results[0].is_a?(String)
       {exit: test_results[1],
        out: test_results[0]}
+    else
+      raise "Invalid test results format: #{test_results}. You must either return [results_array] or [results_string, status]"
     end
   end
 

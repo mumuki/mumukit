@@ -24,9 +24,11 @@ describe TestServer do
   end
 
   context 'when test returns structured results' do
-    before { allow_any_instance_of(TestRunner).to receive(:run_compilation!).and_return([[{title: 'foo', status: :passed, result: 'bar'}]]) }
+    before { allow_any_instance_of(TestRunner).to receive(:run_compilation!).and_return([[['foo', :passed, ''], ['baz', :failed, 'bar']]]) }
 
-    it { expect(result).to eq({testResults: [{title: 'foo', status: :passed, result: 'bar'}]}) }
+    it { expect(result).to eq({testResults: [
+                                  {title: 'foo', status: :passed, result: ''},
+                                  {title: 'baz', status: :failed, result: 'bar'}]}) }
   end
 
   context 'when test fails' do
