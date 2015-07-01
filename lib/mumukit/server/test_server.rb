@@ -22,8 +22,12 @@ class Mumukit::TestServer < Mumukit::Stub
   end
 
   def base_response(test_results)
-    {exit: test_results[1],
-     out: test_results[0]}
+    if test_results[0].is_a? Array
+      {testResults: test_results[0]}
+    else
+      {exit: test_results[1],
+       out: test_results[0]}
+    end
   end
 
   def run_tests!(request)
