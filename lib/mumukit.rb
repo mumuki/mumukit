@@ -9,6 +9,8 @@ I18n.load_path += Dir[File.join(pwd, 'locales', '*.yml')]
 
 I18n.backend.load_translations
 
+MUMUKIT_LIMIT_SCRIPT = File.join(pwd, '..', 'bin', 'limit')
+
 module Mumukit
 end
 

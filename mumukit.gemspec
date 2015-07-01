@@ -13,9 +13,9 @@ Gem::Specification.new do |spec|
   spec.homepage      = 'https://github.com/flbulgarelli/mumukit'
   spec.license       = 'MIT'
 
-  spec.files         = Dir['lib/**/*', 'locales/**']
+  spec.files         = Dir['lib/**/*', 'bin/**/*']
   spec.test_files    = spec.files.grep(%r{^(test|spec|features)/})
-  spec.require_paths = ['lib']
+  spec.require_paths = ['lib', 'bin']
 
   spec.add_development_dependency 'bundler', '~> 1.7'
   spec.add_development_dependency 'rake', '~> 10.0'

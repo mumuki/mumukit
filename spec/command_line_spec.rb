@@ -7,10 +7,6 @@ describe Mumukit::WithCommandLine do
     1
   end
 
-  def limit_command
-    'bin/limit'
-  end
-
   let(:time_message) { 'Execution time limit of 1s exceeded. Is your program performing an infinite loop or recursion?' }
 
   it { expect(run_command %Q{ruby -e 'x = 1; while true; x = -x; end' 2>&1 }).to eq [time_message, :aborted] }

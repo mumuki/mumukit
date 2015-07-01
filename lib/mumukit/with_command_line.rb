@@ -13,7 +13,7 @@ module Mumukit
     end
 
     def limit_command
-      'limit'
+      MUMUKIT_LIMIT_SCRIPT
     end
 
     def run_command(command)
