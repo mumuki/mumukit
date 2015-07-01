@@ -13,24 +13,16 @@ class Mumukit::TestServer < Mumukit::Stub
 
     feedback = run_feedback! r, results
 
-    response = base_response(test_results)
-    response.merge!(expectationResults: expectation_results) if expectation_results.present?
-    response.merge!(feedback: feedback) if feedback.present?
-    response
+    ResponseBuilder.new.instance_eval do
+      add_test_results(test_results)
+      add_expectation_results(expectation_results)
+      add_feedback(feedback)
+      build
+    end
   rescue Exception => e
     {exit: :errored, out: content_type.format_exception(e)}
   end
 
-  def base_response(test_results)
-    if test_results.size == 1 && test_results[0].is_a?(Array)
-      {testResults: test_results[0].map { |title, status, result| {title: title, status: status, result: result} }}
-    elsif test_results.size == 2 && test_results[0].is_a?(String)
-      {exit: test_results[1],
-       out: test_results[0]}
-    else
-      raise "Invalid test results format: #{test_results}. You must either return [results_array] or [results_string, status]"
-    end
-  end
 
   def run_tests!(request)
     compiler = TestCompiler.new(config)
