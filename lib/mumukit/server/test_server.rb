@@ -13,15 +13,18 @@ class Mumukit::TestServer < Mumukit::Stub
 
     feedback = run_feedback! r, results
 
-
-    {exit: test_results[1],
-     out: test_results[0],
-     expectationResults: expectation_results,
-     feedback: feedback}
+    response = base_response(test_results)
+    response.merge!(expectationResults: expectation_results) if expectation_results.present?
+    response.merge!(feedback: feedback) if feedback.present?
+    response
   rescue Exception => e
     {exit: :errored, out: content_type.format_exception(e)}
   end
 
+  def base_response(test_results)
+    {exit: test_results[1],
+     out: test_results[0]}
+  end
 
   def run_tests!(request)
     compiler = TestCompiler.new(config)
