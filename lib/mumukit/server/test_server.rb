@@ -5,13 +5,13 @@ class Mumukit::TestServer < Mumukit::Stub
   def run!(request)
     r = OpenStruct.new(request)
 
-    test_results = run_tests! config, r
-    expectation_results = run_expectations! config, r
+    test_results = run_tests! r
+    expectation_results = run_expectations! r
 
     results = OpenStruct.new(test_results: test_results,
                              expectation_results: expectation_results)
 
-    feedback = run_feedback! config, r, results
+    feedback = run_feedback! r, results
 
 
     {exit: test_results[1],
@@ -23,7 +23,7 @@ class Mumukit::TestServer < Mumukit::Stub
   end
 
 
-  def run_tests!(config, request)
+  def run_tests!(request)
     compiler = TestCompiler.new(config)
     runner = TestRunner.new(config)
 
@@ -31,13 +31,13 @@ class Mumukit::TestServer < Mumukit::Stub
     runner.run_compilation!(compilation)
   end
 
-  def run_expectations!(config, request)
+  def run_expectations!(request)
     expectations_runner = ExpectationsRunner.new(config)
 
-    request.expectations ?  expectations_runner.run_expectations!(request) :  []
+    request.expectations ? expectations_runner.run_expectations!(request) : []
   end
 
-  def run_feedback!(config, request, results)
+  def run_feedback!(request, results)
     FeedbackRunner.new(config).run_feedback!(request, results)
   end
 
