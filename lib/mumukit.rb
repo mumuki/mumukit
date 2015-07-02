@@ -1,6 +1,7 @@
 require 'i18n'
 require 'i18n/backend/fallbacks'
 require 'active_support/all'
+require 'ostruct'
 
 pwd = File.expand_path(File.dirname(__FILE__))
 
@@ -9,11 +10,21 @@ I18n.load_path += Dir[File.join(pwd, 'locales', '*.yml')]
 
 I18n.backend.load_translations
 
-MUMUKIT_LIMIT_SCRIPT = File.join(pwd, '..', 'bin', 'limit')
-
 module Mumukit
+  def self.configure
+    @config ||= OpenStruct.new
+    yield @config
+  end
+
+  def self.config
+    @config
+  end
 end
 
+Mumukit.configure do |config|
+  config.limit_script = File.join(pwd, '..', 'bin', 'limit')
+  config.content_type = :plain
+end
 
 require_relative 'mumukit/version'
 require_relative 'mumukit/content_type'

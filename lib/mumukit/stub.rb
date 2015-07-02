@@ -2,8 +2,8 @@ class Mumukit::Stub
   attr_reader :config, :content_type
 
   def initialize(config=nil)
-    @config = (config || {content_type: :plain}).with_indifferent_access
-    @content_type = Mumukit::ContentType.parse @config['content_type']
+    @config = (config||{}).with_indifferent_access
+    @content_type = Mumukit::ContentType.parse Mumukit.config.content_type
   end
 
   def t(*args)
