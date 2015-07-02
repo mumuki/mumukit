@@ -41,8 +41,8 @@ module Mumukit
 
     def self.parse(s)
       Kernel.const_get "Mumukit::ContentType::#{s.to_s.titlecase}"
-    rescue raise
-      "unknown content_type #{config['content_type']}"
+    rescue => e
+      raise "unknown content_type #{s}"
     end
   end
 end
