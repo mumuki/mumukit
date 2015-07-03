@@ -20,13 +20,27 @@ describe TestServer do
   context 'when test passes' do
     before { allow_any_instance_of(TestRunner).to receive(:run_compilation!).and_return(['ok', :passed]) }
 
-    it { expect(result).to eq({out: 'ok', exit: :passed, expectationResults: [], feedback: ''}) }
+    it { expect(result).to eq({out: 'ok', exit: :passed}) }
+  end
+
+  context 'when test returns structured results' do
+    before { allow_any_instance_of(TestRunner).to receive(:run_compilation!).and_return([[['foo', :passed, ''], ['baz', :failed, 'bar']]]) }
+
+    it { expect(result).to eq({testResults: [
+                                  {title: 'foo', status: :passed, result: ''},
+                                  {title: 'baz', status: :failed, result: 'bar'}]}) }
   end
 
   context 'when test fails' do
     before { allow_any_instance_of(TestRunner).to receive(:run_compilation!).and_return(['nok', :failed]) }
 
-    it { expect(result).to eq({out: 'nok', exit: :failed, expectationResults: [], feedback: ''}) }
+    it { expect(result).to eq({out: 'nok', exit: :failed}) }
+  end
+
+  context 'when test is aborted' do
+    before { allow_any_instance_of(TestRunner).to receive(:run_compilation!).and_return(['out of memory error', :aborted]) }
+
+    it { expect(result).to eq({out: 'out of memory error', exit: :aborted}) }
   end
 
   context 'when expectations is implemented and passes' do
@@ -34,26 +48,26 @@ describe TestServer do
     before { allow_any_instance_of(TestRunner).to receive(:run_compilation!).and_return(['ok', :passed]) }
     before { allow_any_instance_of(ExpectationsRunner).to receive(:run_expectations!).and_return(expectation_results) }
 
-    it { expect(result).to eq({out: 'ok', exit: :passed, expectationResults: expectation_results, feedback: ''}) }
+    it { expect(result).to eq({out: 'ok', exit: :passed, expectationResults: expectation_results}) }
   end
 
   context 'when expectations is implemented but crashes' do
     before { allow_any_instance_of(TestRunner).to receive(:run_compilation!).and_return(['ok', :passed]) }
     before { allow_any_instance_of(ExpectationsRunner).to receive(:run_expectations!).and_raise('ups!') }
 
-    it { expect(result[:exit]).to eq(:failed) }
+    it { expect(result[:exit]).to eq(:errored) }
     it { expect(result[:out]).to include('ups!') }
   end
 
   context 'when test runner crashes' do
     before { allow_any_instance_of(TestRunner).to receive(:run_compilation!).and_raise('ups!') }
-    it { expect(result[:exit]).to eq(:failed) }
+    it { expect(result[:exit]).to eq(:errored) }
     it { expect(result[:out]).to include('ups!') }
   end
 
   context 'when feedback is given by the feedback runner' do
     before { allow_any_instance_of(TestRunner).to receive(:run_compilation!).and_return(['ok', :passed]) }
-    before { allow_any_instance_of(FeedbackRunner).to receive(:run_feedback!).and_return('Keep up the good work!')}
+    before { allow_any_instance_of(FeedbackRunner).to receive(:run_feedback!).and_return('Keep up the good work!') }
     it { expect(result[:feedback]).to eq('Keep up the good work!') }
   end
 end

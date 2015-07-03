@@ -13,13 +13,14 @@ class Mumukit::TestServer < Mumukit::Stub
 
     feedback = run_feedback! r, results
 
-
-    {exit: test_results[1],
-     out: test_results[0],
-     expectationResults: expectation_results,
-     feedback: feedback}
+    ResponseBuilder.new.instance_eval do
+      add_test_results(test_results)
+      add_expectation_results(expectation_results)
+      add_feedback(feedback)
+      build
+    end
   rescue Exception => e
-    {exit: :failed, out: content_type.format_exception(e)}
+    {exit: :errored, out: content_type.format_exception(e)}
   end
 
 

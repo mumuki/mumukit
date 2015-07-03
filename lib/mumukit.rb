@@ -39,5 +39,6 @@ require_relative 'mumukit/test_runner/file_test_runner'
 require_relative 'stubs/expectations_runner'
 require_relative 'stubs/feedback_runner'
 
+require_relative 'mumukit/server/response_builder'
 require_relative 'mumukit/server/test_server'
 require_relative 'mumukit/server/test_server_app'
