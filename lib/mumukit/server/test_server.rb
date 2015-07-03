@@ -13,7 +13,7 @@ class Mumukit::TestServer < Mumukit::Stub
 
     feedback = run_feedback! r, results
 
-    ResponseBuilder.new.instance_eval do
+    Mumukit::ResponseBuilder.new.instance_eval do
       add_test_results(test_results)
       add_expectation_results(expectation_results)
       add_feedback(feedback)
