@@ -20,13 +20,21 @@ class Mumukit::ResponseBuilder
   private
 
   def base_response(test_results)
-    if test_results.size == 1 && test_results[0].is_a?(Array)
+    if structured_test_result?(test_results)
       structured_base_response(test_results)
-    elsif test_results.size == 2 && test_results[0].is_a?(String)
+    elsif unstructured_test_result?(test_results)
       unstructured_base_response(test_results)
     else
       raise "Invalid test results format: #{test_results}. You must either return [results_array] or [results_string, status]"
     end
+  end
+
+  def structured_test_result?(test_results)
+    test_results.size == 1 && test_results[0].is_a?(Array)
+  end
+
+  def unstructured_test_result?(test_results)
+    test_results.size == 2 && test_results[0].is_a?(String)
   end
 
   def structured_base_response(test_results)
