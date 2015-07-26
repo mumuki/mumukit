@@ -70,4 +70,10 @@ describe TestServer do
     before { allow_any_instance_of(FeedbackRunner).to receive(:run_feedback!).and_return('Keep up the good work!') }
     it { expect(result[:feedback]).to eq('Keep up the good work!') }
   end
+
+  context 'when request validator fails' do
+    before { allow_any_instance_of(RequestValidator).to receive(:validate!).and_raise(RequestValidationError.new('never use File.new')) }
+    it { expect(result[:exit]).to eq(:aborted) }
+    it { expect(result[:out]).to eq('never use File.new') }
+  end
 end

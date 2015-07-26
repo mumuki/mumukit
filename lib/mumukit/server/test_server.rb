@@ -5,6 +5,7 @@ class Mumukit::TestServer < Mumukit::Stub
   def run!(request)
     r = OpenStruct.new(request)
 
+    validate_request! r
     test_results = run_tests! r
     expectation_results = run_expectations! r
 
@@ -19,8 +20,14 @@ class Mumukit::TestServer < Mumukit::Stub
       add_feedback(feedback)
       build
     end
+  rescue Mumukit::RequestValidationError => e
+    {exit: :aborted, out: e.message}
   rescue Exception => e
     {exit: :errored, out: content_type.format_exception(e)}
+  end
+
+  def validate_request!(request)
+    RequestValidator.new(config).validate! request
   end
 
 
