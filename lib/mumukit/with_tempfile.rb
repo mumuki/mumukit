@@ -7,10 +7,17 @@ module Mumukit
     end
 
     def write_tempfile!(content)
+      with_tempfile do |file|
+        file.write(content)
+      end
+    end
+
+    def with_tempfile
       file = create_tempfile
-      file.write(content)
+      yield file
       file.close
       file
     end
+
   end
 end
