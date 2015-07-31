@@ -10,4 +10,13 @@ class Mumukit::Stub
     I18n.t(*args)
   end
 
+  def method_missing(name, *args, &block)
+    super unless should_forward_to_config?(args, name, &block)
+    @config[name]
+  end
+
+  def should_forward_to_config?(args, name)
+    args.length == 0 && !block_given? && @config[name]
+  end
+
 end
