@@ -4,37 +4,31 @@ require 'ostruct'
 class Mumukit::TestServer < Mumukit::Stub
 
   def test!(raw_request)
-    r = parse_request(raw_request)
+    respond_to(raw_request) do |r|
+      test_results = run_tests! r
+      expectation_results = run_expectations! r
 
-    test_results = run_tests! r
-    expectation_results = run_expectations! r
+      results = OpenStruct.new(test_results: test_results,
+                               expectation_results: expectation_results)
 
-    results = OpenStruct.new(test_results: test_results,
-                             expectation_results: expectation_results)
+      feedback = run_feedback! r, results
 
-    feedback = run_feedback! r, results
-
-    Mumukit::ResponseBuilder.new.instance_eval do
-      add_test_results(test_results)
-      add_expectation_results(expectation_results)
-      add_feedback(feedback)
-      build
+      Mumukit::ResponseBuilder.new.instance_eval do
+        add_test_results(test_results)
+        add_expectation_results(expectation_results)
+        add_feedback(feedback)
+        build
+      end
     end
-  rescue Mumukit::RequestValidationError => e
-    {exit: :aborted, out: e.message}
-  rescue Exception => e
-    {exit: :errored, out: content_type.format_exception(e)}
   end
 
   def query!(raw_request)
-    r = parse_request(raw_request)
+    respond_to(raw_request) do |r|
+      results = run_query!(r)
 
-    results = run_query!(r)
-
-    {exit: results[1],
-     out: results[0]}
-  rescue Exception => e
-    {exit: :errored, out: content_type.format_exception(e)}
+      {exit: results[1],
+       out: results[0]}
+    end
   end
 
   def run_query!(request)
@@ -62,7 +56,6 @@ class Mumukit::TestServer < Mumukit::Stub
 
   private
 
-
   def parse_request(request)
     OpenStruct.new(request).tap { |r| validate_request! r }
   end
@@ -71,4 +64,12 @@ class Mumukit::TestServer < Mumukit::Stub
     RequestValidator.new(config).validate! request
   end
 
+
+  def respond_to(raw_request)
+    yield parse_request(raw_request)
+  rescue Mumukit::RequestValidationError => e
+    {exit: :aborted, out: e.message}
+  rescue Exception => e
+    {exit: :errored, out: content_type.format_exception(e)}
+  end
 end
