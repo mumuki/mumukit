@@ -3,10 +3,9 @@ require 'ostruct'
 
 class Mumukit::TestServer < Mumukit::Stub
 
-  def test!(request)
-    r = OpenStruct.new(request)
+  def test!(raw_request)
+    r = parse_request(raw_request)
 
-    validate_request! r
     test_results = run_tests! r
     expectation_results = run_expectations! r
 
@@ -27,8 +26,8 @@ class Mumukit::TestServer < Mumukit::Stub
     {exit: :errored, out: content_type.format_exception(e)}
   end
 
-  def query!(request)
-    r = OpenStruct.new(request)
+  def query!(raw_request)
+    r = parse_request(raw_request)
 
     results = run_query!(r)
 
@@ -42,10 +41,6 @@ class Mumukit::TestServer < Mumukit::Stub
     QueryRunner.new(config).run_query! request
   end
 
-
-  def validate_request!(request)
-    RequestValidator.new(config).validate! request
-  end
 
   def run_tests!(request)
     compiler = TestCompiler.new(config)
@@ -63,6 +58,17 @@ class Mumukit::TestServer < Mumukit::Stub
 
   def run_feedback!(request, results)
     FeedbackRunner.new(config).run_feedback!(request, results)
+  end
+
+  private
+
+
+  def parse_request(request)
+    OpenStruct.new(request).tap { |r| validate_request! r }
+  end
+
+  def validate_request!(request)
+    RequestValidator.new(config).validate! request
   end
 
 end
