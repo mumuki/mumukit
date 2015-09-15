@@ -13,11 +13,10 @@ class Mumukit::TestServer < Mumukit::Stub
 
       feedback = run_feedback! r, results
 
-      Mumukit::ResponseBuilder.new.instance_eval do
+      Mumukit::ResponseBuilder.build do
         add_test_results(test_results)
         add_expectation_results(expectation_results)
         add_feedback(feedback)
-        build
       end
     end
   end
@@ -25,9 +24,9 @@ class Mumukit::TestServer < Mumukit::Stub
   def query!(raw_request)
     respond_to(raw_request) do |r|
       results = run_query!(r)
-
-      {exit: results[1],
-       out: results[0]}
+      Mumukit::ResponseBuilder.build do
+        add_query_results(results)
+      end
     end
   end
 
