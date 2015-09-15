@@ -4,6 +4,10 @@ class Mumukit::ResponseBuilder
     @response = base_response(r)
   end
 
+  def add_query_results(r)
+    @response = unstructured_base_response(r)
+  end
+
   def add_expectation_results(r)
     @response.merge!(expectationResults: r) if r.present?
   end
@@ -15,6 +19,12 @@ class Mumukit::ResponseBuilder
 
   def build
     @response
+  end
+
+  def self.build(&block)
+    builder = new
+    builder.instance_eval(&block)
+    builder.build
   end
 
   private

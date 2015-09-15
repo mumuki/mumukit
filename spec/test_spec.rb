@@ -14,8 +14,7 @@ end
 
 describe TestServer do
   let(:server) { TestServer.new }
-  let(:result) { server.run!({'content' => 'foo', 'test' => 'bar', 'expectations' => []}) }
-
+  let(:result) { server.test!({'content' => 'foo', 'test' => 'bar', 'expectations' => []}) }
 
   context 'when test passes' do
     before { allow_any_instance_of(TestRunner).to receive(:run_compilation!).and_return(['ok', :passed]) }
