@@ -27,20 +27,25 @@ class Mumukit::TestServer < Mumukit::Stub
     {exit: :errored, out: content_type.format_exception(e)}
   end
 
-  def validate_request!(request)
-    RequestValidator.new(config).validate! request
-  end
-
   def query!(request)
     r = OpenStruct.new(request)
-    runner = QueryRunner.new(config)
-    results = runner.run_query! r
+
+    results = run_query!(r)
+
     {exit: results[1],
      out: results[0]}
   rescue Exception => e
-    {exit: :failed, out: "#{e.message}:\n#{e.backtrace.join("\n")}"}
+    {exit: :errored, out: content_type.format_exception(e)}
   end
 
+  def run_query!(request)
+    QueryRunner.new(config).run_query! request
+  end
+
+
+  def validate_request!(request)
+    RequestValidator.new(config).validate! request
+  end
 
   def run_tests!(request)
     compiler = TestCompiler.new(config)
