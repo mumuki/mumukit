@@ -34,8 +34,9 @@ class Mumukit::TestServer < Mumukit::Stub
     QueryRunner.new(config).run_query! request
   end
 
-
   def run_tests!(request)
+    return ['', :passed] if request.test.blank?
+
     compiler = TestCompiler.new(config)
     runner = TestRunner.new(config)
 

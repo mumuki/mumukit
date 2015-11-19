@@ -16,6 +16,10 @@ describe TestServer do
   let(:server) { TestServer.new }
   let(:result) { server.test!({'content' => 'foo', 'test' => 'bar', 'expectations' => []}) }
 
+  context 'when there are not tests and no expectations' do
+    it { expect(server.test!('content'=> 'foo')).to eq({out: '', exit: :passed}) }
+  end
+
   context 'when test passes' do
     before { allow_any_instance_of(TestRunner).to receive(:run_compilation!).and_return(['ok', :passed]) }
 
@@ -48,6 +52,15 @@ describe TestServer do
     before { allow_any_instance_of(ExpectationsRunner).to receive(:run_expectations!).and_return(expectation_results) }
 
     it { expect(result).to eq({out: 'ok', exit: :passed, expectationResults: expectation_results}) }
+  end
+
+  context 'when there are no tests but expectations' do
+    let(:expectation_results) { [{expectation: {binding: :foo, inspection: :HasUsage}, result: true}] }
+    let(:result) { server.test!('content' => 'foo', 'expectations' => [{binding: :foo, inspection: :HasUsage}]) }
+
+    before { allow_any_instance_of(ExpectationsRunner).to receive(:run_expectations!).and_return(expectation_results) }
+
+    it { expect(result).to eq({out: '', exit: :passed, expectationResults: expectation_results}) }
   end
 
   context 'when expectations is implemented but crashes' do
