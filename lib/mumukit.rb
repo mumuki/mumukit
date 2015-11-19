@@ -34,6 +34,7 @@ require_relative 'mumukit/stub'
 require_relative 'mumukit/with_tempfile'
 require_relative 'mumukit/with_command_line'
 require_relative 'mumukit/test_compiler/file_test_compiler'
+require_relative 'mumukit/test_compiler/mashup_test_compiler'
 require_relative 'mumukit/test_runner/file_test_runner'
 require_relative 'mumukit/request_validator/request_validation_error'
 
