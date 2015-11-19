@@ -3,7 +3,11 @@ require 'tempfile'
 module Mumukit
   module WithTempfile
     def create_tempfile
-      Tempfile.new('mumuki.compile')
+      Tempfile.new(['mumuki.compile', tempfile_extension])
+    end
+
+    def tempfile_extension
+      ''
     end
 
     def write_tempfile!(content)
