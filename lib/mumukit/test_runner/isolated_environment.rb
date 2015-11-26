@@ -21,7 +21,6 @@ module Mumukit
           'Cmd' => command,
           'NetworkDisabled' => true,
           'HostConfig' => {
-              #  'Memory' => Mumukit.config.command_size_limit,
               'Binds' => binds},
           'Volumes' => volumes)
     end
