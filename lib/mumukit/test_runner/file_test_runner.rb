@@ -1,7 +1,5 @@
 module Mumukit
   class FileTestRunner < Mumukit::Stub
-    include Mumukit::WithCommandLine
-
     def run_compilation!(file)
       post_process_file(file, *run_test_file!(file))
     ensure
