@@ -4,19 +4,38 @@
 
 # Mumukit
 
-Gem for quickly implement mumuki runners
+> Micro framework for quickly implement mumuki runners
 
 ## Usage
 
-1. Create a new ruby project: 
-    1. create an empty directory
-    2. add an empty Gemfile - you can use bundle init
-    3. add a Rakefile if you want - usefull for running tests
-    4. and a .ruby-version, so that tools like rvm or rbenv know the version of ruby
-2. Add mumukit as dependency in the Gemfile: `gem 'mumukit', github: 'uqbar-project/mumukit', tag: 'v0.2.0'`
-3. Add a test runner in lib/test_runner. It must be a class that at implements at least a `run_test_command` method [Example](https://github.com/uqbar-project/mumuki-plunit-server/blob/master/lib/test_runner.rb)
-4. Add a test compiler in lib/test_compiler. It must be a class that at least implements a `compile` method.  [Example](https://github.com/uqbar-project/mumuki-plunit-server/blob/master/lib/test_compiler.rb)
-5. Add the following config.ru:
+### Installing
+
+You usually add mumukit to an empty project. First you need to add it to your Gemfile:
+
+```
+gem 'mumukit', github: 'mumuki/mumukit', tag: 'v0.7.2'
+```
+
+or, if you want latest version:
+
+
+```
+gem 'mumukit', github: 'mumuki/mumukit', branch: 'master'
+```
+
+And then `bundle install`
+
+### Adding basic components
+
+The most basic mumukit components are:
+
+* a test runner: lib/test_runner. It must be a class that at implements at least a `run_test_command` method [Example](https://github.com/uqbar-project/mumuki-plunit-server/blob/master/lib/test_runner.rb)
+* test compiler: lib/test_compiler. It must be a class that at least implements a `compile` method.  [Example](https://github.com/uqbar-project/mumuki-plunit-server/blob/master/lib/test_compiler.rb)
+
+### Running
+
+Mumukit comes wit sinatra embedded. We recommend running it using a `config.ru` file:
+
 ```ruby
 require 'mumukit'
 
@@ -30,9 +49,9 @@ And run as `bundle exec rackup`
 
 ## Testing
 
-You can unit test any runner developed with mumukit since you are just extending plain ruby classes. 
+You can unit test any runner developed with mumukit since you are just extending plain ruby classes.
 
-You can also do integration testing. There are two options: 
+You can also do integration testing. There are two options:
 
 * Running a local mumuki-platform instance
 * Or using mumukit-bridge, wich is the standalone component that is used by the platform to interact with the runners. Here there is a test template: https://gist.github.com/flbulgarelli/defdc7adbd115481d4bc

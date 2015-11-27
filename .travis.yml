@@ -7,7 +7,6 @@ addons:
     code_climate:
       repo_token: 2deec4841978b14c5f8d2695508d4769837b5af8e585618235ab93295cd8321c
 env: CODECLIMATE_REPO_TOKEN=2deec4841978b14c5f8d2695508d4769837b5af8e585618235ab93295cd8321c
-
 services:
   - docker
 before_install:
