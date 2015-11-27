@@ -4,7 +4,7 @@
 
 # Mumukit
 
-> Micro framework for quickly implement mumuki runners
+> Micro framework for quickly implement Mumuki runners
 
 ## Usage
 
@@ -29,12 +29,12 @@ And then `bundle install`
 
 The most basic mumukit components are:
 
-* a test runner: lib/test_runner. It must be a class that at implements at least a `run_test_command` method [Example](https://github.com/uqbar-project/mumuki-plunit-server/blob/master/lib/test_runner.rb)
-* test compiler: lib/test_compiler. It must be a class that at least implements a `compile` method.  [Example](https://github.com/uqbar-project/mumuki-plunit-server/blob/master/lib/test_compiler.rb)
+* a test runner: lib/test_runner. It must be a class that implements at least a `run_test_command` method [Example](https://github.com/uqbar-project/mumuki-plunit-server/blob/master/lib/test_runner.rb)
+* test compiler: lib/test_compiler. It must be a class that implements at least a `compile` method.  [Example](https://github.com/uqbar-project/mumuki-plunit-server/blob/master/lib/test_compiler.rb)
 
 ### Running
 
-Mumukit comes wit sinatra embedded. We recommend running it using a `config.ru` file:
+Mumukit comes wit Sinatra embedded. We recommend running it using a `config.ru` file:
 
 ```ruby
 require 'mumukit'
@@ -49,7 +49,7 @@ And run as `bundle exec rackup`
 
 ## Testing
 
-You can unit test any runner developed with mumukit since you are just extending plain ruby classes.
+You can unit test any runner developed with mumukit since you are just extending plain Ruby classes.
 
 You can also do integration testing. There are two options:
 
