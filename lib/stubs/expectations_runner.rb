@@ -1,4 +1,4 @@
-class ExpectationsRunner < Mumukit::Stub
+class ExpectationsRunner < Mumukit::Hook
   def run_expectations!(request)
     []
   end

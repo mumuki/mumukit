@@ -1,6 +1,6 @@
 require_relative './spec_helper'
 
-class QueryRunner < Mumukit::Stub
+class QueryRunner < Mumukit::Hook
   include Mumukit::WithTempfile
   include Mumukit::WithCommandLine
 

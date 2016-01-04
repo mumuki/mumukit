@@ -8,7 +8,7 @@ class TestCompiler < FileTestCompiler
   end
 end
 
-class TestRunner < Stub
+class TestRunner < Hook
 
 end
 

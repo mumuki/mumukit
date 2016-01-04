@@ -30,7 +30,7 @@ end
 
 require_relative 'mumukit/version'
 require_relative 'mumukit/content_type'
-require_relative 'mumukit/stub'
+require_relative 'mumukit/hook'
 require_relative 'mumukit/with_tempfile'
 require_relative 'mumukit/with_command_line'
 require_relative 'mumukit/test_compiler/file_test_compiler'

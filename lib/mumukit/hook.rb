@@ -1,4 +1,4 @@
-class Mumukit::Stub
+class Mumukit::Hook
   attr_reader :config, :content_type
 
   def initialize(config=nil)

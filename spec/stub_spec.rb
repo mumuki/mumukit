@@ -1,8 +1,8 @@
 require_relative './spec_helper.rb'
 
-describe Mumukit::Stub do
+describe Mumukit::Hook do
 
-  class TestStub < Mumukit::Stub
+  class TestStub < Mumukit::Hook
   end
 
   let(:an_stub) { TestStub.new(foo: 'bar') }

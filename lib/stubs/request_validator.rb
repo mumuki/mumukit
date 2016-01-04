@@ -1,4 +1,4 @@
-class RequestValidator < Mumukit::Stub
+class RequestValidator < Mumukit::Hook
   def validate!(request)
   end
 end

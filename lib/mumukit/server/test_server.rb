@@ -1,7 +1,7 @@
 require 'yaml'
 require 'ostruct'
 
-class Mumukit::TestServer < Mumukit::Stub
+class Mumukit::TestServer < Mumukit::Hook
 
   def test!(raw_request)
     respond_to(raw_request) do |r|
