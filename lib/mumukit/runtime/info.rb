@@ -3,7 +3,7 @@ module Mumukit::RuntimeInfo
     {
         name: Mumukit.config.runner_name,
         version: Mumukit.config.runner_version,
-        mumukit_version: Mumukit.VERSION,
+        mumukit_version: Mumukit::VERSION,
         output_content_type: Mumukit.config.content_type,
         features: {
             structured: Mumukit.config.structured,

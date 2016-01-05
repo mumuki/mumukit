@@ -50,6 +50,7 @@ require_relative 'mumukit/defaults/query_runner'
 require_relative 'mumukit/defaults/feedback_runner'
 require_relative 'mumukit/defaults/request_validator'
 require_relative 'mumukit/defaults/test_compiler'
+require_relative 'mumukit/defaults/metadata_publisher'
 require_relative 'mumukit/defaults/test_runner'
 
 require_relative 'mumukit/server/response_builder'

@@ -11,12 +11,13 @@ end
 describe TestServer do
   let(:server) { TestServer.new }
   let(:result) { server.test!({'content' => 'foo', 'test' => 'bar', 'expectations' => []}) }
+  let(:info) { server.info('http://localhost:8080')[:features] }
 
   context 'when there are not tests and no expectations' do
     it { expect(server.test!('content' => 'foo')).to eq({out: '', exit: :passed}) }
   end
 
-  context 'when test runner is defined' do
+  context 'when test runner is implemented but no expectations' do
     before do
       class TestRunner < Hook
       end
@@ -24,6 +25,9 @@ describe TestServer do
     after do
       Object.send :remove_const, :TestRunner
     end
+
+    it { expect(info[:expectations]).to be false }
+
     context 'when test passes' do
       before { allow_any_instance_of(TestRunner).to receive(:run_compilation!).and_return(['ok', :passed]) }
 
@@ -55,7 +59,7 @@ describe TestServer do
 
       it { expect(result).to eq({out: 'out of memory error', exit: :aborted}) }
     end
-    context 'when feedback is  given by the feedback runner' do
+    context 'when feedback runner is implemented' do
       before do
         class FeedbackRunner < Hook
         end
@@ -65,9 +69,13 @@ describe TestServer do
         Object.send :remove_const, :FeedbackRunner
       end
 
-      before { allow_any_instance_of(TestRunner).to receive(:run_compilation!).and_return(['ok', :passed]) }
-      before { allow_any_instance_of(FeedbackRunner).to receive(:run_feedback!).and_return('Keep up the good work!') }
-      it { expect(result[:feedback]).to eq('Keep up the good work!') }
+      it { expect(info[:feedback]).to be true }
+
+      context 'when feedback is given' do
+        before { allow_any_instance_of(TestRunner).to receive(:run_compilation!).and_return(['ok', :passed]) }
+        before { allow_any_instance_of(FeedbackRunner).to receive(:run_feedback!).and_return('Keep up the good work!') }
+        it { expect(result[:feedback]).to eq('Keep up the good work!') }
+      end
     end
   end
 
@@ -83,6 +91,8 @@ describe TestServer do
       Object.send :remove_const, :TestRunner
       Object.send :remove_const, :ExpectationsRunner
     end
+
+    it { expect(info[:expectations]).to be true }
 
     context 'when both passed' do
       let(:expectation_results) { [{expectation: {binding: :foo, inspection: :HasUsage}, result: true}] }
@@ -119,7 +129,7 @@ describe TestServer do
   end
 
 
-  context 'when request validator fails' do
+  context 'when request is implemented' do
     before do
       class RequestValidator < Hook
       end
@@ -129,8 +139,12 @@ describe TestServer do
       Object.send :remove_const, :RequestValidator
     end
 
-    before { allow_any_instance_of(RequestValidator).to receive(:validate!).and_raise(RequestValidationError.new('never use File.new')) }
-    it { expect(result[:exit]).to eq(:aborted) }
-    it { expect(result[:out]).to eq('never use File.new') }
+    it { expect(info[:secure]).to be true }
+
+    context 'when validation fails' do
+      before { allow_any_instance_of(RequestValidator).to receive(:validate!).and_raise(RequestValidationError.new('never use File.new')) }
+      it { expect(result[:exit]).to eq(:aborted) }
+      it { expect(result[:out]).to eq('never use File.new') }
+    end
   end
 end
