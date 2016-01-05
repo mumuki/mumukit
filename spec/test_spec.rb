@@ -23,7 +23,7 @@ describe TestServer do
       end
     end
     after do
-      Object.send :remove_const, :TestRunner
+      drop_hook TestRunner
     end
 
     it { expect(info[:expectations]).to be false }
@@ -66,7 +66,7 @@ describe TestServer do
       end
 
       after do
-        Object.send :remove_const, :FeedbackRunner
+        drop_hook FeedbackRunner
       end
 
       it { expect(info[:feedback]).to be true }
@@ -88,8 +88,8 @@ describe TestServer do
     end
 
     after do
-      Object.send :remove_const, :TestRunner
-      Object.send :remove_const, :ExpectationsRunner
+      drop_hook TestRunner
+      drop_hook ExpectationsRunner
     end
 
     it { expect(info[:expectations]).to be true }
@@ -117,7 +117,7 @@ describe TestServer do
     end
 
     after do
-      Object.send :remove_const, :ExpectationsRunner
+      drop_hook ExpectationsRunner
     end
 
     let(:expectation_results) { [{expectation: {binding: :foo, inspection: :HasUsage}, result: true}] }
@@ -136,7 +136,7 @@ describe TestServer do
     end
 
     after do
-      Object.send :remove_const, :RequestValidator
+      drop_hook RequestValidator
     end
 
     it { expect(info[:secure]).to be true }

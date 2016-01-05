@@ -48,7 +48,7 @@ describe Mumukit::Runtime do
     end
 
     after do
-      Object.send :remove_const, :TestRunner
+      drop_hook TestRunner
     end
 
     it { expect(runtime.info[:features][:sandboxed]).to be true }
@@ -61,7 +61,7 @@ describe Mumukit::Runtime do
     end
 
     after do
-      Object.send :remove_const, :TestRunner
+      drop_hook TestRunner
     end
 
     it { expect(runtime.info[:features][:sandboxed]).to be false }

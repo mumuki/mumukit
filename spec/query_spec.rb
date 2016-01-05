@@ -25,7 +25,7 @@ describe Mumukit::TestServer do
   end
 
   after do
-    Object.send :remove_const, :QueryRunner
+    drop_hook QueryRunner
   end
 
   let(:server) { Mumukit::TestServer.new(nil) }
