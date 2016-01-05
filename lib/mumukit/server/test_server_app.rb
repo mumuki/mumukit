@@ -16,8 +16,8 @@ class Mumukit::TestServerApp < Sinatra::Base
     set :config_filename, 'config/production.yml'
   end
 
-  config = YAML.load_file(settings.config_filename) rescue nil
-  server = Mumukit::TestServer.new(config)
+  runtime_config = YAML.load_file(settings.config_filename) rescue nil
+  server = Mumukit::TestServer.new(runtime_config)
 
   helpers do
     def parse_request
@@ -25,6 +25,10 @@ class Mumukit::TestServerApp < Sinatra::Base
       I18n.locale = r['locale'] || :en
       r
     end
+  end
+
+  get '/info' do
+    JSON.generate(server.info(request.path))
   end
 
   post '/test' do

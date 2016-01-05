@@ -1,5 +1,5 @@
 module Mumukit
-  class FileTestRunner < Mumukit::Stub
+  class FileTestRunner < Mumukit::Hook
     def run_compilation!(file)
       post_process_file(file, *run_test_file!(file))
     ensure

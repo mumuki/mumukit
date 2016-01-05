@@ -1,9 +1,10 @@
-class Mumukit::Stub
-  attr_reader :config, :content_type
+class Mumukit::Hook
+  attr_reader :config
+
+  include Mumukit::WithContentType
 
   def initialize(config=nil)
     @config = (config||{}).with_indifferent_access
-    @content_type = Mumukit::ContentType.parse Mumukit.config.content_type
   end
 
   def t(*args)
@@ -18,5 +19,4 @@ class Mumukit::Stub
   def should_forward_to_config?(args, name)
     args.length == 0 && !block_given? && @config[name]
   end
-
 end
