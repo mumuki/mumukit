@@ -10,8 +10,8 @@ class Mumukit::TestServer
     @runtime = Mumukit::Runtime.new(runtime_config)
   end
 
-  def info(path)
-    runtime.info.merge(runtime.metadata_publisher.metadata).merge(url: path)
+  def info(url)
+    runtime.info.merge(runtime.metadata_publisher.metadata).merge(url: url)
   end
 
   def test!(raw_request)
