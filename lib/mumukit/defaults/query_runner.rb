@@ -1,4 +1,4 @@
-class QueryRunner < Mumukit::Hook
+class Mumukit::DefaultQueryRunner < Mumukit::Hook
   def run_query!(request)
     ['unimplemented', :aborted]
   end

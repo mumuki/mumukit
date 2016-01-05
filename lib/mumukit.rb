@@ -28,11 +28,13 @@ Mumukit.configure do |config|
   config.command_size_limit = 1024
 end
 
+require_relative 'mumukit/with_tempfile'
+require_relative 'mumukit/with_content_type'
+require_relative 'mumukit/with_command_line'
 require_relative 'mumukit/version'
 require_relative 'mumukit/content_type'
 require_relative 'mumukit/hook'
-require_relative 'mumukit/with_tempfile'
-require_relative 'mumukit/with_command_line'
+require_relative 'mumukit/runtime'
 require_relative 'mumukit/test_compiler/file_test_compiler'
 require_relative 'mumukit/test_compiler/mashup_test_compiler'
 require_relative 'mumukit/test_runner/isolated_environment'
@@ -41,9 +43,12 @@ require_relative 'mumukit/test_runner/with_isolated_environment'
 require_relative 'mumukit/test_runner/file_test_runner'
 require_relative 'mumukit/request_validator/request_validation_error'
 
-require_relative 'stubs/expectations_runner'
-require_relative 'stubs/feedback_runner'
-require_relative 'stubs/request_validator'
+require_relative 'mumukit/defaults/expectations_runner'
+require_relative 'mumukit/defaults/query_runner'
+require_relative 'mumukit/defaults/feedback_runner'
+require_relative 'mumukit/defaults/request_validator'
+require_relative 'mumukit/defaults/test_compiler'
+require_relative 'mumukit/defaults/test_runner'
 
 require_relative 'mumukit/server/response_builder'
 require_relative 'mumukit/server/test_server'

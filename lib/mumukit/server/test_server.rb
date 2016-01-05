@@ -1,7 +1,14 @@
 require 'yaml'
 require 'ostruct'
 
-class Mumukit::TestServer < Mumukit::Hook
+class Mumukit::TestServer
+  attr_reader :runtime
+
+  include Mumukit::WithContentType
+
+  def initialize(config=nil)
+    @runtime = Mumukit::Runtime.new(config)
+  end
 
   def test!(raw_request)
     respond_to(raw_request) do |r|
@@ -31,27 +38,22 @@ class Mumukit::TestServer < Mumukit::Hook
   end
 
   def run_query!(request)
-    QueryRunner.new(config).run_query! request
+    runtime.query_runner.run_query! request
   end
 
   def run_tests!(request)
     return ['', :passed] if request.test.blank?
 
-    compiler = TestCompiler.new(config)
-    runner = TestRunner.new(config)
-
-    compilation = compiler.create_compilation!(request)
-    runner.run_compilation!(compilation)
+    compilation = runtime.test_compiler.create_compilation!(request)
+    runtime.test_runner.run_compilation!(compilation)
   end
 
   def run_expectations!(request)
-    expectations_runner = ExpectationsRunner.new(config)
-
-    request.expectations ? expectations_runner.run_expectations!(request) : []
+    request.expectations ? runtime.expectations_runner.run_expectations!(request) : []
   end
 
   def run_feedback!(request, results)
-    FeedbackRunner.new(config).run_feedback!(request, results)
+    runtime.feedback_runner.run_feedback!(request, results)
   end
 
   private
@@ -61,7 +63,7 @@ class Mumukit::TestServer < Mumukit::Hook
   end
 
   def validate_request!(request)
-    RequestValidator.new(config).validate! request
+    runtime.request_validator.validate! request
   end
 
 
