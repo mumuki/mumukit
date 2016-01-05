@@ -27,6 +27,10 @@ class Mumukit::TestServerApp < Sinatra::Base
     end
   end
 
+  get '/info' do
+    JSON.generate(server.info(request.path))
+  end
+
   post '/test' do
     JSON.generate(server.test!(parse_request))
   end

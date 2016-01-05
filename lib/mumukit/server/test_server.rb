@@ -10,6 +10,10 @@ class Mumukit::TestServer
     @runtime = Mumukit::Runtime.new(config)
   end
 
+  def info(path)
+    runtime.metadata_publisher.metadata(path)
+  end
+
   def test!(raw_request)
     respond_to(raw_request) do |r|
       test_results = run_tests! r
