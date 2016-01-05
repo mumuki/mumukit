@@ -1,2 +1,5 @@
-class Mumukit::DefaultMetadataPublisher < Mumukit::DynamicMetadataPublisher
+class Mumukit::DefaultMetadataPublisher < Hook
+  def metadata
+    {}
+  end
 end

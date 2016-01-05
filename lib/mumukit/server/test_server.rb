@@ -6,12 +6,12 @@ class Mumukit::TestServer
 
   include Mumukit::WithContentType
 
-  def initialize(config=nil)
-    @runtime = Mumukit::Runtime.new(config)
+  def initialize(runtime_config=nil)
+    @runtime = Mumukit::Runtime.new(runtime_config)
   end
 
   def info(path)
-    runtime.metadata_publisher.metadata(path)
+    runtime.info.merge(runtime.metadata_publisher.metadata).merge(url: path)
   end
 
   def test!(raw_request)
