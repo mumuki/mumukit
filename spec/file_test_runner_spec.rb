@@ -37,3 +37,33 @@ describe Mumukit::FileTestRunner do
     it { expect(runner.run_compilation!(File.new 'spec/data/data.txt')).to eq ["lorem impsum\n", :passed] }
   end
 end
+
+describe Mumukit::Runtime do
+  let(:runtime) { Mumukit::Runtime.new({}) }
+
+  context 'when test runner is isolated' do
+    before do
+      class TestRunner < IsolatedEnvTestRunner
+      end
+    end
+
+    after do
+      Object.send :remove_const, :TestRunner
+    end
+
+    it { expect(runtime.info[:features][:sandboxed]).to be true }
+  end
+
+  context 'when test runner is embedded' do
+    before do
+      class TestRunner < EmbeddedEnvTestRunner
+      end
+    end
+
+    after do
+      Object.send :remove_const, :TestRunner
+    end
+
+    it { expect(runtime.info[:features][:sandboxed]).to be false }
+  end
+end
