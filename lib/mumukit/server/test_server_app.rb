@@ -16,6 +16,10 @@ class Mumukit::TestServerApp < Sinatra::Base
     set :config_filename, 'config/production.yml'
   end
 
+  before do
+    content_type 'application/json'
+  end
+
   runtime_config = YAML.load_file(settings.config_filename) rescue nil
   server = Mumukit::TestServer.new(runtime_config)
 
