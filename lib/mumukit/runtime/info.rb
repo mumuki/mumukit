@@ -8,12 +8,12 @@ module Mumukit::RuntimeInfo
         features: {
             structured: Mumukit.config.structured,
 
-            query: hook_defined?(:QueryRunner),
-            expectations: hook_defined?(:ExpectationsRunner),
-            feedback: hook_defined?(:FeedbackRunner),
-            secure: hook_defined?(:RequestValidator),
+            query: hook_defined?(:QueryRunnerHook),
+            expectations: hook_defined?(:ExpectationsRunnerHook),
+            feedback: hook_defined?(:FeedbackRunnerHook),
+            secure: hook_defined?(:RequestValidatorHook),
 
-            sandboxed: [:TestRunner, :QueryRunner].any? { |it| hook_includes?(it, Mumukit::WithIsolatedEnvironment) }
+            sandboxed: [:TestHook, :QueryRunnerHook].any? { |it| hook_includes?(it, Mumukit::WithIsolatedEnvironment) }
         }
     }
   end

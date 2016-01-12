@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-class BaseTestRunner < Mumukit::FileTestRunnerHook
+class BaseTestRunner < Mumukit::FileTestHook
   def run_test_command(path)
     "cat #{path}"
   end
@@ -24,7 +24,7 @@ class File
 end
 
 
-describe Mumukit::FileTestRunnerHook do
+describe Mumukit::FileTestHook do
   context 'with embedded env' do
     let(:runner) { EmbeddedEnvTestRunner.new }
 
@@ -43,25 +43,26 @@ describe Mumukit::Runtime do
 
   context 'when test runner is isolated' do
     before do
-      class TestRunner < IsolatedEnvTestRunner
+      class TestHook < IsolatedEnvTestRunner
       end
     end
 
     after do
-      drop_hook TestRunner
+      drop_hook TestHook
     end
 
+    it { expect(runtime.hook_defined? :TestHook).to be true}
     it { expect(runtime.info[:features][:sandboxed]).to be true }
   end
 
   context 'when test runner is embedded' do
     before do
-      class TestRunner < EmbeddedEnvTestRunner
+      class TestHook < EmbeddedEnvTestRunner
       end
     end
 
     after do
-      drop_hook TestRunner
+      drop_hook TestHook
     end
 
     it { expect(runtime.info[:features][:sandboxed]).to be false }

@@ -1,29 +1,25 @@
 module Mumukit::RuntimeShortcuts
   def feedback_runner
-    new_hook :FeedbackRunner
+    new_hook :FeedbackRunnerHook
   end
 
   def expectations_runner
-    new_hook :ExpectationsRunner
+    new_hook :ExpectationsRunnerHook
   end
 
-  def test_compiler
-    new_hook :TestCompiler
-  end
-
-  def test_runner
-    new_hook :TestRunner
+  def test_hook
+    new_hook :TestHook
   end
 
   def query_runner
-    new_hook :QueryRunner
+    new_hook :QueryRunnerHook
   end
 
   def request_validator
-    new_hook :RequestValidator
+    new_hook :RequestValidatorHook
   end
 
   def metadata_publisher
-    new_hook :MetadataPublisher
+    new_hook :MetadataPublisherHook
   end
 end

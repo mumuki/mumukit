@@ -48,8 +48,8 @@ class Mumukit::TestServer
   def run_tests!(request)
     return ['', :passed] if request.test.blank?
 
-    compilation = runtime.test_compiler.compile(request)
-    runtime.test_runner.run!(compilation)
+    compilation = runtime.test_hook.compile(request)
+    runtime.test_hook.run!(compilation)
   end
 
   def run_expectations!(request)

@@ -2,7 +2,7 @@ require_relative './spec_helper'
 
 describe Mumukit::TestServer do
   before do
-    class QueryRunner < Mumukit::Hook
+    class QueryRunnerHook < Mumukit::Hook
       include Mumukit::WithTempfile
       include Mumukit::WithCommandLine
 
@@ -25,7 +25,7 @@ describe Mumukit::TestServer do
   end
 
   after do
-    drop_hook QueryRunner
+    drop_hook QueryRunnerHook
   end
 
   let(:server) { Mumukit::TestServer.new(nil) }

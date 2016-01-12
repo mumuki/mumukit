@@ -1,7 +1,7 @@
 require_relative './spec_helper'
 require 'ostruct'
 
-describe Mumukit::MashupTestCompilerHook do
+describe Mumukit::WithMashupFileContent do
   def req(test, extra, content)
     OpenStruct.new(test:test, extra:extra, content: content)
   end
@@ -30,8 +30,12 @@ end
 
 EOT
 
+  class SampleMashupTestHook < Mumukit::FileTestHook
+    include Mumukit::WithMashupFileContent
+  end
+
   describe '#compile' do
-    let(:compiler) { Mumukit::MashupTestCompilerHook.new(nil) }
+    let(:compiler) { SampleMashupTestHook.new(nil) }
     it { expect(compiler.compile_file_content(req(true_test, '_false = false', true_submission))).to eq(compiled_test_submission) }
   end
 
