@@ -1,5 +1,8 @@
 module Mumukit
   class FileTestRunner < Mumukit::Hook
+    def run_test_file!(*args)
+      raise 'Wrong configuration. You must include an environment mixin'
+    end
     def run_compilation!(file)
       post_process_file(file, *run_test_file!(file))
     ensure
