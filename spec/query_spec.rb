@@ -6,7 +6,7 @@ describe Mumukit::TestServer do
       include Mumukit::WithTempfile
       include Mumukit::WithCommandLine
 
-      def run_query!(request)
+      def run!(request)
         request.query
         eval_query compile_query(request)
       end

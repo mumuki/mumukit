@@ -1,5 +1,5 @@
 class Mumukit::DefaultExpectationsRunnerHook < Mumukit::Hook
-  def run_expectations!(request)
+  def run!(request)
     []
   end
 end

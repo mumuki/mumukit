@@ -3,7 +3,8 @@ module Mumukit
     def run_test_file!(*args)
       raise 'Wrong configuration. You must include an environment mixin'
     end
-    def run_compilation!(file)
+
+    def run!(file)
       post_process_file(file, *run_test_file!(file))
     ensure
       file.unlink

@@ -3,12 +3,12 @@ module Mumukit
     include Mumukit::WithTempfile
 
     def compile(request)
+      write_tempfile! compile_file_content(request)
+
+    end
+
+    def compile_file_content(request)
       raise 'You need to implement this method'
     end
-
-    def create_compilation!(request)
-      write_tempfile! compile(request)
-    end
-
   end
 end

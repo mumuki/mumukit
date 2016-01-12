@@ -42,22 +42,22 @@ class Mumukit::TestServer
   end
 
   def run_query!(request)
-    runtime.query_runner.run_query! request
+    runtime.query_runner.run! request
   end
 
   def run_tests!(request)
     return ['', :passed] if request.test.blank?
 
-    compilation = runtime.test_compiler.create_compilation!(request)
-    runtime.test_runner.run_compilation!(compilation)
+    compilation = runtime.test_compiler.compile(request)
+    runtime.test_runner.run!(compilation)
   end
 
   def run_expectations!(request)
-    request.expectations ? runtime.expectations_runner.run_expectations!(request) : []
+    request.expectations ? runtime.expectations_runner.run!(request) : []
   end
 
   def run_feedback!(request, results)
-    runtime.feedback_runner.run_feedback!(request, results)
+    runtime.feedback_runner.run!(request, results)
   end
 
   private

@@ -28,13 +28,13 @@ describe Mumukit::FileTestRunnerHook do
   context 'with embedded env' do
     let(:runner) { EmbeddedEnvTestRunner.new }
 
-    it { expect(runner.run_compilation!(File.new 'spec/data/data.txt')).to eq ["lorem impsum", :passed] }
+    it { expect(runner.run!(File.new 'spec/data/data.txt')).to eq ["lorem impsum", :passed] }
   end
 
   context 'with isolated env' do
     let(:runner) { IsolatedEnvTestRunner.new }
 
-    it { expect(runner.run_compilation!(File.new 'spec/data/data.txt')).to eq ["lorem impsum\n", :passed] }
+    it { expect(runner.run!(File.new 'spec/data/data.txt')).to eq ["lorem impsum\n", :passed] }
   end
 end
 

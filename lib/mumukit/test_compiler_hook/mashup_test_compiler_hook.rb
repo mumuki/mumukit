@@ -1,6 +1,6 @@
 module Mumukit
   class MashupTestCompilerHook < FileTestCompilerHook
-    def compile(request)
+    def compile_file_content(request)
       <<EOF
 #{request.extra}
 #{request.content}

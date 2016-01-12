@@ -1,5 +1,5 @@
 class Mumukit::DefaultFeedbackRunnerHook < Mumukit::Hook
-  def run_feedback!(request, results)
+  def run!(request, results)
     ''
   end
 end

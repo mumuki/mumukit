@@ -32,7 +32,7 @@ EOT
 
   describe '#compile' do
     let(:compiler) { Mumukit::MashupTestCompilerHook.new(nil) }
-    it { expect(compiler.compile(req(true_test, '_false = false', true_submission))).to eq(compiled_test_submission) }
+    it { expect(compiler.compile_file_content(req(true_test, '_false = false', true_submission))).to eq(compiled_test_submission) }
   end
 
 end

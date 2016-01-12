@@ -1,5 +1,5 @@
 class Mumukit::DefaultTestCompilerHook < Mumukit::Hook
-  def create_compilation!(request)
+  def compile(request)
     ''
   end
 end
