@@ -2,7 +2,7 @@ require_relative './spec_helper.rb'
 
 include Mumukit
 
-class SampleTestHook < FileTestHook
+class IntegrationTestBaseTestHook < FileTestHook
   def compile_file_content(r)
     "#{r.test}  #{r.extra}  #{r.content}"
   end
@@ -19,7 +19,7 @@ describe TestServer do
 
   context 'when test runner is implemented but no expectations' do
     before do
-      class TestHook < SampleTestHook
+      class TestHook < IntegrationTestBaseTestHook
       end
     end
     after do
@@ -61,19 +61,19 @@ describe TestServer do
     end
     context 'when feedback runner is implemented' do
       before do
-        class FeedbackRunnerHook < Hook
+        class FeedbackHook < Hook
         end
       end
 
       after do
-        drop_hook FeedbackRunnerHook
+        drop_hook FeedbackHook
       end
 
       it { expect(info[:feedback]).to be true }
 
       context 'when feedback is given' do
         before { allow_any_instance_of(TestHook).to receive(:run!).and_return(['ok', :passed]) }
-        before { allow_any_instance_of(FeedbackRunnerHook).to receive(:run!).and_return('Keep up the good work!') }
+        before { allow_any_instance_of(FeedbackHook).to receive(:run!).and_return('Keep up the good work!') }
         it { expect(result[:feedback]).to eq('Keep up the good work!') }
       end
     end
@@ -81,15 +81,15 @@ describe TestServer do
 
   context 'when expectations and test runner are implemented' do
     before do
-      class ExpectationsRunnerHook < Hook
+      class ExpectationsHook < Hook
       end
-      class TestHook < SampleTestHook
+      class TestHook < IntegrationTestBaseTestHook
       end
     end
 
     after do
       drop_hook TestHook
-      drop_hook ExpectationsRunnerHook
+      drop_hook ExpectationsHook
     end
 
     it { expect(info[:expectations]).to be true }
@@ -97,13 +97,13 @@ describe TestServer do
     context 'when both passed' do
       let(:expectation_results) { [{expectation: {binding: :foo, inspection: :HasUsage}, result: true}] }
       before { allow_any_instance_of(TestHook).to receive(:run!).and_return(['ok', :passed]) }
-      before { allow_any_instance_of(ExpectationsRunnerHook).to receive(:run!).and_return(expectation_results) }
+      before { allow_any_instance_of(ExpectationsHook).to receive(:run!).and_return(expectation_results) }
 
       it { expect(result).to eq({out: 'ok', exit: :passed, expectationResults: expectation_results}) }
     end
     context 'when expectations crash' do
       before { allow_any_instance_of(TestHook).to receive(:run!).and_return(['ok', :passed]) }
-      before { allow_any_instance_of(ExpectationsRunnerHook).to receive(:run!).and_raise('ups!') }
+      before { allow_any_instance_of(ExpectationsHook).to receive(:run!).and_raise('ups!') }
 
       it { expect(result[:exit]).to eq(:errored) }
       it { expect(result[:out]).to include('ups!') }
@@ -112,18 +112,18 @@ describe TestServer do
 
   context 'when there are no tests but expectations' do
     before do
-      class ExpectationsRunnerHook < Hook
+      class ExpectationsHook < Hook
       end
     end
 
     after do
-      drop_hook ExpectationsRunnerHook
+      drop_hook ExpectationsHook
     end
 
     let(:expectation_results) { [{expectation: {binding: :foo, inspection: :HasUsage}, result: true}] }
     let(:result) { server.test!('content' => 'foo', 'expectations' => [{binding: :foo, inspection: :HasUsage}]) }
 
-    before { allow_any_instance_of(ExpectationsRunnerHook).to receive(:run!).and_return(expectation_results) }
+    before { allow_any_instance_of(ExpectationsHook).to receive(:run!).and_return(expectation_results) }
 
     it { expect(result).to eq({out: '', exit: :passed, expectationResults: expectation_results}) }
   end
@@ -131,18 +131,18 @@ describe TestServer do
 
   context 'when request is implemented' do
     before do
-      class RequestValidatorHook < Hook
+      class ValidationHook < Hook
       end
     end
 
     after do
-      drop_hook RequestValidatorHook
+      drop_hook ValidationHook
     end
 
     it { expect(info[:secure]).to be true }
 
     context 'when validation fails' do
-      before { allow_any_instance_of(RequestValidatorHook).to receive(:validate!).and_raise(RequestValidationError.new('never use File.new')) }
+      before { allow_any_instance_of(ValidationHook).to receive(:validate!).and_raise(RequestValidationError.new('never use File.new')) }
       it { expect(result[:exit]).to eq(:aborted) }
       it { expect(result[:out]).to eq('never use File.new') }
     end

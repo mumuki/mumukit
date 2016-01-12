@@ -11,7 +11,7 @@ class Mumukit::TestServer
   end
 
   def info(url)
-    runtime.info.merge(runtime.metadata_publisher.metadata).merge(url: url)
+    runtime.info.merge(runtime.metadata_hook.metadata).merge(url: url)
   end
 
   def test!(raw_request)
@@ -42,7 +42,7 @@ class Mumukit::TestServer
   end
 
   def run_query!(request)
-    runtime.query_runner.run! request
+    runtime.query_hook.run! request
   end
 
   def run_tests!(request)
@@ -53,11 +53,11 @@ class Mumukit::TestServer
   end
 
   def run_expectations!(request)
-    request.expectations ? runtime.expectations_runner.run!(request) : []
+    request.expectations ? runtime.expectations_hook.run!(request) : []
   end
 
   def run_feedback!(request, results)
-    runtime.feedback_runner.run!(request, results)
+    runtime.feedback_hook.run!(request, results)
   end
 
   private
@@ -67,7 +67,7 @@ class Mumukit::TestServer
   end
 
   def validate_request!(request)
-    runtime.request_validator.validate! request
+    runtime.validation_hook.validate! request
   end
 
 

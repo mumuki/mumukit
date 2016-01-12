@@ -51,7 +51,7 @@ describe Mumukit::Runtime do
       drop_hook TestHook
     end
 
-    it { expect(runtime.hook_defined? :test).to be true}
+    it { expect(runtime.test_hook?).to be true}
     it { expect(runtime.info[:features][:sandboxed]).to be true }
   end
 

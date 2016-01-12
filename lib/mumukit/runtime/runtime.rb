@@ -8,6 +8,8 @@ class Mumukit::Runtime
   end
 
   def hook_defined?(hook_name)
+    hook_name.to_default_mumukit_hook_class rescue raise "Wrong hook #{hook_name}"
+
     Kernel.const_defined? hook_name.to_mumukit_hook_class_name
   end
 
