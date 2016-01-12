@@ -6,20 +6,15 @@ describe Mumukit::TestServer do
       include Mumukit::WithTempfile
       include Mumukit::WithCommandLine
 
-      def run!(request)
-        request.query
-        eval_query compile_query(request)
-      end
-
-      def compile_query(r)
-        "#{r.extra}\n#{r.content}\nprint('=> ' + (#{r.query}).inspect)"
-      end
-
-      def eval_query(r)
-        f = write_tempfile! r
+      def run!(compilation)
+        f = write_tempfile! compilation
         run_command "ruby < #{f.path}"
       ensure
         f.unlink
+      end
+
+      def compile(req)
+        "#{req.extra}\n#{req.content}\nprint('=> ' + (#{req.query}).inspect)"
       end
     end
   end

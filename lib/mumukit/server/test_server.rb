@@ -42,7 +42,8 @@ class Mumukit::TestServer
   end
 
   def run_query!(request)
-    runtime.query_hook.run! request
+    compilation = runtime.query_hook.compile(request)
+    runtime.query_hook.run!(compilation)
   end
 
   def run_tests!(request)
