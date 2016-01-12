@@ -1,15 +1,13 @@
 require_relative './spec_helper.rb'
 
-include Mumukit
-
-class IntegrationTestBaseTestHook < FileTestHook
+class IntegrationTestBaseTestHook < Mumukit::FileTestHook
   def compile_file_content(r)
     "#{r.test}  #{r.extra}  #{r.content}"
   end
 end
 
-describe TestServer do
-  let(:server) { TestServer.new }
+describe Mumukit::TestServer do
+  let(:server) { Mumukit::TestServer.new }
   let(:result) { server.test!({'content' => 'foo', 'test' => 'bar', 'expectations' => []}) }
   let(:info) { server.info('http://localhost:8080')[:features] }
 
@@ -61,7 +59,7 @@ describe TestServer do
     end
     context 'when feedback runner is implemented' do
       before do
-        class FeedbackHook < Hook
+        class FeedbackHook < Mumukit::Hook
         end
       end
 
@@ -81,7 +79,7 @@ describe TestServer do
 
   context 'when expectations and test runner are implemented' do
     before do
-      class ExpectationsHook < Hook
+      class ExpectationsHook < Mumukit::Hook
       end
       class TestHook < IntegrationTestBaseTestHook
       end
@@ -112,7 +110,7 @@ describe TestServer do
 
   context 'when there are no tests but expectations' do
     before do
-      class ExpectationsHook < Hook
+      class ExpectationsHook < Mumukit::Hook
       end
     end
 
@@ -131,7 +129,7 @@ describe TestServer do
 
   context 'when request is implemented' do
     before do
-      class ValidationHook < Hook
+      class ValidationHook < Mumukit::Hook
       end
     end
 
@@ -142,7 +140,9 @@ describe TestServer do
     it { expect(info[:secure]).to be true }
 
     context 'when validation fails' do
-      before { allow_any_instance_of(ValidationHook).to receive(:validate!).and_raise(RequestValidationError.new('never use File.new')) }
+      before do
+        allow_any_instance_of(ValidationHook).to receive(:validate!).and_raise(Mumukit::RequestValidationError.new('never use File.new'))
+      end
       it { expect(result[:exit]).to eq(:aborted) }
       it { expect(result[:out]).to eq('never use File.new') }
     end
