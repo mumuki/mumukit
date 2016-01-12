@@ -34,7 +34,7 @@ class Mumukit::Runtime
   end
 
   def default_hook_class(hook_name)
-    Kernel.const_get("Mumukit::Default#{hook_name}")
+    Kernel.const_get("Mumukit::Default#{hook_name}Hook")
   end
 
 end

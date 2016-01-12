@@ -2,7 +2,7 @@ require_relative './spec_helper.rb'
 
 include Mumukit
 
-class TestCompiler < FileTestCompiler
+class TestCompiler < FileTestCompilerHook
   def compile(r)
     "#{r.test}  #{r.extra}  #{r.content}"
   end

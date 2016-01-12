@@ -1,4 +1,4 @@
-class Mumukit::DefaultTestRunner < Mumukit::Hook
+class Mumukit::DefaultTestRunnerHook < Mumukit::Hook
   def run_compilation!(compilation)
     ['unimplemented', :aborted]
   end

@@ -1,5 +1,5 @@
 module Mumukit
-  class FileTestCompiler < Mumukit::Hook
+  class FileTestCompilerHook < Mumukit::Hook
     include Mumukit::WithTempfile
 
     def compile(request)

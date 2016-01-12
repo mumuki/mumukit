@@ -1,7 +1,7 @@
 require_relative './spec_helper'
 require 'ostruct'
 
-describe Mumukit::MashupTestCompiler do
+describe Mumukit::MashupTestCompilerHook do
   def req(test, extra, content)
     OpenStruct.new(test:test, extra:extra, content: content)
   end
@@ -31,7 +31,7 @@ end
 EOT
 
   describe '#compile' do
-    let(:compiler) { Mumukit::MashupTestCompiler.new(nil) }
+    let(:compiler) { Mumukit::MashupTestCompilerHook.new(nil) }
     it { expect(compiler.compile(req(true_test, '_false = false', true_submission))).to eq(compiled_test_submission) }
   end
 

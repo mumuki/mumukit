@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-class BaseTestRunner < Mumukit::FileTestRunner
+class BaseTestRunner < Mumukit::FileTestRunnerHook
   def run_test_command(path)
     "cat #{path}"
   end
@@ -24,7 +24,7 @@ class File
 end
 
 
-describe Mumukit::FileTestRunner do
+describe Mumukit::FileTestRunnerHook do
   context 'with embedded env' do
     let(:runner) { EmbeddedEnvTestRunner.new }
 
