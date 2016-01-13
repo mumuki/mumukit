@@ -6,15 +6,20 @@ module Mumukit::RuntimeInfo
         mumukit_version: Mumukit::VERSION,
         output_content_type: Mumukit.config.content_type,
         features: {
-            structured: Mumukit.config.structured,
-
             query: query_hook?,
             expectations: expectations_hook?,
             feedback: feedback_hook?,
             secure: validation_hook?,
 
-            sandboxed: [:test, :query].any? { |it| hook_includes?(it, Mumukit::Templates::WithIsolatedEnvironment) }
+            sandboxed: any_hook_include?([:test, :query], Mumukit::Templates::WithIsolatedEnvironment),
+            structured: any_hook_include?([:test], Mumukit::Templates::WithStructuredResults) || Mumukit.config.structured
         }
     }
+  end
+
+  private
+
+  def any_hook_include?(hooks, mixin)
+    hooks.any? { |it| hook_includes?(it, mixin) }
   end
 end

@@ -28,6 +28,12 @@ module Mumukit
       raise 'You need to implement this method'
     end
 
+    def self.structured(value=true)
+      if value
+        include Mumukit::Templates::WithStructuredResults
+      end
+    end
+
     def self.isolated(value=true)
       if value
         include Mumukit::Templates::WithIsolatedEnvironment
