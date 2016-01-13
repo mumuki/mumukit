@@ -1,5 +1,5 @@
 module Mumukit
-  module WithEmbeddedEnvironment
+  module Templates::WithEmbeddedEnvironment
     extend ActiveSupport::Concern
     included do
       include Mumukit::WithCommandLine

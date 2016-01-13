@@ -1,4 +1,4 @@
-class Mumukit::DefaultTestHook < Mumukit::Hook
+class Mumukit::Defaults::TestHook < Mumukit::Hook
   def compile(request)
     request
   end

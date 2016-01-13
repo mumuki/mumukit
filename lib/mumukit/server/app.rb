@@ -3,7 +3,7 @@ require 'yaml'
 require 'json'
 
 
-class Mumukit::TestServerApp < Sinatra::Base
+class Mumukit::Server::App < Sinatra::Base
   configure do
     set :mumuki_url, 'http://mumuki.io'
   end
@@ -21,7 +21,7 @@ class Mumukit::TestServerApp < Sinatra::Base
   end
 
   runtime_config = YAML.load_file(settings.config_filename) rescue nil
-  server = Mumukit::TestServer.new(runtime_config)
+  server = Mumukit::Server::TestServer.new(runtime_config)
 
   helpers do
     def parse_request

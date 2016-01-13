@@ -1,5 +1,5 @@
 module Mumukit
-  module WithMashupFileContent
+  module Templates::WithMashupFileContent
     def compile_file_content(request)
 <<EOF
 #{request.extra}

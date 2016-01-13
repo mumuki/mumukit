@@ -1,13 +1,13 @@
 require_relative './spec_helper.rb'
 
-class IntegrationTestBaseTestHook < Mumukit::FileRunnerHook
+class IntegrationTestBaseTestHook < Mumukit::Templates::FileHook
   def compile_file_content(r)
     "#{r.test}  #{r.extra}  #{r.content}"
   end
 end
 
-describe Mumukit::TestServer do
-  let(:server) { Mumukit::TestServer.new }
+describe Mumukit::Server::TestServer do
+  let(:server) { Mumukit::Server::TestServer.new }
   let(:result) { server.test!({'content' => 'foo', 'test' => 'bar', 'expectations' => []}) }
   let(:info) { server.info('http://localhost:8080')[:features] }
 

@@ -1,5 +1,5 @@
 module Mumukit
-  module WithIsolatedEnvironment
+  module Templates::WithIsolatedEnvironment
     def run_file!(file)
       env = Mumukit::IsolatedEnvironment.new
       env.configure!(file) { |filename| command_line(filename) }

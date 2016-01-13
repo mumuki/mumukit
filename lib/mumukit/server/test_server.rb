@@ -1,7 +1,7 @@
 require 'yaml'
 require 'ostruct'
 
-class Mumukit::TestServer
+class Mumukit::Server::TestServer
   attr_reader :runtime
 
   include Mumukit::WithContentType
@@ -24,7 +24,7 @@ class Mumukit::TestServer
 
       feedback = run_feedback! r, results
 
-      Mumukit::ResponseBuilder.build do
+      Mumukit::Server::ResponseBuilder.build do
         add_test_results(test_results)
         add_expectation_results(expectation_results)
         add_feedback(feedback)
@@ -35,7 +35,7 @@ class Mumukit::TestServer
   def query!(raw_request)
     respond_to(raw_request) do |r|
       results = run_query!(r)
-      Mumukit::ResponseBuilder.build do
+      Mumukit::Server::ResponseBuilder.build do
         add_query_results(results)
       end
     end

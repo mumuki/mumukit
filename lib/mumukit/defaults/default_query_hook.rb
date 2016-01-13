@@ -1,4 +1,4 @@
-class Mumukit::DefaultQueryHook < Mumukit::Hook
+class Mumukit::Defaults::QueryHook < Mumukit::Hook
   def compile(request)
     request
   end

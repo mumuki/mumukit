@@ -13,7 +13,7 @@ module Mumukit::RuntimeInfo
             feedback: feedback_hook?,
             secure: validation_hook?,
 
-            sandboxed: [:test, :query].any? { |it| hook_includes?(it, Mumukit::WithIsolatedEnvironment) }
+            sandboxed: [:test, :query].any? { |it| hook_includes?(it, Mumukit::Templates::WithIsolatedEnvironment) }
         }
     }
   end

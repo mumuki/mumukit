@@ -1,7 +1,7 @@
 require_relative './spec_helper'
 require 'ostruct'
 
-describe Mumukit::WithMashupFileContent do
+describe Mumukit::Templates::WithMashupFileContent do
   def req(test, extra, content)
     OpenStruct.new(test:test, extra:extra, content: content)
   end
@@ -30,8 +30,8 @@ end
 
 EOT
 
-  class SampleMashupTestHook < Mumukit::FileRunnerHook
-    include Mumukit::WithMashupFileContent
+  class SampleMashupTestHook < Mumukit::Templates::FileHook
+    include Mumukit::Templates::WithMashupFileContent
   end
 
   describe '#compile' do

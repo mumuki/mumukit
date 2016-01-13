@@ -1,4 +1,4 @@
-class Mumukit::DefaultMetadataHook < Mumukit::Hook
+class Mumukit::Defaults::MetadataHook < Mumukit::Hook
   def metadata
     {}
   end

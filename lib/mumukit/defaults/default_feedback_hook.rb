@@ -1,4 +1,4 @@
-class Mumukit::DefaultFeedbackHook < Mumukit::Hook
+class Mumukit::Defaults::FeedbackHook < Mumukit::Hook
   def run!(request, results)
     ''
   end

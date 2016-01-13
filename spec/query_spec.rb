@@ -1,9 +1,9 @@
 require_relative './spec_helper'
 
-describe Mumukit::TestServer do
+describe Mumukit::Server::TestServer do
   before do
-    class QueryHook < Mumukit::FileRunnerHook
-      include Mumukit::WithEmbeddedEnvironment
+    class QueryHook < Mumukit::Templates::FileHook
+      include Mumukit::Templates::WithEmbeddedEnvironment
 
       def command_line(filename)
         "ruby < #{filename}"
@@ -19,7 +19,7 @@ describe Mumukit::TestServer do
     drop_hook QueryHook
   end
 
-  let(:server) { Mumukit::TestServer.new(nil) }
+  let(:server) { Mumukit::Server::TestServer.new(nil) }
 
   it { expect(server.info('http://localhost')[:features][:query]).to be true }
 

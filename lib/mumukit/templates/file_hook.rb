@@ -1,5 +1,5 @@
 module Mumukit
-  class FileRunnerHook < Mumukit::Hook
+  class Templates::FileHook < Mumukit::Hook
     include Mumukit::WithTempfile
 
     def compile(request)
