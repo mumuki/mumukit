@@ -2,18 +2,14 @@ require_relative './spec_helper'
 
 describe Mumukit::TestServer do
   before do
-    class QueryHook < Mumukit::Hook
-      include Mumukit::WithTempfile
-      include Mumukit::WithCommandLine
+    class QueryHook < Mumukit::FileRunnerHook
+      include Mumukit::WithEmbeddedEnvironment
 
-      def run!(compilation)
-        f = write_tempfile! compilation
-        run_command "ruby < #{f.path}"
-      ensure
-        f.unlink
+      def command_line(filename)
+        "ruby < #{filename}"
       end
 
-      def compile(req)
+      def compile_file_content(req)
         "#{req.extra}\n#{req.content}\nprint('=> ' + (#{req.query}).inspect)"
       end
     end

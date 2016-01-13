@@ -1,6 +1,6 @@
 require_relative './spec_helper.rb'
 
-class IntegrationTestBaseTestHook < Mumukit::FileTestHook
+class IntegrationTestBaseTestHook < Mumukit::FileRunnerHook
   def compile_file_content(r)
     "#{r.test}  #{r.extra}  #{r.content}"
   end

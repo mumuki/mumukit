@@ -1,5 +1,5 @@
 module Mumukit
-  class FileTestHook < Mumukit::Hook
+  class FileRunnerHook < Mumukit::Hook
     include Mumukit::WithTempfile
 
     def compile(request)
@@ -7,7 +7,7 @@ module Mumukit
     end
 
     def run!(file)
-      post_process_file(file, *run_test_file!(file))
+      post_process_file(file, *run_file!(file))
     ensure
       file.unlink
     end
@@ -20,11 +20,11 @@ module Mumukit
       raise 'You need to implement this method'
     end
 
-    def run_test_file!(*args)
+    def run_file!(*args)
       raise 'Wrong configuration. You must include an environment mixin'
     end
 
-    def run_test_command(filename)
+    def command_line(filename)
       raise 'You need to implement this method'
     end
   end

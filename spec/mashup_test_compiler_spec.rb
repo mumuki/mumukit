@@ -30,7 +30,7 @@ end
 
 EOT
 
-  class SampleMashupTestHook < Mumukit::FileTestHook
+  class SampleMashupTestHook < Mumukit::FileRunnerHook
     include Mumukit::WithMashupFileContent
   end
 
