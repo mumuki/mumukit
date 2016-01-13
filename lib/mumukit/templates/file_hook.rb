@@ -16,17 +16,10 @@ module Mumukit
       [result, status]
     end
 
-    def compile_file_content(request)
-      raise 'You need to implement this method'
-    end
+    required :compile_file_content
+    required :command_line
 
-    def run_file!(*args)
-      raise 'Wrong configuration. You must include an environment mixin'
-    end
-
-    def command_line(filename)
-      raise 'You need to implement this method'
-    end
+    required :run_file!, 'Wrong configuration. You must include an environment mixin'
 
     def self.structured(value=true)
       if value
