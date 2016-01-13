@@ -3,7 +3,7 @@ require_relative './spec_helper'
 describe Mumukit::Server::TestServer do
   before do
     class QueryHook < Mumukit::Templates::FileHook
-      include Mumukit::Templates::WithEmbeddedEnvironment
+      isolated false
 
       def command_line(filename)
         "ruby < #{filename}"

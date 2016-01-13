@@ -7,11 +7,11 @@ class BaseTestRunner < Mumukit::Templates::FileHook
 end
 
 class EmbeddedEnvTestRunner < BaseTestRunner
-  include Mumukit::Templates::WithEmbeddedEnvironment
+  isolated false
 end
 
 class IsolatedEnvTestRunner < BaseTestRunner
-  include Mumukit::Templates::WithIsolatedEnvironment
+  isolated true
 end
 
 Mumukit.configure do |c|
@@ -51,7 +51,7 @@ describe Mumukit::Runtime do
       drop_hook TestHook
     end
 
-    it { expect(runtime.test_hook?).to be true}
+    it { expect(runtime.test_hook?).to be true }
     it { expect(runtime.info[:features][:sandboxed]).to be true }
   end
 

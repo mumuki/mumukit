@@ -27,5 +27,23 @@ module Mumukit
     def command_line(filename)
       raise 'You need to implement this method'
     end
+
+    def self.isolated(value=true)
+      if value
+        include Mumukit::Templates::WithIsolatedEnvironment
+      else
+        include Mumukit::Templates::WithEmbeddedEnvironment
+      end
+    end
+
+    def self.mashup(*args)
+      include Mumukit::Templates::WithMashupFileContent
+
+      args = args.present? ? args : [:extra, :content, :test]
+
+      if args
+        define_method(:mashup_fields) { args }
+      end
+    end
   end
 end
