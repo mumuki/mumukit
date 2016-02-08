@@ -2,7 +2,7 @@ module Mumukit::RuntimeInfo
   def info
     {
         name: Mumukit.config.runner_name,
-        version: Mumukit.config.runner_version,
+        version: (File.read('version') rescue 'master'),
         mumukit_version: Mumukit::VERSION,
         output_content_type: Mumukit.config.content_type,
         features: {
