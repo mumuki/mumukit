@@ -3,6 +3,8 @@ module Mumukit::RuntimeInfo
     {
         name: Mumukit.config.runner_name,
         version: (File.read('version') rescue 'master'),
+        escualo_base_version: ENV['ESCUALO_BASE_VERSION'],
+        escualo_service_version: ENV['ESCUALO_SERVICE_VERSION'],
         mumukit_version: Mumukit::VERSION,
         output_content_type: Mumukit.config.content_type,
         features: {
