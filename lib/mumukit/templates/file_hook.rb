@@ -7,7 +7,8 @@ module Mumukit
     end
 
     def run!(file)
-      post_process_file(file, *run_file!(file))
+      result, status = run_file!(file)
+      post_process_file(file, result.force_encoding('UTF-8'), status)
     ensure
       file.unlink
     end
