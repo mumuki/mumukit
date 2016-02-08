@@ -8,7 +8,9 @@ class Mumukit::Runtime
   end
 
   def hook_defined?(hook_name)
-    Kernel.const_defined?(hook_name)
+    hook_name.to_default_mumukit_hook_class rescue raise "Wrong hook #{hook_name}"
+
+    Kernel.const_defined? hook_name.to_mumukit_hook_class_name
   end
 
   def hook_includes?(hook_name, mixin)
@@ -22,19 +24,12 @@ class Mumukit::Runtime
   private
 
   def hook_class(hook_name)
-    @hook_classes[hook_name] ||= hook_class_or(hook_name, default_hook_class(hook_name))
+    @hook_classes[hook_name] ||=
+        if hook_defined? hook_name
+          hook_name.to_mumukit_hook_class
+        else
+          hook_name.to_default_mumukit_hook_class
+        end
   end
-
-  def hook_class_or(hook_name, default_hook_class)
-    if hook_defined? hook_name
-      Kernel.const_get(hook_name)
-    else
-      default_hook_class
-    end
-  end
-
-  def default_hook_class(hook_name)
-    Kernel.const_get("Mumukit::Default#{hook_name}")
-  end
-
 end
+

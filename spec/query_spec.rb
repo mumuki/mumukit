@@ -1,34 +1,25 @@
 require_relative './spec_helper'
 
-describe Mumukit::TestServer do
+describe Mumukit::Server::TestServer do
   before do
-    class QueryRunner < Mumukit::Hook
-      include Mumukit::WithTempfile
-      include Mumukit::WithCommandLine
+    class QueryHook < Mumukit::Templates::FileHook
+      isolated false
 
-      def run_query!(request)
-        request.query
-        eval_query compile_query(request)
+      def command_line(filename)
+        "ruby < #{filename}"
       end
 
-      def compile_query(r)
-        "#{r.extra}\n#{r.content}\nprint('=> ' + (#{r.query}).inspect)"
-      end
-
-      def eval_query(r)
-        f = write_tempfile! r
-        run_command "ruby < #{f.path}"
-      ensure
-        f.unlink
+      def compile_file_content(req)
+        "#{req.extra}\n#{req.content}\nprint('=> ' + (#{req.query}).inspect)"
       end
     end
   end
 
   after do
-    drop_hook QueryRunner
+    drop_hook QueryHook
   end
 
-  let(:server) { Mumukit::TestServer.new(nil) }
+  let(:server) { Mumukit::Server::TestServer.new(nil) }
 
   it { expect(server.info('http://localhost')[:features][:query]).to be true }
 

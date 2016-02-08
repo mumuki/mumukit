@@ -1,7 +1,7 @@
 require 'yaml'
 require 'ostruct'
 
-class Mumukit::TestServer
+class Mumukit::Server::TestServer
   attr_reader :runtime
 
   include Mumukit::WithContentType
@@ -11,7 +11,7 @@ class Mumukit::TestServer
   end
 
   def info(url)
-    runtime.info.merge(runtime.metadata_publisher.metadata).merge(url: url)
+    runtime.info.merge(runtime.metadata_hook.metadata).merge(url: url)
   end
 
   def test!(raw_request)
@@ -24,7 +24,7 @@ class Mumukit::TestServer
 
       feedback = run_feedback! r, results
 
-      Mumukit::ResponseBuilder.build do
+      Mumukit::Server::ResponseBuilder.build do
         add_test_results(test_results)
         add_expectation_results(expectation_results)
         add_feedback(feedback)
@@ -35,29 +35,30 @@ class Mumukit::TestServer
   def query!(raw_request)
     respond_to(raw_request) do |r|
       results = run_query!(r)
-      Mumukit::ResponseBuilder.build do
+      Mumukit::Server::ResponseBuilder.build do
         add_query_results(results)
       end
     end
   end
 
   def run_query!(request)
-    runtime.query_runner.run_query! request
+    compilation = runtime.query_hook.compile(request)
+    runtime.query_hook.run!(compilation)
   end
 
   def run_tests!(request)
     return ['', :passed] if request.test.blank?
 
-    compilation = runtime.test_compiler.create_compilation!(request)
-    runtime.test_runner.run_compilation!(compilation)
+    compilation = runtime.test_hook.compile(request)
+    runtime.test_hook.run!(compilation)
   end
 
   def run_expectations!(request)
-    request.expectations ? runtime.expectations_runner.run_expectations!(request) : []
+    request.expectations ? runtime.expectations_hook.run!(request) : []
   end
 
   def run_feedback!(request, results)
-    runtime.feedback_runner.run_feedback!(request, results)
+    runtime.feedback_hook.run!(request, results)
   end
 
   private
@@ -67,7 +68,7 @@ class Mumukit::TestServer
   end
 
   def validate_request!(request)
-    runtime.request_validator.validate! request
+    runtime.validation_hook.validate! request
   end
 
 

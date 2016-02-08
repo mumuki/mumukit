@@ -1,17 +1,17 @@
 require 'spec_helper'
 
-class BaseTestRunner < Mumukit::FileTestRunner
-  def run_test_command(path)
+class BaseTestRunner < Mumukit::Templates::FileHook
+  def command_line(path)
     "cat #{path}"
   end
 end
 
 class EmbeddedEnvTestRunner < BaseTestRunner
-  include Mumukit::WithEmbeddedEnvironment
+  isolated false
 end
 
 class IsolatedEnvTestRunner < BaseTestRunner
-  include Mumukit::WithIsolatedEnvironment
+  isolated true
 end
 
 Mumukit.configure do |c|
@@ -24,17 +24,17 @@ class File
 end
 
 
-describe Mumukit::FileTestRunner do
+describe Mumukit::Templates::FileHook do
   context 'with embedded env' do
     let(:runner) { EmbeddedEnvTestRunner.new }
 
-    it { expect(runner.run_compilation!(File.new 'spec/data/data.txt')).to eq ["lorem impsum", :passed] }
+    it { expect(runner.run!(File.new 'spec/data/data.txt')).to eq ["lorem impsum", :passed] }
   end
 
   context 'with isolated env' do
     let(:runner) { IsolatedEnvTestRunner.new }
 
-    it { expect(runner.run_compilation!(File.new 'spec/data/data.txt')).to eq ["lorem impsum\n", :passed] }
+    it { expect(runner.run!(File.new 'spec/data/data.txt')).to eq ["lorem impsum\n", :passed] }
   end
 end
 
@@ -43,25 +43,26 @@ describe Mumukit::Runtime do
 
   context 'when test runner is isolated' do
     before do
-      class TestRunner < IsolatedEnvTestRunner
+      class TestHook < IsolatedEnvTestRunner
       end
     end
 
     after do
-      drop_hook TestRunner
+      drop_hook TestHook
     end
 
+    it { expect(runtime.test_hook?).to be true }
     it { expect(runtime.info[:features][:sandboxed]).to be true }
   end
 
   context 'when test runner is embedded' do
     before do
-      class TestRunner < EmbeddedEnvTestRunner
+      class TestHook < EmbeddedEnvTestRunner
       end
     end
 
     after do
-      drop_hook TestRunner
+      drop_hook TestHook
     end
 
     it { expect(runtime.info[:features][:sandboxed]).to be false }
