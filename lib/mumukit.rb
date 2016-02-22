@@ -29,11 +29,12 @@ Mumukit.configure do |config|
   config.command_size_limit = 1024
 end
 
+require 'mumukit/content_type'
+
 require_relative 'mumukit/with_tempfile'
 require_relative 'mumukit/with_content_type'
 require_relative 'mumukit/with_command_line'
 require_relative 'mumukit/version'
-require_relative 'mumukit/content_type'
 require_relative 'mumukit/hook'
 require_relative 'mumukit/runtime'
 require_relative 'mumukit/isolated_environment'
