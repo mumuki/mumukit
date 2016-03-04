@@ -5,7 +5,8 @@ module Mumukit
     required :language
 
     def run!(request)
-      run_command "#{mulang_path} #{mulang_json request[:content], request[:expectations]}"
+      result = run_command "#{mulang_path} #{mulang_json request[:content], request[:expectations]}"
+      JSON.parse(result)['results']
     end
 
     def transform_content(content)

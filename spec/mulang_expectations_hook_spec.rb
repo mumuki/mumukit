@@ -2,7 +2,8 @@ require_relative './spec_helper'
 
 describe Mumukit::Templates::MulangExpectationsHook do
   let(:content) { 'x = 1' }
-  let(:expectations) { [{ subject: ['x'], transitive: false, negated: false, verb: 'uses', object: { tag: 'Anyone', contents: [] } }] }
+  let(:usesX) { { subject: ['x'], transitive: false, negated: false, verb: 'uses', object: { tag: 'Anyone', contents: [] } } }
+  let(:expectations) { [usesX] }
 
   after do
     drop_hook ExpectationsHook
@@ -20,6 +21,22 @@ describe Mumukit::Templates::MulangExpectationsHook do
       end
 
       it { expect { hook.run! request }.to raise_error(Exception, 'You need to implement method language') }
+    end
+
+    context 'transforms the results json into a hash' do
+      before do
+        class ExpectationsHook < Mumukit::Templates::MulangExpectationsHook
+          def language
+            'Haskell'
+          end
+        end
+      end
+
+      before do
+        allow_any_instance_of(ExpectationsHook).to receive(:run_command).and_return('{"results":[{"result":false,"expectation":{"subject":["x"],"transitive":false,"negated":false,"object":{"tag":"Anyone","contents":[]},"verb":"uses"}}],"smells":[]}')
+      end
+
+      it { expect(hook.run! request).to eq([{ expectation: usesX, result: false }.deep_stringify_keys]) }
     end
   end
 
