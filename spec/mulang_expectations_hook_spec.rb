@@ -20,7 +20,7 @@ describe Mumukit::Templates::MulangExpectationsHook do
         end
       end
 
-      it { expect { hook.run! request }.to raise_error(Exception, 'You need to implement method language') }
+      it { expect { hook.run! request }.to raise_error(Exception, 'You have to provide a Mulang-compatible language in order to use this hook') }
     end
 
     context 'transforms the results json into a hash' do

@@ -2,7 +2,7 @@ module Mumukit
   class Templates::MulangExpectationsHook < Mumukit::Hook
     include Mumukit::WithCommandLine
 
-    required :language
+    required :language, 'You have to provide a Mulang-compatible language in order to use this hook'
 
     def run!(request)
       result = run_command "#{mulang_path} #{mulang_json request[:content], request[:expectations]}"
