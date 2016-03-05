@@ -6,7 +6,7 @@ module Mumukit
 
     def run!(request)
       result = run_command "#{mulang_path} '#{mulang_input(request[:content], request[:expectations]).to_json}'"
-      make_response JSON.parse(result)
+      make_response JSON.parse(result[0])
     end
 
     def transform_content(content)

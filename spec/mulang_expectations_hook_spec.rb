@@ -12,6 +12,10 @@ describe Mumukit::Templates::MulangExpectationsHook do
   let(:hook) { ExpectationsHook.new('mulang_path' => 'mulang') }
 
   context '#run!' do
+    def mock_mulang_output(output)
+      allow_any_instance_of(ExpectationsHook).to receive(:run_command).and_return([output, :passed])
+    end
+
     let(:request) { { content: content, expectations: expectations } }
 
     context 'when language is not defined' do
@@ -33,7 +37,7 @@ describe Mumukit::Templates::MulangExpectationsHook do
       end
 
       before do
-        allow_any_instance_of(ExpectationsHook).to receive(:run_command).and_return('{"results":[{"result":false,"expectation":{"subject":["x"],"transitive":false,"negated":false,"object":{"tag":"Anyone","contents":[]},"verb":"uses"}}],"smells":[]}')
+        mock_mulang_output '{"results":[{"result":false,"expectation":{"subject":["x"],"transitive":false,"negated":false,"object":{"tag":"Anyone","contents":[]},"verb":"uses"}}],"smells":[]}'
       end
 
       it { expect(hook.run! request).to eq([{ 'expectation' => usesX, 'result' => false }]) }
@@ -51,7 +55,7 @@ describe Mumukit::Templates::MulangExpectationsHook do
       end
 
       before do
-        allow_any_instance_of(ExpectationsHook).to receive(:run_command).and_return('{"results":[{"result":false,"expectation":{"subject":["x"],"transitive":false,"negated":false,"object":{"tag":"Anyone","contents":[]},"verb":"uses"}}],"smells":[{"subject":["identidad"],"transitive":false,"negated":true,"object":{"tag":"Anyone","contents":[]},"verb":"HasRedundantLambda"}]}')
+        mock_mulang_output '{"results":[{"result":false,"expectation":{"subject":["x"],"transitive":false,"negated":false,"object":{"tag":"Anyone","contents":[]},"verb":"uses"}}],"smells":[{"subject":["identidad"],"transitive":false,"negated":true,"object":{"tag":"Anyone","contents":[]},"verb":"HasRedundantLambda"}]}'
       end
 
       let(:hasRedundantLambda) { {subject: ['identidad'], transitive: false, negated: true, object: {tag: 'Anyone', contents: [] }, verb: 'HasRedundantLambda'}.deep_stringify_keys }
