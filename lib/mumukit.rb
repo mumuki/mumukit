@@ -25,6 +25,7 @@ Mumukit.configure do |config|
   config.limit_script = File.join(pwd, '..', 'bin', 'limit')
   config.content_type = :plain
   config.structured = false
+  config.mulang_path = 'mulang'
   config.command_time_limit = 4
   config.command_size_limit = 1024
 end
