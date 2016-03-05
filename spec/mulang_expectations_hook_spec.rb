@@ -60,7 +60,7 @@ describe Mumukit::Templates::MulangExpectationsHook do
     end
   end
 
-  context '#mulang_json' do
+  context '#mulang_input' do
     context 'with defaults' do
       before do
         class ExpectationsHook < Mumukit::Templates::MulangExpectationsHook
@@ -70,7 +70,7 @@ describe Mumukit::Templates::MulangExpectationsHook do
         end
       end
 
-      it { expect(hook.mulang_json content, expectations).to include(code: { content: 'x = 1', language: 'Haskell' }) }
+      it { expect(hook.mulang_input content, expectations).to include(code: { content: 'x = 1', language: 'Haskell' }) }
     end
 
     context 'when transform_content is provided' do
@@ -86,7 +86,7 @@ describe Mumukit::Templates::MulangExpectationsHook do
         end
       end
 
-      it { expect(hook.mulang_json content, expectations).to include(code: { content: '// x = 1 //', language: 'Haskell' }) }
+      it { expect(hook.mulang_input content, expectations).to include(code: { content: '// x = 1 //', language: 'Haskell' }) }
     end
   end
 end

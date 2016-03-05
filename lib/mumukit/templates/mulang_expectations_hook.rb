@@ -5,7 +5,7 @@ module Mumukit
     required :language, 'You have to provide a Mulang-compatible language in order to use this hook'
 
     def run!(request)
-      result = run_command "#{mulang_path} #{mulang_json request[:content], request[:expectations]}"
+      result = run_command "#{mulang_path} '#{mulang_input(request[:content], request[:expectations]).to_json}'"
       make_response JSON.parse(result)
     end
 
@@ -13,7 +13,7 @@ module Mumukit
       content
     end
 
-    def mulang_json(content, expectations)
+    def mulang_input(content, expectations)
       {
         expectations: expectations,
         code: { content: transform_content(content), language: language}
