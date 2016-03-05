@@ -9,7 +9,30 @@ describe Mumukit::Templates::MulangExpectationsHook do
     drop_hook ExpectationsHook
   end
 
-  let(:hook) { ExpectationsHook.new('mulang_path' => 'mulang') }
+  let(:hook) { ExpectationsHook.new('mulang_path' => './bin/mulang') }
+
+  context 'integration' do
+    before do
+      class ExpectationsHook < Mumukit::Templates::MulangExpectationsHook
+        include_smells true
+
+        def language
+          'Haskell'
+        end
+      end
+    end
+
+    let(:content) { 'f x = f x' }
+    let(:declaresWithArity1) { {subject:['f'],transitive:false,negated:false,object:{tag:'Anyone',contents:[]},verb:'declaresWithArity1'}.deep_stringify_keys }
+    let(:redundantParameterSmell) { {subject:['f'],transitive:false,negated:true,object:{tag:'Anyone',contents:[]},verb:'HasRedundantParameter'}.deep_stringify_keys }
+    let(:request) { { content: content, expectations: [declaresWithArity1] } }
+
+    let(:result) { hook.run! request }
+
+    it { expect(result.length).to eq 2 }
+    it { expect(result).to include({ 'expectation' => declaresWithArity1, 'result' => true }) }
+    it { expect(result).to include({ 'expectation' => redundantParameterSmell, 'result' => false }) }
+  end
 
   context '#run!' do
     def mock_mulang_output(output)
