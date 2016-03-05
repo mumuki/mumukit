@@ -20,8 +20,8 @@ module Mumukit
       }
     end
 
-    def make_response(mulang_response)
-      mulang_response['results']
+    def make_response(mulang_output)
+      mulang_output['results']
     end
 
     def self.include_smells(value=true)
