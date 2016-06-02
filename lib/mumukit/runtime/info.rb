@@ -12,6 +12,7 @@ module Mumukit::RuntimeInfo
             expectations: expectations_hook?,
             feedback: feedback_hook?,
             secure: validation_hook?,
+            stateful: Mumukit.config.stateful,
 
             sandboxed: any_hook_include?([:test, :query], Mumukit::Templates::WithIsolatedEnvironment),
             structured: any_hook_include?([:test], Mumukit::Templates::WithStructuredResults) || Mumukit.config.structured
