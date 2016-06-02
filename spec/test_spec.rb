@@ -95,12 +95,14 @@ describe Mumukit::Server::TestServer do
     context 'when both passed' do
       let(:expectation_results) { [{expectation: {binding: :foo, inspection: :HasUsage}, result: true}] }
       before { allow_any_instance_of(TestHook).to receive(:run!).and_return(['ok', :passed]) }
+      before { allow_any_instance_of(ExpectationsHook).to receive(:compile) }
       before { allow_any_instance_of(ExpectationsHook).to receive(:run!).and_return(expectation_results) }
 
       it { expect(result).to eq({out: 'ok', exit: :passed, expectationResults: expectation_results}) }
     end
     context 'when expectations crash' do
       before { allow_any_instance_of(TestHook).to receive(:run!).and_return(['ok', :passed]) }
+      before { allow_any_instance_of(ExpectationsHook).to receive(:compile) }
       before { allow_any_instance_of(ExpectationsHook).to receive(:run!).and_raise('ups!') }
 
       it { expect(result[:exit]).to eq(:errored) }
@@ -121,6 +123,7 @@ describe Mumukit::Server::TestServer do
     let(:expectation_results) { [{expectation: {binding: :foo, inspection: :HasUsage}, result: true}] }
     let(:result) { server.test!('content' => 'foo', 'expectations' => [{binding: :foo, inspection: :HasUsage}]) }
 
+    before { allow_any_instance_of(ExpectationsHook).to receive(:compile) }
     before { allow_any_instance_of(ExpectationsHook).to receive(:run!).and_return(expectation_results) }
 
     it { expect(result).to eq({out: '', exit: :passed, expectationResults: expectation_results}) }

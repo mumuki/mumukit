@@ -42,19 +42,21 @@ class Mumukit::Server::TestServer
   end
 
   def run_query!(request)
-    compilation = runtime.query_hook.compile(request)
-    runtime.query_hook.run!(compilation)
+    compile_and_run runtime.query_hook, request
   end
 
   def run_tests!(request)
     return ['', :passed] if request.test.blank?
 
-    compilation = runtime.test_hook.compile(request)
-    runtime.test_hook.run!(compilation)
+    compile_and_run runtime.test_hook, request
   end
 
   def run_expectations!(request)
-    request.expectations ? runtime.expectations_hook.run!(request) : []
+    if request.expectations
+      compile_and_run runtime.expectations_hook, request
+    else
+      []
+    end
   end
 
   def run_feedback!(request, results)
@@ -62,6 +64,11 @@ class Mumukit::Server::TestServer
   end
 
   private
+
+  def compile_and_run(hook, request)
+    compilation = hook.compile(request)
+    hook.run!(compilation)
+  end
 
   def parse_request(request)
     OpenStruct.new(request).tap { |r| validate_request! r }
