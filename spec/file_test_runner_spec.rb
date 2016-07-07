@@ -14,6 +14,7 @@ class IsolatedEnvTestRunner < BaseTestRunner
   isolated true
 end
 
+Mumukit.runner_name = 'demo'
 Mumukit.configure do |c|
   c.docker_image = 'ubuntu'
 end
@@ -43,12 +44,12 @@ describe Mumukit::Runtime do
 
   context 'when test runner is isolated' do
     before do
-      class TestHook < IsolatedEnvTestRunner
+      class DemoTestHook < IsolatedEnvTestRunner
       end
     end
 
     after do
-      drop_hook TestHook
+      drop_hook DemoTestHook
     end
 
     it { expect(runtime.test_hook?).to be true }
@@ -57,12 +58,12 @@ describe Mumukit::Runtime do
 
   context 'when test runner is embedded' do
     before do
-      class TestHook < EmbeddedEnvTestRunner
+      class DemoTestHook < EmbeddedEnvTestRunner
       end
     end
 
     after do
-      drop_hook TestHook
+      drop_hook DemoTestHook
     end
 
     it { expect(runtime.info[:features][:sandboxed]).to be false }

@@ -11,17 +11,43 @@ I18n.load_path += Dir[File.join(pwd, 'locales', '*.yml')]
 I18n.backend.load_translations
 
 module Mumukit
-  def self.configure
-    @config ||= OpenStruct.new
-    yield @config
+  def self.current_runner=(runner)
+    @current_runner = runner
+  end
+
+  def self.current_runner
+    raise "no runner selected. Did you forget to set current runner's name?" unless @current_runner
+    @current_runner
+  end
+
+  def self.runner_name=(name)
+    self.current_runner = Mumukit::Runner.new(name)
+  end
+
+  def self.runner_name
+    current_runner.name
+  end
+
+  def self.prefix
+    current_runner.prefix
+  end
+
+  def self.configure(&block)
+    current_runner.configure(&block)
+  end
+
+  def self.configure_defaults(&block)
+    Mumukit::Runner.configure_defaults(&block)
   end
 
   def self.config
-    @config
+    current_runner.config
   end
 end
 
-Mumukit.configure do |config|
+require_relative 'mumukit/runner'
+
+Mumukit.configure_defaults do |config|
   config.limit_script = File.join(pwd, '..', 'bin', 'limit')
   config.content_type = :plain
   config.structured = false

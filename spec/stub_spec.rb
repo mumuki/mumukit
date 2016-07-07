@@ -2,10 +2,10 @@ require_relative './spec_helper.rb'
 
 describe Mumukit::Hook do
 
-  class TestStub < Mumukit::Hook
+  class DemoTestStub < Mumukit::Hook
   end
 
-  let(:an_stub) { TestStub.new(foo: 'bar') }
+  let(:an_stub) { DemoTestStub.new(foo: 'bar') }
 
   it { expect(an_stub.foo).to eq 'bar' }
   it { expect { an_stub.baz }.to raise_error(NoMethodError) }

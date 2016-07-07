@@ -6,14 +6,14 @@ describe Mumukit::Templates::MulangExpectationsHook do
   let(:expectations) { [usesX] }
 
   after do
-    drop_hook ExpectationsHook
+    drop_hook DemoExpectationsHook
   end
 
-  let(:hook) { ExpectationsHook.new('mulang_path' => './bin/mulang') }
+  let(:hook) { DemoExpectationsHook.new('mulang_path' => './bin/mulang') }
 
   context 'integration' do
     before do
-      class ExpectationsHook < Mumukit::Templates::MulangExpectationsHook
+      class DemoExpectationsHook < Mumukit::Templates::MulangExpectationsHook
         include_smells true
 
         def language
@@ -36,14 +36,14 @@ describe Mumukit::Templates::MulangExpectationsHook do
 
   context '#run!' do
     def mock_mulang_output(output)
-      allow_any_instance_of(ExpectationsHook).to receive(:run_command).and_return([output, :passed])
+      allow_any_instance_of(DemoExpectationsHook).to receive(:run_command).and_return([output, :passed])
     end
 
     let(:request) { { content: content, expectations: expectations } }
 
     context 'when language is not defined' do
       before do
-        class ExpectationsHook < Mumukit::Templates::MulangExpectationsHook
+        class DemoExpectationsHook < Mumukit::Templates::MulangExpectationsHook
         end
       end
 
@@ -52,7 +52,7 @@ describe Mumukit::Templates::MulangExpectationsHook do
 
     context 'transforms the results json into a hash' do
       before do
-        class ExpectationsHook < Mumukit::Templates::MulangExpectationsHook
+        class DemoExpectationsHook < Mumukit::Templates::MulangExpectationsHook
           def language
             'Haskell'
           end
@@ -68,7 +68,7 @@ describe Mumukit::Templates::MulangExpectationsHook do
 
     context 'when smells are enabled' do
       before do
-        class ExpectationsHook < Mumukit::Templates::MulangExpectationsHook
+        class DemoExpectationsHook < Mumukit::Templates::MulangExpectationsHook
           include_smells true
 
           def language
@@ -90,7 +90,7 @@ describe Mumukit::Templates::MulangExpectationsHook do
   context '#mulang_input' do
     context 'with defaults' do
       before do
-        class ExpectationsHook < Mumukit::Templates::MulangExpectationsHook
+        class DemoExpectationsHook < Mumukit::Templates::MulangExpectationsHook
           def language
             'Haskell'
           end
@@ -102,7 +102,7 @@ describe Mumukit::Templates::MulangExpectationsHook do
 
     context 'when transform_content is provided' do
       before do
-        class ExpectationsHook < Mumukit::Templates::MulangExpectationsHook
+        class DemoExpectationsHook < Mumukit::Templates::MulangExpectationsHook
           def language
             'Haskell'
           end
