@@ -2,7 +2,7 @@ require_relative './spec_helper'
 
 describe Mumukit::Server::TestServer do
   before do
-    class QueryHook < Mumukit::Templates::FileHook
+    class DemoQueryHook < Mumukit::Templates::FileHook
       isolated false
 
       def command_line(filename)
@@ -16,7 +16,7 @@ describe Mumukit::Server::TestServer do
   end
 
   after do
-    drop_hook QueryHook
+    drop_hook DemoQueryHook
   end
 
   let(:server) { Mumukit::Server::TestServer.new(nil) }
