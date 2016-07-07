@@ -17,9 +17,13 @@ module Mumukit
       content
     end
 
+    def transform_expectations(expectations)
+      expectations
+    end
+
     def mulang_input(content, expectations)
       {
-        expectations: expectations,
+        expectations: transform_expectations(expectations),
         code: { content: transform_content(content), language: language}
       }
     end
