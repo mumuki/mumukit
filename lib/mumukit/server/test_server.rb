@@ -14,6 +14,9 @@ class Mumukit::Server::TestServer
     runtime.info.merge(runtime.metadata_hook.metadata).merge(url: url)
   end
 
+  def start_request!(_raw_request)
+  end
+
   def test!(raw_request)
     respond_to(raw_request) do |r|
       test_results = run_tests! r
@@ -71,16 +74,15 @@ class Mumukit::Server::TestServer
   end
 
   def parse_request(request)
-    OpenStruct.new(request).tap { |r| validate_request! r }
+    OpenStruct.new(request)
   end
 
   def validate_request!(request)
     runtime.validation_hook.validate! request
   end
 
-
   def respond_to(raw_request)
-    yield parse_request(raw_request)
+    yield parse_request(raw_request).tap { |r| validate_request! r }
   rescue Mumukit::RequestValidationError => e
     {exit: :aborted, out: e.message}
   rescue Exception => e

@@ -11,9 +11,6 @@ I18n.load_path += Dir[File.join(pwd, 'locales', '*.yml')]
 I18n.backend.load_translations
 
 module Mumukit
-  def self.start_request(_request)
-  end
-
   def self.current_runner=(runner)
     @current_runner = runner
   end
