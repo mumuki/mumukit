@@ -16,6 +16,7 @@ module Mumukit
   end
 
   def self.current_runner
+    raise "no runner selected. Did you forget to set current runner's name?" unless @current_runner
     @current_runner
   end
 
