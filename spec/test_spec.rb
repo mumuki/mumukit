@@ -8,11 +8,11 @@ end
 
 describe Mumukit::Server::TestServer do
   let(:server) { Mumukit::Server::TestServer.new }
-  let(:result) { server.test!({'content' => 'foo', 'test' => 'bar', 'expectations' => []}) }
+  let(:result) { server.test!(req content: 'foo', test: 'bar', expectations: []) }
   let(:info) { server.info('http://localhost:8080')[:features] }
 
   context 'when there are not tests and no expectations' do
-    it { expect(server.test!('content' => 'foo')).to eq({out: '', exit: :passed}) }
+    it { expect(server.test!(req content: 'foo')).to eq({out: '', exit: :passed}) }
   end
 
   context 'when test runner is implemented but no expectations' do
@@ -121,7 +121,7 @@ describe Mumukit::Server::TestServer do
     end
 
     let(:expectation_results) { [{expectation: {binding: :foo, inspection: :HasUsage}, result: true}] }
-    let(:result) { server.test!('content' => 'foo', 'expectations' => [{binding: :foo, inspection: :HasUsage}]) }
+    let(:result) { server.test!(req content: 'foo', expectations: [{binding: :foo, inspection: :HasUsage}]) }
 
     before { allow_any_instance_of(DemoExpectationsHook).to receive(:compile) }
     before { allow_any_instance_of(DemoExpectationsHook).to receive(:run!).and_return(expectation_results) }

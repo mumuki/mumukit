@@ -14,11 +14,25 @@ class Mumukit::Server::TestServer
     runtime.info.merge(runtime.metadata_hook.metadata).merge(url: url)
   end
 
-  def start_request!(_raw_request)
+  def start_request!(_request)
   end
 
-  def test!(raw_request)
-    respond_to(raw_request) do |r|
+  def parse_request(sinatra_request)
+    OpenStruct.new parse_request_headers(sinatra_request).merge(parse_request_body(sinatra_request))
+  end
+
+  def parse_request_headers(sinatra_request)
+    {}
+  end
+
+  def parse_request_body(sinatra_request)
+    JSON.parse(sinatra_request.body.read).tap do |it|
+      I18n.locale = it['locale'] || :en
+    end rescue {}
+  end
+
+  def test!(request)
+    respond_to(request) do |r|
       test_results = run_tests! r
       expectation_results = run_expectations! r
 
@@ -35,8 +49,8 @@ class Mumukit::Server::TestServer
     end
   end
 
-  def query!(raw_request)
-    respond_to(raw_request) do |r|
+  def query!(request)
+    respond_to(request) do |r|
       results = run_query!(r)
       Mumukit::Server::ResponseBuilder.build do
         add_query_results(results)
@@ -73,19 +87,16 @@ class Mumukit::Server::TestServer
     hook.run!(compilation)
   end
 
-  def parse_request(request)
-    OpenStruct.new(request)
-  end
-
   def validate_request!(request)
     runtime.validation_hook.validate! request
   end
 
-  def respond_to(raw_request)
-    yield parse_request(raw_request).tap { |r| validate_request! r }
+  def respond_to(request)
+    yield request.tap { |r| validate_request! r }
   rescue Mumukit::RequestValidationError => e
     {exit: :aborted, out: e.message}
   rescue Exception => e
     {exit: :errored, out: content_type.format_exception(e)}
   end
+
 end

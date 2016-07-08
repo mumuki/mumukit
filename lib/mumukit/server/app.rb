@@ -16,22 +16,24 @@ class Mumukit::Server::App < Sinatra::Base
     set :config_filename, 'config/production.yml'
   end
 
+  runtime_config = YAML.load_file(settings.config_filename) rescue nil
+  set :server, Mumukit::Server::TestServer.new(runtime_config)
+
   before do
     content_type 'application/json'
   end
-
-  runtime_config = YAML.load_file(settings.config_filename) rescue nil
-  server = Mumukit::Server::TestServer.new(runtime_config)
 
   before do
     server.start_request!(parse_request)
   end
 
   helpers do
+    def server
+      settings.server
+    end
+
     def parse_request
-      @parsed_request ||= JSON.parse(request.body.read).tap do |it|
-        I18n.locale = it['locale'] || :en
-      end
+      @parsed_request ||= server.parse_request(request)
     end
   end
 

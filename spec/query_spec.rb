@@ -24,23 +24,23 @@ describe Mumukit::Server::TestServer do
   it { expect(server.info('http://localhost')[:features][:query]).to be true }
 
   context 'just extra' do
-    it { expect(server.query!(query: '5')[:out]).to eq '=> 5' }
+    it { expect(server.query!(req query: '5')[:out]).to eq '=> 5' }
   end
 
   context 'no content' do
-    it { expect(server.query!(query: 'x', extra: 'x = 4')[:out]).to eq '=> 4' }
+    it { expect(server.query!(req query: 'x', extra: 'x = 4')[:out]).to eq '=> 4' }
   end
 
   context 'with content' do
-    it { expect(server.query!(query: 'x', content: 'x = 4')[:out]).to eq '=> 4' }
+    it { expect(server.query!(req query: 'x', content: 'x = 4')[:out]).to eq '=> 4' }
   end
 
   context 'with content and effect' do
-    it { expect(server.query!(query: 'puts x', content: 'x = 4')[:out]).to eq "4\n=> nil" }
+    it { expect(server.query!(req query: 'puts x', content: 'x = 4')[:out]).to eq "4\n=> nil" }
   end
 
   context 'with content and extra' do
-    it { expect(server.query!(query: 'x', content: 'x = y', extra: 'y = 3')[:out]).to eq '=> 3' }
+    it { expect(server.query!(req query: 'x', content: 'x = y', extra: 'y = 3')[:out]).to eq '=> 3' }
   end
 
 end
