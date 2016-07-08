@@ -77,7 +77,7 @@ describe Mumukit::Templates::MulangExpectationsHook do
         end
       end
 
-      it { expect(hook.compile content: content, expectations: expectations).to include(code: {content: 'x = 1', language: 'Haskell'}) }
+      it { expect(hook.compile_json_file_content content: content, expectations: expectations).to include(code: {content: 'x = 1', language: 'Haskell'}) }
     end
 
     context 'when transform_content is provided' do
@@ -93,7 +93,7 @@ describe Mumukit::Templates::MulangExpectationsHook do
         end
       end
 
-      it { expect(hook.compile content: content, expectations: expectations).to include(code: {content: '// x = 1 //', language: 'Haskell'}) }
+      it { expect(hook.compile_json_file_content content: content, expectations: expectations).to include(code: {content: '// x = 1 //', language: 'Haskell'}) }
     end
   end
 end
