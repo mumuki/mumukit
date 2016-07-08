@@ -9,7 +9,7 @@ module Mumukit
     end
 
     def command_line(filename)
-      "cat #{filename} | #{mulang_path}"
+      "cat #{filename} | #{mulang_path} -s"
     end
 
     def post_process_file(file, result, status)
