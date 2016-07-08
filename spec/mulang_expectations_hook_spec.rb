@@ -66,44 +66,7 @@ describe Mumukit::Templates::MulangExpectationsHook do
 
       it { expect { compile_and_run request }.to raise_error(Exception, 'You have to provide a Mulang-compatible language in order to use this hook') }
     end
-
-    context 'transforms the results json into a hash' do
-      before do
-        class DemoExpectationsHook < Mumukit::Templates::MulangExpectationsHook
-          def language
-            'Haskell'
-          end
-        end
-      end
-
-      before do
-        mock_mulang_output '{"results":[{"result":false,"expectation":{"subject":["x"],"transitive":false,"negated":false,"object":{"tag":"Anyone","contents":[]},"verb":"uses"}}],"smells":[]}'
-      end
-
-      it { expect(compile_and_run(request)).to eq([{expectation: usesX, result: false}]) }
-    end
-
-    context 'when smells are enabled' do
-      before do
-        class DemoExpectationsHook < Mumukit::Templates::MulangExpectationsHook
-          include_smells true
-
-          def language
-            'Haskell'
-          end
-        end
-      end
-
-      before do
-        mock_mulang_output '{"results":[{"result":false,"expectation":{"subject":["x"],"transitive":false,"negated":false,"object":{"tag":"Anyone","contents":[]},"verb":"uses"}}],"smells":[{"subject":["identidad"],"transitive":false,"negated":true,"object":{"tag":"Anyone","contents":[]},"verb":"HasRedundantLambda"}]}'
-      end
-
-      let(:hasRedundantLambda) { {subject: ['identidad'], transitive: false, negated: true, object: {tag: 'Anyone', contents: []}, verb: 'HasRedundantLambda'}.deep_stringify_keys }
-
-      it { expect(compile_and_run request).to eq([{expectation: usesX, result: false}, {expectation: hasRedundantLambda, result: false}]) }
-    end
   end
-
   context '#mulang_input' do
     context 'with defaults' do
       before do
