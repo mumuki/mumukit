@@ -11,6 +11,6 @@ services:
   - docker
 before_install:
 - docker pull ubuntu
-- wget https://github.com/mumuki/mulang/releases/download/v0.1.0/mulang
+- wget https://github.com/mumuki/mulang/releases/download/v0.2.1/mulang
 - mv mulang bin/
 - chmod +x bin/mulang

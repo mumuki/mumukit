@@ -14,17 +14,6 @@ class IsolatedEnvTestRunner < BaseTestRunner
   isolated true
 end
 
-Mumukit.runner_name = 'demo'
-Mumukit.configure do |c|
-  c.docker_image = 'ubuntu'
-end
-
-class File
-  def unlink
-  end
-end
-
-
 describe Mumukit::Templates::FileHook do
   context 'with embedded env' do
     let(:runner) { EmbeddedEnvTestRunner.new }
