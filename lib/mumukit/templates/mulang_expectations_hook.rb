@@ -29,9 +29,14 @@ module Mumukit
     def parse_response(response)
       response['results'].map do |it|
         {result: it['result'],
-         expectation: it['expectation'].deep_symbolize_keys}
+         expectation: parse_expectation(it['expectation'])}
       end
     end
+
+    def parse_expectation(expectation)
+      expectation.deep_symbolize_keys.except(:tag)
+    end
+
 
     def self.include_smells(value=true)
       if value

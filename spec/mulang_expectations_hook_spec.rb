@@ -55,12 +55,7 @@ describe Mumukit::Templates::MulangExpectationsHook do
     it { expect(result).to include(expectation: declaresWithArity1, result: true) }
     it { expect(result).to include(expectation: redundantParameterSmell, result: false) }
   end
-
   context '#run!' do
-    def mock_mulang_output(output)
-      allow_any_instance_of(DemoExpectationsHook).to receive(:run_command).and_return([output, :passed])
-    end
-
     let(:request) { {content: content, expectations: expectations} }
 
     context 'when language is not defined' do
