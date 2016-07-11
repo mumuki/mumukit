@@ -2,12 +2,11 @@ require 'yaml'
 require 'ostruct'
 
 class Mumukit::Server::TestServer
-  attr_reader :runtime
 
   include Mumukit::WithContentType
 
-  def initialize(runtime_config=nil)
-    @runtime = Mumukit::Runtime.new(runtime_config)
+  def runtime
+    Mumukit.runtime
   end
 
   def info(url)

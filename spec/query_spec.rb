@@ -19,7 +19,7 @@ describe Mumukit::Server::TestServer do
     drop_hook DemoQueryHook
   end
 
-  let(:server) { Mumukit::Server::TestServer.new(nil) }
+  let(:server) { Mumukit::Server::TestServer.new }
 
   it { expect(server.info('http://localhost')[:features][:query]).to be true }
 

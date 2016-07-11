@@ -11,6 +11,8 @@ describe Mumukit::Server::TestServer do
   let(:result) { server.test!(req content: 'foo', test: 'bar', expectations: []) }
   let(:info) { server.info('http://localhost:8080')[:features] }
 
+  before { Mumukit.configure_runtime(nil) }
+
   context 'when there are not tests and no expectations' do
     it { expect(server.test!(req content: 'foo')).to eq({out: '', exit: :passed}) }
   end

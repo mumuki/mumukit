@@ -1,5 +1,5 @@
 class Mumukit::Runner
-  attr_reader :name
+  attr_reader :name, :runtime
 
   def initialize(name)
     @name = name
@@ -8,6 +8,10 @@ class Mumukit::Runner
   def configure
     @config ||= self.class.default_config.clone
     yield @config
+  end
+
+  def configure_runtime(config)
+    @runtime = Mumukit::Runtime.new(config)
   end
 
   def config

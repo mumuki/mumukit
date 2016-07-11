@@ -28,20 +28,12 @@ module Mumukit
     current_runner.name
   end
 
-  def self.prefix
-    current_runner.prefix
-  end
-
-  def self.configure(&block)
-    current_runner.configure(&block)
-  end
-
   def self.configure_defaults(&block)
     Mumukit::Runner.configure_defaults(&block)
   end
 
-  def self.config
-    current_runner.config
+  class << self
+    delegate :prefix, :config, :configure, :runtime, :configure_runtime, to: :current_runner
   end
 end
 
