@@ -16,6 +16,14 @@ class Mumukit::Hook
     @config[name]
   end
 
+  def env
+    Mumukit::Env.env
+  end
+
+  def logger
+    env['rack.logger']
+  end
+
   def should_forward_to_config?(args, name)
     args.length == 0 && !block_given? && @config[name]
   end

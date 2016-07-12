@@ -29,6 +29,7 @@ class Mumukit::Server::App < Sinatra::Base
   end
 
   before do
+    Mumukit::Env.env = env
     server.start_request!(parse_request)
   end
 
