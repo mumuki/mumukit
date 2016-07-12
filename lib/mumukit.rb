@@ -49,6 +49,7 @@ end
 
 require 'mumukit/content_type'
 
+require_relative 'mumukit/json'
 require_relative 'mumukit/with_tempfile'
 require_relative 'mumukit/with_content_type'
 require_relative 'mumukit/with_command_line'

@@ -10,6 +10,6 @@ module Mumukit::Templates::WithStructuredResults
   end
 
   def to_structured_result(result)
-    JSON.parse(result)
+    JSON.pretty_parse(result)
   end
 end

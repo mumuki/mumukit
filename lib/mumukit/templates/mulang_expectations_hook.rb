@@ -13,7 +13,7 @@ module Mumukit
     end
 
     def post_process_file(file, result, status)
-      parse_response JSON.parse(result)
+      parse_response JSON.pretty_parse(result)
     end
 
     def compile_file_content(request)
