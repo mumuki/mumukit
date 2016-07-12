@@ -15,7 +15,7 @@ class Mumukit::Runner
   end
 
   def config
-    @config
+    @config or raise 'This runner has not being configured yet'
   end
 
   def prefix
