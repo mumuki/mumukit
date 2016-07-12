@@ -6,6 +6,8 @@ require 'json'
 class Mumukit::Server::App < Sinatra::Base
   configure do
     set :mumuki_url, 'http://mumuki.io'
+    set :show_exceptions, :after_handler
+    enable :logging
   end
 
   configure :development do
@@ -54,5 +56,15 @@ class Mumukit::Server::App < Sinatra::Base
 
   get '/*' do
     redirect settings.mumuki_url
+  end
+
+  error StandardError do
+    content_type :json
+    status 200
+
+    message = Mumukit::ContentType::Plain.format_exception env['sinatra.error']
+    logger.error "Unhandled error #{message}"
+
+    {status: :errored, result: message}.to_json
   end
 end
