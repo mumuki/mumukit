@@ -33,26 +33,23 @@ describe Mumukit::Templates::MulangExpectationsHook do
     end
 
     let(:content) { 'f x = f x' }
-    let(:declaresWithArity1) do
+    let(:declaresComputationWithArity1) do
       {subject: ['f'],
        transitive: false,
        negated: false,
        object: {tag: 'Anyone', contents: []},
-       verb: 'declaresWithArity1'}
+       verb: 'declaresComputationWithArity1'}
     end
     let(:redundantParameterSmell) do
-      {subject: ['f'],
-       transitive: false,
-       negated: true,
-       object: {tag: 'Anyone', contents: []},
-       verb: 'HasRedundantParameter'}
+      {binding: 'f',
+       inspection: 'HasRedundantParameter'}
     end
-    let(:request) { {content: content, expectations: [declaresWithArity1]} }
+    let(:request) { {content: content, expectations: [declaresComputationWithArity1]} }
 
     let(:result) { compile_and_run request }
 
     it { expect(result.length).to eq 2 }
-    it { expect(result).to include(expectation: declaresWithArity1, result: true) }
+    it { expect(result).to include(expectation: declaresComputationWithArity1, result: true) }
     it { expect(result).to include(expectation: redundantParameterSmell, result: false) }
   end
   context '#run!' do
