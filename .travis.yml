@@ -16,7 +16,7 @@ before_install:
 deploy:
   provider: rubygems
   api_key:
-    secure: CbwXvy7Vaccn9dGkcO8pz8QDeuFRStu+G/nc/+I8PpGtYiBUhRA/UQQHJlY9iwgKuD/qflzrobJJ0/X13lBKVTAjuZa47rLWERwIN90Ma0FNuNDFW+ScI1oSdNe0gBbXBs6GqabckeTMJxpxJp+X3SWkwyzsOiPnvTp+AoXJXUg=
+    secure: OhFEVe4vNGbcWG9hndGew4Bfln2d6QhXINjcdF7Piur4dPLmfFNNrKLS6qEbirwXZMbSgGfjdyH+tq8yjc0rdjdvnlHxdRtqqKUGqqTZKmMLMWiLkUM+YUulSoUsAJjdDQRrCHdFJIDwrpnYD2IYuMkZtjY2xYSKgEQgCO452NY=
   gem: mumukit
   on:
     tags: true
