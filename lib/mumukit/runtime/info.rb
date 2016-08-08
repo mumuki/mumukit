@@ -7,6 +7,7 @@ module Mumukit::RuntimeInfo
         escualo_service_version: ENV['ESCUALO_SERVICE_VERSION'],
         mumukit_version: Mumukit::VERSION,
         output_content_type: Mumukit.config.content_type,
+        comment_type: Mumukit.config.comment_type,
         features: {
             query: query_hook?,
             expectations: expectations_hook?,

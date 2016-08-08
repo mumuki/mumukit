@@ -1,6 +1,7 @@
 require 'i18n'
 require 'i18n/backend/fallbacks'
 require 'mumukit/core'
+require 'mumukit/directives'
 require 'ostruct'
 
 pwd = File.expand_path(File.dirname(__FILE__))
@@ -42,6 +43,7 @@ require_relative 'mumukit/runner'
 Mumukit.configure_defaults do |config|
   config.limit_script = File.join(pwd, '..', 'bin', 'limit')
   config.content_type = :plain
+  config.comment_type = Mumukit::Directives::CommentType::Cpp
   config.structured = false
   config.command_time_limit = 4
   config.command_size_limit = 1024

@@ -30,5 +30,6 @@ Gem::Specification.new do |spec|
   spec.add_dependency 'excon', '0.45.4'
 
   spec.add_dependency 'mumukit-core', '~> 0.1'
+  spec.add_dependency 'mumukit-directives', '~> 0.1'
   spec.add_dependency 'mumukit-content-type', '~> 0.2'
 end
