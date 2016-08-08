@@ -18,9 +18,3 @@ end
 def req(hash)
   OpenStruct.new hash
 end
-
-
-class File
-  def unlink
-  end
-end

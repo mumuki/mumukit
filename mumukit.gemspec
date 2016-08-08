@@ -28,4 +28,7 @@ Gem::Specification.new do |spec|
   spec.add_dependency 'puma'
   spec.add_dependency 'docker-api', '~> 1.22.2'
   spec.add_dependency 'excon', '0.46.0'
+
+  spec.add_dependency 'mumukit-core', '~> 0.1'
+  spec.add_dependency 'mumukit-content-type', '~> 0.2'
 end

@@ -1,6 +1,6 @@
 require 'i18n'
 require 'i18n/backend/fallbacks'
-require 'active_support/all'
+require 'mumukit/core'
 require 'ostruct'
 
 pwd = File.expand_path(File.dirname(__FILE__))
@@ -50,7 +50,6 @@ end
 require 'mumukit/content_type'
 
 require_relative 'mumukit/env'
-require_relative 'mumukit/json'
 require_relative 'mumukit/with_tempfile'
 require_relative 'mumukit/with_content_type'
 require_relative 'mumukit/with_command_line'
