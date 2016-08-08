@@ -45,6 +45,7 @@ Mumukit.configure_defaults do |config|
   config.content_type = :plain
   config.comment_type = Mumukit::Directives::CommentType::Cpp
   config.structured = false
+  config.stateful = false
   config.command_time_limit = 4
   config.command_size_limit = 1024
 end
