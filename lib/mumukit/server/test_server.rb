@@ -82,8 +82,25 @@ class Mumukit::Server::TestServer
   private
 
   def compile_and_run(hook, request)
-    compilation = hook.compile(request)
+    compilation = hook.compile(preprocess request)
     hook.run!(compilation)
+  end
+
+  def preprocess(request)
+    if Mumukit.config.preprocessor_enabled
+      directives_pipeline.transform(request)
+    else
+      request
+    end
+  end
+
+  def directives_pipeline
+    @pipeline ||= Mumukit::Directives::Pipeline.new(
+        [Mumukit::Directives::Sections.new,
+         Mumukit::Directives::Interpolations.new('test'),
+         Mumukit::Directives::Interpolations.new('extra'),
+         Mumukit::Directives::Flags.new],
+        Mumukit.config.comment_type)
   end
 
   def validate_request!(request)

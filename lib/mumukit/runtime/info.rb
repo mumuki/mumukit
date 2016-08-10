@@ -14,6 +14,7 @@ module Mumukit::RuntimeInfo
             feedback: feedback_hook?,
             secure: validation_hook?,
             stateful: Mumukit.config.stateful,
+            preprocessor: Mumukit.config.preprocessor_enabled,
 
             sandboxed: any_hook_include?([:test, :query], Mumukit::Templates::WithIsolatedEnvironment),
             structured: any_hook_include?([:test], Mumukit::Templates::WithStructuredResults) || Mumukit.config.structured

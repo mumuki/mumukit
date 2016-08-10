@@ -44,6 +44,7 @@ Mumukit.configure_defaults do |config|
   config.limit_script = File.join(pwd, '..', 'bin', 'limit')
   config.content_type = :plain
   config.comment_type = Mumukit::Directives::CommentType::Cpp
+  config.preprocessor_enabled = true
   config.structured = false
   config.stateful = false
   config.command_time_limit = 4
