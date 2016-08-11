@@ -53,15 +53,16 @@ end
 
 require 'mumukit/content_type'
 
+require_relative 'mumukit/version'
 require_relative 'mumukit/env'
 require_relative 'mumukit/with_tempfile'
 require_relative 'mumukit/with_content_type'
 require_relative 'mumukit/with_command_line'
-require_relative 'mumukit/version'
 require_relative 'mumukit/hook'
 require_relative 'mumukit/runtime'
 require_relative 'mumukit/isolated_environment'
 require_relative 'mumukit/templates'
 require_relative 'mumukit/request_validation_error'
 require_relative 'mumukit/defaults'
+require_relative 'mumukit/metatest'
 require_relative 'mumukit/server'
