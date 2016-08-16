@@ -1,10 +1,10 @@
 module Mumukit::Metatest
   class Checker
-    def check(value, example)
-      example[:postconditions].each { |key, arg| check_assertion key, value, arg, example }
-      [example[:name], :passed, render_success_output(value)]
+    def check(result, example)
+      example[:postconditions].each { |key, arg| check_assertion key, result, arg, example }
+      [example[:name], :passed, render_success_output(result)]
     rescue => e
-      [example[:name], :failed, render_error_output(value, e.message)]
+      [example[:name], :failed, render_error_output(result, e.message)]
     end
 
     def render_success_output(value)
@@ -15,8 +15,8 @@ module Mumukit::Metatest
       error
     end
 
-    def check_assertion(key, value, arg, example)
-      send "check_#{key}", value, arg
+    def check_assertion(key, result, arg, example)
+      send "check_#{key}", result, arg
     end
 
     def fail(message)
