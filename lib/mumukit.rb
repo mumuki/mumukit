@@ -1,15 +1,8 @@
-require 'i18n'
-require 'i18n/backend/fallbacks'
 require 'mumukit/core'
 require 'mumukit/directives'
 require 'ostruct'
 
-pwd = File.expand_path(File.dirname(__FILE__))
-
-I18n::Backend::Simple.send(:include, I18n::Backend::Fallbacks)
-I18n.load_path += Dir[File.join(pwd, 'locales', '*.yml')]
-
-I18n.backend.load_translations
+I18n.load_translations_path File.join(__dir__, 'locales', '*.yml')
 
 module Mumukit
   def self.current_runner=(runner)
@@ -41,7 +34,7 @@ end
 require_relative 'mumukit/runner'
 
 Mumukit.configure_defaults do |config|
-  config.limit_script = File.join(pwd, '..', 'bin', 'limit')
+  config.limit_script = File.join(__dir__, '..', 'bin', 'limit')
   config.content_type = :plain
   config.comment_type = Mumukit::Directives::CommentType::Cpp
   config.preprocessor_enabled = true
