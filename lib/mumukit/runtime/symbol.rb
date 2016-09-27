@@ -8,10 +8,10 @@ class Symbol
   end
 
   def to_mumukit_hook_class
-    Kernel.const_get to_mumukit_hook_class_name
+    to_mumukit_hook_class_name.constantize
   end
 
   def to_default_mumukit_hook_class
-    Kernel.const_get "Mumukit::Defaults::#{to_simple_mumukit_hook_class_name}"
+    "Mumukit::Defaults::#{to_simple_mumukit_hook_class_name}".constantize
   end
 end
