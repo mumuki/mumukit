@@ -3,6 +3,7 @@ module Mumukit
   end
 end
 
+require_relative './defaults/default_version_hook'
 require_relative './defaults/default_expectations_hook'
 require_relative './defaults/default_query_hook'
 require_relative './defaults/default_feedback_hook'

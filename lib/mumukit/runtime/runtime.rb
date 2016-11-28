@@ -21,8 +21,6 @@ class Mumukit::Runtime
     hook_class(hook_name).new(@config)
   end
 
-  private
-
   def hook_class(hook_name)
     @hook_classes[hook_name] ||=
         if hook_defined? hook_name

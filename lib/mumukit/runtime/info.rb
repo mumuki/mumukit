@@ -2,7 +2,7 @@ module Mumukit::RuntimeInfo
   def info
     {
         name: Mumukit.runner_name,
-        version: (File.read('version') rescue 'master'),
+        version: hook_class(:version)::VERSION,
         escualo_base_version: ENV['ESCUALO_BASE_VERSION'],
         escualo_service_version: ENV['ESCUALO_SERVICE_VERSION'],
         mumukit_version: Mumukit::VERSION,
