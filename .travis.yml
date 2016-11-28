@@ -13,6 +13,8 @@ before_install:
 - wget https://github.com/mumuki/mulang/releases/download/v0.2.5/mulang
 - mv mulang bin/
 - chmod +x bin/mulang
+after_success:
+  - bundle exec codeclimate-test-reporter
 deploy:
   provider: rubygems
   api_key:
