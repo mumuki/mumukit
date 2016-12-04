@@ -6,11 +6,11 @@ class Mumukit::Cookie
   end
 
   def code
-    statements_code + "\n" + stdout_separator_code
+    "#{statements_code}\n#{stdout_separator_code}\n"
   end
 
   def trim(output)
-    output.split("#{stdout_separator }\n")[1]
+    output.split("#{stdout_separator}\n")[1]
   end
 
   def stdout_separator
