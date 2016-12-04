@@ -6,7 +6,7 @@ class Mumukit::Cookie
   end
 
   def code
-    statements_code + stdout_separator_code
+    statements_code + "\n" + stdout_separator_code
   end
 
   def trim(output)

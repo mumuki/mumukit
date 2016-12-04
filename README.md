@@ -53,6 +53,7 @@ In addition, `mumukit` provides some _components_ to make implementation of hook
 
 Also, `mumukit` provides _templates_ that implement some specialized use cases hooks:
 
+* `Mumukit::Hook`: the base hook. It lets to read environment variables and translations
 * `Mumukit::Templates::FileHook`: allows to implement `test_hooks` and `query_hooks` that interact with external command line tools using files and command line arguments
 * `Mumukit::Templates::MulangExpectationsHook`: allows to implement `expectation_hooks` that rely on [mulang](https://github.com/mumuki/mulang) tool
 
@@ -60,6 +61,8 @@ Also, `mumukit` provides _templates_ that implement some specialized use cases h
 
 Finally, `mumukit` templates provides the following _extensions_ - features that can be activated in some `hooks`:
 
+* `Mumukit::Hook`
+  * `stateful_through`: lets to handle cookies. Useful in `query_hooks`.
 *  `Mumukit::Templates::FileHook`:
   * `structured`: lets to process JSON output from external commands
   * `mashup`: lets to generate source code files
