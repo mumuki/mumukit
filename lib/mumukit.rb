@@ -48,6 +48,7 @@ require 'mumukit/content_type'
 
 require_relative 'mumukit/version'
 require_relative 'mumukit/env'
+require_relative 'mumukit/cookie'
 require_relative 'mumukit/with_tempfile'
 require_relative 'mumukit/with_content_type'
 require_relative 'mumukit/with_command_line'
