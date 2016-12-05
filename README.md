@@ -57,7 +57,7 @@ Also, `mumukit` provides _templates_ that implement some specialized use cases h
 * `Mumukit::Templates::FileHook`: allows to implement `test_hooks` and `query_hooks` that interact with external command line tools using files and command line arguments
 * `Mumukit::Templates::MulangExpectationsHook`: allows to implement `expectation_hooks` that rely on [mulang](https://github.com/mumuki/mulang) tool
 
-## Extensions
+### Extensions
 
 Finally, `mumukit` templates provides the following _extensions_ - features that can be activated in some `hooks`:
 
