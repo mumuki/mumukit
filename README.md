@@ -6,14 +6,12 @@
 
 > Micro framework for quickly implement Mumuki runners
 
-## Usage
-
-### Installing
+## Installing
 
 You usually add mumukit to an empty project. First you need to add it to your Gemfile:
 
 ```
-gem 'mumukit', github: 'mumuki/mumukit', tag: 'v0.7.2'
+gem 'mumukit'
 ```
 
 or, if you want latest version:
@@ -25,41 +23,49 @@ gem 'mumukit', github: 'mumuki/mumukit', branch: 'master'
 
 And then `bundle install`
 
-### Adding basic components
+## Ruby Version
 
-The most basic mumukit components are:
+`mumukit` works with Ruby 2.0-2.3
 
-* a test runner: lib/test_runner. It must be a class that implements at least a `run_test_command` method [Example](https://github.com/uqbar-project/mumuki-plunit-server/blob/master/lib/test_runner.rb)
-* test compiler: lib/test_compiler. It must be a class that implements at least a `compile` method.  [Example](https://github.com/uqbar-project/mumuki-plunit-server/blob/master/lib/test_compiler.rb)
+## Getting started
 
-### Running
+### Hooks
 
-Mumukit comes wit Sinatra embedded. We recommend running it using a `config.ru` file:
+`mumukit` is a framework where nearly everything is a _hook_ - a class you must implement following some naming and method conventions.
+In order to implement a Mumuki Runner with `mumukit`, you need zero or more of the following:
 
-```ruby
-require 'mumukit'
+* `query_hook`: lets runner to run queries like in a native console
+* `version_hook`: lets runner to specify a version
+* `feedback_hook`: lets runner to generate explanations of compiler/interpreter tools
+* `expectations_hook`: lets runner to execute expectations
+* `validation_hook`: lets runner to validate request in order to detect malicious code
 
-require_relative 'lib/test_compiler'
-require_relative 'lib/test_runner'
+### Components
 
-run Mumukit::TestServerApp
-```
+In addition, `mumukit` provides some _components_ to make implementation of hooks easier:
 
-And run as `bundle exec rackup`
+* `Mumukit::IsolatedEnvironment`
+* `Mumukit::Cookie`
+* `Mumukit::Metatest`
+* `Mumukit::Explainer`
 
-## Testing
+### Templates
 
-You can unit test any runner developed with mumukit since you are just extending plain Ruby classes.
+Also, `mumukit` provides _templates_ that implement some specialized use cases hooks:
 
-You can also do integration testing. There are two options:
+* `Mumukit::Hook`: the base hook. It lets to read environment variables and translations
+* `Mumukit::Templates::FileHook`: allows to implement `test_hooks` and `query_hooks` that interact with external command line tools using files and command line arguments
+* `Mumukit::Templates::MulangExpectationsHook`: allows to implement `expectation_hooks` that rely on [mulang](https://github.com/mumuki/mulang) tool
 
-* Running a local mumuki-platform instance
-* Or using mumukit-bridge, wich is the standalone component that is used by the platform to interact with the runners. Here there is a test template: https://gist.github.com/flbulgarelli/defdc7adbd115481d4bc
+## Extensions
 
-## Contributing
+Finally, `mumukit` templates provides the following _extensions_ - features that can be activated in some `hooks`:
 
-1. Fork it ( https://github.com/[my-github-username]/mumuki/fork )
-2. Create your feature branch (`git checkout -b my-new-feature`)
-3. Commit your changes (`git commit -am 'Add some feature'`)
-4. Push to the branch (`git push origin my-new-feature`)
-5. Create a new Pull Request
+* `Mumukit::Hook`
+  * `stateful_through`: lets to handle cookies. Useful in `query_hooks`.
+*  `Mumukit::Templates::FileHook`:
+  * `structured`: lets to process JSON output from external commands
+  * `mashup`: lets to generate source code files
+  * `isolated`: lets to run commands within docker or in native environment
+* `Mumukit::Templates::MulangExpectationsHook`
+  * `include_smells`: lets to include in the result smells produced by _mulang_

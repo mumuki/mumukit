@@ -27,4 +27,11 @@ class Mumukit::Hook
   def should_forward_to_config?(args, name)
     args.length == 0 && !block_given? && @config[name]
   end
+
+  def self.stateful_through(cookie_clazz)
+    include Mumukit::Templates::WithCookie
+    define_method :cookie_class do
+      cookie_clazz
+    end
+  end
 end
