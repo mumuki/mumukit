@@ -27,7 +27,7 @@ module Mumukit
   end
 
   class << self
-    delegate :prefix, :config, :configure, :runtime, :configure_runtime, to: :current_runner
+    delegate :prefix, :config, :configure, :runtime, :configure_runtime, :directives_pipeline, to: :current_runner
   end
 end
 
