@@ -87,20 +87,7 @@ class Mumukit::Server::TestServer
   end
 
   def preprocess(request)
-    if Mumukit.config.preprocessor_enabled
-      directives_pipeline.transform(request)
-    else
-      request
-    end
-  end
-
-  def directives_pipeline
-    @pipeline ||= Mumukit::Directives::Pipeline.new(
-        [Mumukit::Directives::Sections.new,
-         Mumukit::Directives::Interpolations.new('test'),
-         Mumukit::Directives::Interpolations.new('extra'),
-         Mumukit::Directives::Flags.new],
-        Mumukit.config.comment_type)
+    Mumukit.directives_pipeline.transform(request)
   end
 
   def validate_request!(request)
