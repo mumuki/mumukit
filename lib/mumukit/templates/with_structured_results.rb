@@ -3,10 +3,14 @@ module Mumukit::Templates::WithStructuredResults
     if [:passed, :failed].include? status
       [to_structured_result(result)]
     else
-      [result, status]
+      post_process_unstructured_result(file, result, status)
     end
   rescue JSON::ParserError
     [result, :errored]
+  end
+
+  def post_process_unstructured_result(_file, result, status)
+    [result, status]
   end
 
   def to_structured_result(result)
