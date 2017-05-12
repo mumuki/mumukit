@@ -24,6 +24,7 @@ module Mumukit
 
     def self.metatested(value=true)
       if value
+        include Mumukit::Templates::WithMetatest
         include Mumukit::Templates::WithMetatestResults
       end
     end

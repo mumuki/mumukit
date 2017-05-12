@@ -6,6 +6,7 @@ end
 require_relative './templates/file_hook'
 require_relative './templates/with_structured_results'
 require_relative './templates/with_metatest'
+require_relative './templates/with_metatest_results'
 require_relative './templates/with_mashup_file_content'
 require_relative './templates/with_embedded_environment'
 require_relative './templates/with_isolated_environment'
