@@ -22,6 +22,12 @@ module Mumukit
 
     required :run_file!, 'Wrong configuration. You must include an environment mixin'
 
+    def self.metatested(value=true)
+      if value
+        include Mumukit::Templates::WithMetatestResults
+      end
+    end
+
     def self.structured(value=true)
       if value
         include Mumukit::Templates::WithStructuredResults
