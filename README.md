@@ -6,6 +6,10 @@
 
 > Micro framework for quickly implement Mumuki runners
 
+## TL;DR
+
+The best way to start using `mumukit` is with [mumukit-bootstrap](https://github.com/mumuki/mumukit-bootstrap), and reading our online documentation in [develop.mumuki.io](http://develop.mumuki.io/chapters/66-runners-development)
+
 ## Installing
 
 You usually add mumukit to an empty project. First you need to add it to your Gemfile:
