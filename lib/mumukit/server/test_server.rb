@@ -79,6 +79,10 @@ class Mumukit::Server::TestServer
     runtime.feedback_hook.run!(request, results)
   end
 
+  def spec_structure
+    runtime.metadata_hook.spec_structure
+  end
+
   private
 
   def compile_and_run(hook, request)
