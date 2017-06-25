@@ -50,7 +50,7 @@ describe Mumukit::Templates::MulangExpectationsHook do
 
     it { expect(result.length).to eq 1 }
     it { expect(result).to include(expectation: declaresComputationWithArity1, result: true) }
-    skip { expect(result).to include(expectation: redundantParameterSmell, result: false) }
+    it { expect(result).to include(expectation: redundantParameterSmell, result: false) }
   end
   context '#run!' do
     let(:request) { {content: content, expectations: expectations} }
@@ -74,7 +74,11 @@ describe Mumukit::Templates::MulangExpectationsHook do
         end
       end
 
-      it { expect(hook.compile_json_file_content content: content, expectations: expectations).to include(code: {content: 'x = 1', language: 'Haskell'}) }
+      it { expect(hook.compile_json_file_content content: content, expectations: expectations)
+                .to include sample: {
+                              tag: 'CodeSample',
+                              content: 'x = 1',
+                              language: 'Haskell' } }
     end
 
     context 'when transform_content is provided' do
@@ -90,7 +94,11 @@ describe Mumukit::Templates::MulangExpectationsHook do
         end
       end
 
-      it { expect(hook.compile_json_file_content content: content, expectations: expectations).to include(code: {content: '// x = 1 //', language: 'Haskell'}) }
+      it { expect(hook.compile_json_file_content content: content, expectations: expectations)
+              .to include sample: {
+                            tag: 'CodeSample',
+                            content: '// x = 1 //',
+                            language: 'Haskell'} }
     end
   end
 end

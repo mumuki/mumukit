@@ -1,7 +1,7 @@
 module Mumukit
   class Templates::MulangExpectationsHook < Mumukit::Templates::FileHook
     isolated false
-
+    # TODO Support externalized languages
     required :language, 'You have to provide a Mulang-compatible language in order to use this hook'
 
     def tempfile_extension
@@ -9,6 +9,7 @@ module Mumukit
     end
 
     def command_line(filename)
+      # TODO avoid file generation
       "cat #{filename} | #{mulang_path} -s"
     end
 
@@ -21,12 +22,34 @@ module Mumukit
     end
 
     def compile_json_file_content(request)
+      expectations, exceptions = compile_expectations_and_exceptions request
       {
-          expectations: request[:expectations].map { |it| compile_expectation(it.deep_symbolize_keys) },
-          code: {
-              content: compile_content(request[:content]),
-              language: language}
+          sample: {
+            tag: 'CodeSample',
+            language: language,
+            content: compile_content(request[:content])
+          },
+          spec: {
+            expectations: expectations,
+            smellsSet: {
+              tag: 'AllSmells',
+              except: exceptions
+            }
+          }
       }
+    end
+
+    def compile_expectations_and_exceptions(request)
+      expectations = []
+      exceptions = []
+      request[:expectations].each do |it|
+        if it[:inspection]&.start_with? 'Except:'
+          exceptions << it[:inspection][7,-1]
+        else
+          expectations << compile_expectation(it.deep_symbolize_keys)
+        end
+      end
+      [expectations, exceptions]
     end
 
     def compile_content(content)
@@ -38,7 +61,7 @@ module Mumukit
     end
 
     def parse_response(response)
-      response['results'].map do |it|
+      response['expectationResults'].map do |it|
         {result: it['result'],
          expectation: parse_expectation(it['expectation'])}
       end
