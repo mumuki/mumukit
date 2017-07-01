@@ -1,3 +1,5 @@
+require 'mumukit/inspection'
+
 module Mumukit
   class Templates::MulangExpectationsHook < Mumukit::Templates::FileHook
     isolated false
@@ -44,7 +46,7 @@ module Mumukit
       exceptions = []
       request[:expectations].each do |it|
         if it[:inspection]&.start_with? 'Except:'
-          exceptions << it[:inspection][7,-1]
+          exceptions << it[:inspection][7..-1]
         else
           expectations << compile_expectation(it.deep_symbolize_keys)
         end
@@ -57,7 +59,7 @@ module Mumukit
     end
 
     def compile_expectation(expectation)
-      (expectation[:verb].present? ? {tag: :Advanced} : {tag: :Basic}).merge(expectation)
+      Mumukit::Inspection::Expectation.parse(expectation).as_v2.to_h
     end
 
     def parse_response(response)

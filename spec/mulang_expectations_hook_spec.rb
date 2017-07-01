@@ -2,13 +2,7 @@ require_relative './spec_helper'
 
 describe Mumukit::Templates::MulangExpectationsHook do
   let(:content) { 'x = 1' }
-  let(:usesX) do
-    {subject: ['x'],
-     transitive: false,
-     negated: false,
-     verb: 'uses',
-     object: {tag: 'Anyone', contents: []}}
-  end
+  let(:usesX) { {binding: '', inspection: 'Uses:X'} }
   let(:expectations) { [usesX] }
 
   after do
@@ -33,24 +27,31 @@ describe Mumukit::Templates::MulangExpectationsHook do
     end
 
     let(:content) { 'f x = f x' }
-    let(:declaresComputationWithArity1) do
-      {subject: ['f'],
-       transitive: false,
-       negated: false,
-       object: {tag: 'Anyone', contents: []},
-       verb: 'declaresComputationWithArity1'}
-    end
-    let(:redundantParameterSmell) do
-      {binding: 'f',
-       inspection: 'HasRedundantParameter'}
-    end
-    let(:request) { {content: content, expectations: [declaresComputationWithArity1]} }
+
+    let(:declaresComputationWithArity1) { {binding: '', inspection: 'DeclaresComputationWithArity1:f'} }
+    let(:usesIf) { {binding: 'f', inspection: 'UsesIf'} }
+    let(:hasBindingF) { {binding: 'f', inspection: 'HasBinding'} }
+    let(:hasBindingG) { {binding: 'g', inspection: 'HasBinding'} }
+    let(:redundantParameterSmell) { {binding: 'f', inspection: 'HasRedundantParameter'} }
+    let(:exceptHasTooShortBindings) { {binding: '', inspection: 'Except:HasTooShortBindings'} }
+
+    let(:request) { {
+      content: content,
+      expectations: [declaresComputationWithArity1, usesIf, hasBindingF, hasBindingG, exceptHasTooShortBindings]} }
 
     let(:result) { compile_and_run request }
 
-    it { expect(result.length).to eq 1 }
+    it { expect(result.length).to eq 5 }
+
     it { expect(result).to include(expectation: declaresComputationWithArity1, result: true) }
+
+    it { expect(result).to include(expectation: usesIf, result: false) }
+
+    it { expect(result).to include(expectation: {binding: '', inspection: 'Declares:=f'}, result: true) }
+    it { expect(result).to include(expectation: {binding: '', inspection: 'Declares:=g'}, result: false) }
+
     it { expect(result).to include(expectation: redundantParameterSmell, result: false) }
+    it { expect(result).to_not include(expectation: {binding: 'f', inspection: 'HasTooShortBindings'}, result: false) }
   end
   context '#run!' do
     let(:request) { {content: content, expectations: expectations} }
