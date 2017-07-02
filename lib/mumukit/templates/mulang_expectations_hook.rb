@@ -12,11 +12,13 @@ module Mumukit
 
     def command_line(filename)
       # TODO avoid file generation
-      "cat #{filename} | #{mulang_path} -s"
+      "cat #{filename} | #{mulang_path} -s 2>&1"
     end
 
     def post_process_file(file, result, status)
       parse_response JSON.pretty_parse(result)
+    rescue JSON::ParserError
+      raise "Can not handle mulang results #{result}"
     end
 
     def compile_file_content(request)
