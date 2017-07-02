@@ -28,11 +28,7 @@ module Mumukit
     def compile_json_file_content(request)
       expectations, exceptions = compile_expectations_and_exceptions request
       {
-          sample: {
-            tag: 'CodeSample',
-            language: language,
-            content: compile_content(request[:content])
-          },
+          sample: compile_sample(request),
           spec: {
             expectations: expectations,
             smellsSet: {
@@ -41,6 +37,22 @@ module Mumukit
             }
           }
       }
+    end
+
+    def compile_sample(request)
+      compiled_content = compile_content(request[:content])
+      if language == 'Mulang'
+        {
+          tag: 'MulangSample',
+          ast: compiled_content
+        }
+      else
+        {
+          tag: 'CodeSample',
+          language: language,
+          content: compiled_content
+        }
+      end
     end
 
     def compile_expectations_and_exceptions(request)
