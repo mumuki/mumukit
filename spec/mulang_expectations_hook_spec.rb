@@ -53,6 +53,7 @@ describe Mumukit::Templates::MulangExpectationsHook do
     it { expect(result).to include(expectation: redundantParameterSmell, result: false) }
     it { expect(result).to_not include(expectation: {binding: 'f', inspection: 'HasTooShortBindings'}, result: false) }
   end
+
   context '#run!' do
     let(:request) { {content: content, expectations: expectations} }
 

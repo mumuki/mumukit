@@ -35,7 +35,7 @@ module Mumukit
             expectations: expectations,
             smellsSet: {
               tag: 'AllSmells',
-              except: exceptions
+              exclude: exceptions
             }
           }
       }
