@@ -25,6 +25,7 @@ end
 
 class LineNumberTestRunner < Mumukit::Templates::FileHook
   isolated true
+  line_number_offset 30
 
   def tempfile_extension
     '_spec.rb'
@@ -59,7 +60,7 @@ describe Mumukit::Server::TestServer do
     after do
       drop_hook DemoTestHook
     end
-    it { expect(result).to eq out: "path is mumuki_test.txt\n", exit: :passed }
+    it { expect(result).to eq out: "path is solution_test.txt\n", exit: :passed }
   end
 
   describe 'line number offset' do
@@ -71,7 +72,7 @@ describe Mumukit::Server::TestServer do
       drop_hook DemoTestHook
     end
     it { expect(result[:out])
-            .to eq "mumuki_spec.rb:65:in `load': mumuki_spec.rb:62: syntax error, unexpected tIDENTIFIER, expecting keyword_end (SyntaxError)\n" }
+            .to eq "solution_spec.rb:35:in `load': solution_spec.rb:32: syntax error, unexpected tIDENTIFIER, expecting keyword_end (SyntaxError)\n" }
   end
 
   context 'when test runner is implemented but no expectations' do

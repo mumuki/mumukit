@@ -14,7 +14,7 @@ module Mumukit
     end
 
     def cleanup_raw_result(result)
-      hide_tempfile_references(result.force_encoding('UTF-8'))
+      mask_tempfile_references(result.force_encoding('UTF-8'), masked_tempfile_path)
     end
 
     def post_process_file(file, result, status)
@@ -25,6 +25,15 @@ module Mumukit
     required :command_line
 
     required :run_file!, 'Wrong configuration. You must include an environment mixin'
+
+    def masked_tempfile_path
+      @masked_tempfile_path ||= "#{t 'mumukit.solution'}#{tempfile_extension}"
+    end
+
+    def self.line_number_offset(offset)
+      include Mumukit::Templates::WithLineNumberOffset
+      define_method(:line_number_offset) { offset }
+    end
 
     def self.metatested(value=true)
       if value
