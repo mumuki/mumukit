@@ -8,13 +8,17 @@ module Mumukit
 
     def run!(file)
       result, status = run_file!(file)
-      post_process_file(file, result.force_encoding('UTF-8'), status)
+      post_process_file(file, cleanup_raw_result(result), status)
     ensure
       file.unlink
     end
 
+    def cleanup_raw_result(result)
+      hide_tempfile_references(result.force_encoding('UTF-8'))
+    end
+
     def post_process_file(file, result, status)
-      [hide_tempfile_references(result), status]
+      [result, status]
     end
 
     required :compile_file_content
