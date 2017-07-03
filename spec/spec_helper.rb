@@ -7,7 +7,7 @@ require_relative '../lib/mumukit'
 
 Mumukit.runner_name = 'demo'
 Mumukit.configure do |c|
-  c.docker_image = 'ubuntu'
+  c.docker_image = 'ubuntu:xenial'
 end
 
 require_relative '../lib/mumukit/server/app'
