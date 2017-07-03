@@ -14,7 +14,7 @@ describe Mumukit::Server::TestServer do
   before { Mumukit.configure_runtime(nil) }
 
   context 'when there are not tests and no expectations' do
-    it { expect(server.test!(req content: 'foo')).to eq({out: '', exit: :passed}) }
+    it { expect(server.test!(req content: 'foo')).to eq out: '', exit: :passed }
   end
 
   context 'when test runner is implemented but no expectations' do
@@ -31,21 +31,21 @@ describe Mumukit::Server::TestServer do
     context 'when test passes' do
       before { allow_any_instance_of(DemoTestHook).to receive(:run!).and_return(['ok', :passed]) }
 
-      it { expect(result).to eq({out: 'ok', exit: :passed}) }
+      it { expect(result).to eq out: 'ok', exit: :passed }
     end
 
     context 'when test returns structured results' do
       before { allow_any_instance_of(DemoTestHook).to receive(:run!).and_return([[['foo', :passed, ''], ['baz', :failed, 'bar']]]) }
 
-      it { expect(result).to eq({testResults: [
+      it { expect(result).to eq testResults: [
           {title: 'foo', status: :passed, result: ''},
-          {title: 'baz', status: :failed, result: 'bar'}]}) }
+          {title: 'baz', status: :failed, result: 'bar'}] }
     end
 
     context 'when test fails' do
       before { allow_any_instance_of(DemoTestHook).to receive(:run!).and_return(['nok', :failed]) }
 
-      it { expect(result).to eq({out: 'nok', exit: :failed}) }
+      it { expect(result).to eq out: 'nok', exit: :failed }
     end
 
     context 'when test runner crashes' do
@@ -54,10 +54,15 @@ describe Mumukit::Server::TestServer do
       it { expect(result[:out]).to include('ups!') }
     end
 
+    context 'when test runner compilation crashes' do
+      before { allow_any_instance_of(DemoTestHook).to receive(:run!).and_raise(Mumukit::CompilationError, "this file has syntax errors") }
+      it { expect(result).to eq out: 'this file has syntax errors', exit: :errored }
+    end
+
     context 'when test is aborted' do
       before { allow_any_instance_of(DemoTestHook).to receive(:run!).and_return(['out of memory error', :aborted]) }
 
-      it { expect(result).to eq({out: 'out of memory error', exit: :aborted}) }
+      it { expect(result).to eq out: 'out of memory error', exit: :aborted }
     end
     context 'when feedback runner is implemented' do
       before do
@@ -100,7 +105,7 @@ describe Mumukit::Server::TestServer do
       before { allow_any_instance_of(DemoExpectationsHook).to receive(:compile) }
       before { allow_any_instance_of(DemoExpectationsHook).to receive(:run!).and_return(expectation_results) }
 
-      it { expect(result).to eq({out: 'ok', exit: :passed, expectationResults: expectation_results}) }
+      it { expect(result).to eq out: 'ok', exit: :passed, expectationResults: expectation_results }
     end
     context 'when expectations crash' do
       before { allow_any_instance_of(DemoTestHook).to receive(:run!).and_return(['ok', :passed]) }
@@ -128,7 +133,7 @@ describe Mumukit::Server::TestServer do
     before { allow_any_instance_of(DemoExpectationsHook).to receive(:compile) }
     before { allow_any_instance_of(DemoExpectationsHook).to receive(:run!).and_return(expectation_results) }
 
-    it { expect(result).to eq({out: '', exit: :passed, expectationResults: expectation_results}) }
+    it { expect(result).to eq out: '', exit: :passed, expectationResults: expectation_results }
   end
 
 
