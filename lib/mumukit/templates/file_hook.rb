@@ -2,7 +2,10 @@ module Mumukit
   class Templates::FileHook < Mumukit::Hook
     include Mumukit::WithTempfile
 
+    attr_accessor :request
+
     def compile(request)
+      self.request = request
       write_tempfile! compile_file_content(request)
     end
 
@@ -30,9 +33,13 @@ module Mumukit
       @masked_tempfile_path ||= "#{t 'mumukit.solution'}#{tempfile_extension}"
     end
 
-    def self.line_number_offset(offset)
+    def self.line_number_offset(offset, options={})
       include Mumukit::Templates::WithLineNumberOffset
-      define_method(:line_number_offset) { offset }
+
+      define_method(:line_number_offset) do
+        extra_offset = options[:include_extra] && request.extra ? request.extra.lines.length : 0
+        offset + extra_offset
+      end
     end
 
     def self.metatested(value=true)
