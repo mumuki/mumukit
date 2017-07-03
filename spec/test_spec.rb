@@ -54,6 +54,11 @@ describe Mumukit::Server::TestServer do
       it { expect(result[:out]).to include('ups!') }
     end
 
+    context 'when test runner compilation crashes' do
+      before { allow_any_instance_of(DemoTestHook).to receive(:run!).and_raise(Mumukit::CompilationError, "this file has syntax errors") }
+      it { expect(result).to eq out: 'this file has syntax errors', exit: :errored }
+    end
+
     context 'when test is aborted' do
       before { allow_any_instance_of(DemoTestHook).to receive(:run!).and_return(['out of memory error', :aborted]) }
 
