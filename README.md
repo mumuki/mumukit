@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/mumuki/mumukit.svg)](https://travis-ci.org/mumuki/mumukit)
+[![Build Status](https://travis-ci.org/mumuki/mumukit.svg?branch=master)](https://travis-ci.org/mumuki/mumukit)
 [![Code Climate](https://codeclimate.com/github/mumuki/mumukit/badges/gpa.svg)](https://codeclimate.com/github/mumuki/mumukit)
 [![Test Coverage](https://codeclimate.com/github/mumuki/mumukit/badges/coverage.svg)](https://codeclimate.com/github/mumuki/mumukit)
 
