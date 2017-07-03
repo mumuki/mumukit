@@ -4,6 +4,10 @@ class BaseTestRunner < Mumukit::Templates::FileHook
   def command_line(path)
     "cat #{path}"
   end
+
+  def post_process_file(file, result, status)
+    super(file, result.strip, status)
+  end
 end
 
 class EmbeddedEnvTestRunner < BaseTestRunner
@@ -51,7 +55,7 @@ describe Mumukit::Templates::FileHook do
   context 'with isolated env' do
     let(:runner) { IsolatedEnvTestRunner.new }
 
-    it { expect(runner.run!(File.new 'spec/data/data.txt')).to eq ["lorem impsum\n", :passed] }
+    it { expect(runner.run!(File.new 'spec/data/data.txt')).to eq ["lorem impsum", :passed] }
   end
 end
 
