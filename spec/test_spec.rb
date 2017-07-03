@@ -6,6 +6,23 @@ class IntegrationTestBaseTestHook < Mumukit::Templates::FileHook
   end
 end
 
+
+class EchoPathTestRunner < Mumukit::Templates::FileHook
+  isolated true
+
+  def tempfile_extension
+    '_test.txt'
+  end
+
+  def compile_file_content(*)
+    ''
+  end
+
+  def command_line(path)
+    "echo path is #{path}"
+  end
+end
+
 describe Mumukit::Server::TestServer do
   let(:server) { Mumukit::Server::TestServer.new }
   let(:result) { server.test!(req content: 'foo', test: 'bar', expectations: []) }
@@ -15,6 +32,18 @@ describe Mumukit::Server::TestServer do
 
   context 'when there are not tests and no expectations' do
     it { expect(server.test!(req content: 'foo')).to eq out: '', exit: :passed }
+  end
+
+
+ describe 'filename hiding' do
+    before do
+      class DemoTestHook < EchoPathTestRunner
+      end
+    end
+    after do
+      drop_hook DemoTestHook
+    end
+    it { expect(result).to eq out: "path is mumuki_test.txt\n", exit: :passed }
   end
 
   context 'when test runner is implemented but no expectations' do

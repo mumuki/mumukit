@@ -14,7 +14,7 @@ module Mumukit
     end
 
     def post_process_file(file, result, status)
-      [result, status]
+      [hide_tempfile_references(result), status]
     end
 
     required :compile_file_content
