@@ -84,6 +84,8 @@ class Mumukit::Server::TestServer
   def compile_and_run(hook, request)
     compilation = hook.compile(preprocess request)
     hook.run!(compilation)
+  rescue Mumukit::CompilationError => e
+    [e.message, :errored]
   end
 
   def preprocess(request)
