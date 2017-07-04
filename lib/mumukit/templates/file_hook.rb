@@ -30,7 +30,7 @@ module Mumukit
     required :run_file!, 'Wrong configuration. You must include an environment mixin'
 
     def masked_tempfile_path
-      @masked_tempfile_path ||= "#{t 'mumukit.solution'}#{tempfile_extension}"
+      @masked_tempfile_path ||= "#{t 'mumukit.masked_tempfile_basename'}#{tempfile_extension}"
     end
 
     def self.line_number_offset(offset, options={})

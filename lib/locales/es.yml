@@ -2,4 +2,4 @@ es:
   mumukit:
     memory_exceeded: Limite de memoria excedido. ¿Tu programa está alocando demasiada memoria?
     time_exceeded:  Limite de tiempo de ejecución de %{limit}s excedido. ¿Tu programa tiene recursión o bucle infinito?
-    solution: solucion
+    masked_tempfile_basename: solucion
