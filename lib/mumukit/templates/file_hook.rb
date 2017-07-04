@@ -2,15 +2,22 @@ module Mumukit
   class Templates::FileHook < Mumukit::Hook
     include Mumukit::WithTempfile
 
+    attr_accessor :request
+
     def compile(request)
+      self.request = request
       write_tempfile! compile_file_content(request)
     end
 
     def run!(file)
       result, status = run_file!(file)
-      post_process_file(file, result.force_encoding('UTF-8'), status)
+      post_process_file(file, cleanup_raw_result(result), status)
     ensure
       file.unlink
+    end
+
+    def cleanup_raw_result(result)
+      mask_tempfile_references(result.force_encoding('UTF-8'), masked_tempfile_path)
     end
 
     def post_process_file(file, result, status)
@@ -21,6 +28,19 @@ module Mumukit
     required :command_line
 
     required :run_file!, 'Wrong configuration. You must include an environment mixin'
+
+    def masked_tempfile_path
+      @masked_tempfile_path ||= "#{t 'mumukit.masked_tempfile_basename'}#{tempfile_extension}"
+    end
+
+    def self.line_number_offset(offset, options={})
+      include Mumukit::Templates::WithLineNumberOffset
+
+      define_method(:line_number_offset) do
+        extra_offset = options[:include_extra] && request.extra ? request.extra.lines.length : 0
+        offset + extra_offset
+      end
+    end
 
     def self.metatested(value=true)
       if value

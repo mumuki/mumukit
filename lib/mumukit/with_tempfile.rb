@@ -23,5 +23,8 @@ module Mumukit
       file
     end
 
+    def mask_tempfile_references(string, masked_tempfile_path)
+      string.gsub(/\/tmp\/mumuki\.compile(.+?)#{tempfile_extension}/, masked_tempfile_path)
+    end
   end
 end

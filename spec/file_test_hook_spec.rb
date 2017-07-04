@@ -46,6 +46,18 @@ describe Mumukit::Templates::FileHook do
 end
 
 describe Mumukit::Templates::FileHook do
+  context 'with line number offset' do
+    let(:runner) { MetatestTestRunner.new }
+
+    before do
+      runner.instance_variable_set :@examples, [{name: 'array test', postconditions: {eq: [1, 2, 3]}}]
+    end
+
+    it { expect(runner.run!(File.new 'spec/data/metatest.json')).to eq [[["array test", :failed, "expected '[1, 2, 4]' to equal '[1, 2, 3]'"]]]}
+  end
+end
+
+describe Mumukit::Templates::FileHook do
   context 'with embedded env' do
     let(:runner) { EmbeddedEnvTestRunner.new }
 

@@ -6,15 +6,83 @@ class IntegrationTestBaseTestHook < Mumukit::Templates::FileHook
   end
 end
 
+
+class EchoPathTestRunner < Mumukit::Templates::FileHook
+  isolated true
+
+  def tempfile_extension
+    '_test.txt'
+  end
+
+  def compile_file_content(*)
+    ''
+  end
+
+  def command_line(path)
+    "echo path is #{path}"
+  end
+end
+
+class LineNumberTestRunner < Mumukit::Templates::FileHook
+  isolated true
+  line_number_offset 30, include_extra: true
+
+  def tempfile_extension
+    '_spec.rb'
+  end
+
+  def compile_file_content(*)
+    ''
+  end
+
+  def command_line(path)
+    "echo #{path}:65:in `load': #{path}:62: syntax error, unexpected tIDENTIFIER, expecting keyword_end (SyntaxError)"
+  end
+end
+
 describe Mumukit::Server::TestServer do
   let(:server) { Mumukit::Server::TestServer.new }
-  let(:result) { server.test!(req content: 'foo', test: 'bar', expectations: []) }
+  let(:result) { server.test!(request) }
+  let(:request) { req content: 'foo', test: 'bar', expectations: [] }
   let(:info) { server.info('http://localhost:8080')[:features] }
 
   before { Mumukit.configure_runtime(nil) }
 
   context 'when there are not tests and no expectations' do
     it { expect(server.test!(req content: 'foo')).to eq out: '', exit: :passed }
+  end
+
+
+  describe 'filename hiding' do
+    before do
+      class DemoTestHook < EchoPathTestRunner
+      end
+    end
+    after do
+      drop_hook DemoTestHook
+    end
+    it { expect(result).to eq out: "path is solution_test.txt\n", exit: :passed }
+  end
+
+  describe 'line number offset' do
+    before do
+      class DemoTestHook < LineNumberTestRunner
+      end
+    end
+    after do
+      drop_hook DemoTestHook
+    end
+
+    context 'no extra' do
+      it { expect(result[:out])
+            .to eq "solution_spec.rb:35:in `load': solution_spec.rb:32: syntax error, unexpected tIDENTIFIER, expecting keyword_end (SyntaxError)\n" }
+    end
+
+    context 'with extra' do
+      let(:request) { req content: 'foo', test: 'bar', extra: "hello\nworld\n", expectations: [] }
+      it { expect(result[:out])
+            .to eq "solution_spec.rb:33:in `load': solution_spec.rb:30: syntax error, unexpected tIDENTIFIER, expecting keyword_end (SyntaxError)\n" }
+    end
   end
 
   context 'when test runner is implemented but no expectations' do
