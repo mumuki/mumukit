@@ -16,7 +16,7 @@ if [ $# -ne 4 ]; then
   echo "[Mumukit::Bootstrap] Hi! So you want to create a runner? This script will help you :D"
   echo "                     Please run this script again passing the following arguments:"
   echo ""
-  echo "                     ./create.sh <GITHUB_USER> <RUNNER> <CONSTANT> <DOCKER_BASE_IMAGE>"
+  echo "                     ./seed.sh <GITHUB_USER> <RUNNER> <CONSTANT> <DOCKER_BASE_IMAGE>"
   echo ""
   echo "                     where..."
   echo ""
@@ -45,7 +45,7 @@ echo "                     So I will create your runner..."
 echo ""
 
 
-project_directory="../mumuki-$runner-runner"
+project_directory="../../mumuki-$runner-runner"
 
 if [ -d $project_directory ]; then
   echo ""
