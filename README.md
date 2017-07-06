@@ -77,6 +77,7 @@ Finally, `mumukit` templates provides the following _extensions_ - features that
 * `Mumukit::Hook`
   * `stateful_through`: lets to handle cookies. Useful in `query_hooks`.
 *  `Mumukit::Templates::FileHook`:
+  * `line_number_offset`: lets you specify line number offset, so that line numbers reported by compilers and interpreters matches content.
   * `structured`: lets to process JSON output from external commands
   * `mashup`: lets to generate source code files
   * `isolated`: lets to run commands within docker or in native environment
