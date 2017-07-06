@@ -33,6 +33,15 @@ And then `bundle install`
 
 ## Getting started
 
+### Seed
+
+The easiest way of getting started is by using using the `seed/seed.sh` script.
+
+1. Clone this project in a clean directory: `git clone https://github.com/mumuki/mumukit`
+2. Go to `seed` directory: `cd mumukit/seed`
+3. Run the script:  `./seed.sh`
+4. Follow instructions.
+
 ### Hooks
 
 `mumukit` is a framework where nearly everything is a _hook_ - a class you must implement following some naming and method conventions.
