@@ -12,6 +12,14 @@ echo "        \/            \/           \/               \/                    
 echo ""
 echo ""
 
+execution_base_path=$(basename $(pwd))
+
+if [ $execution_base_path != 'seed' ]; then
+  echo "[Mumukit::Bootstrap] Oops. It looks like you have not run this script from seed directory."
+  echo "                     Please cd to it first."
+  exit 1
+fi
+
 if [ $# -ne 4 ]; then
   echo "[Mumukit::Bootstrap] Hi! So you want to create a runner? This script will help you :D"
   echo "                     Please run this script again passing the following arguments:"
@@ -43,7 +51,6 @@ echo ""
 echo "[Mumukit::Bootstrap] Good. It looks like you have passed all the required arguments!"
 echo "                     So I will create your runner..."
 echo ""
-
 
 project_directory="../../mumuki-$runner-runner"
 
