@@ -83,6 +83,7 @@ sed -i "s/<RUNNER>/$runner/g"                    config.ru
 echo "[Mumukit::Seed] Creating README.md..."
 sed -i "s/<RUNNER>/$runner/g"                    README.md
 sed -i "s/<USER>/$user/g"                        README.md
+sed -i "s,<IMAGE>,$image,g"                      README.md
 
 echo "[Mumukit::Seed] Creating .travis.yml..."
 sed -i "s/<RUNNER>/$runner/g"                    .travis.yml
