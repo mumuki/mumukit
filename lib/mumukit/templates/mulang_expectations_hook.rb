@@ -18,7 +18,7 @@ module Mumukit
     def post_process_file(file, result, status)
       parse_response JSON.pretty_parse(result)
     rescue JSON::ParserError
-      raise "Can not handle mulang results #{result}"
+      raise Mumukit::CompilationError, "Can not handle mulang results #{result}"
     end
 
     def compile_file_content(request)
