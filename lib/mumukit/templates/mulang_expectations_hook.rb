@@ -59,13 +59,18 @@ module Mumukit
       expectations = []
       exceptions = []
       request[:expectations].each do |it|
-        if it[:inspection]&.start_with? 'Except:'
-          exceptions << it[:inspection][7..-1]
-        else
-          expectations << compile_expectation(it.deep_symbolize_keys)
-        end
+        fill_expectations_and_excetions it.deep_symbolize_keys, expectations, exceptions
       end
       [expectations, exceptions]
+    end
+
+    def fill_expectations_and_excetions(expectation, expectations, exceptions)
+      inspection = expectation[:inspection]
+      if inspection&.start_with? 'Except:'
+        exceptions << inspection[7..-1]
+      else
+        expectations << compile_expectation(expectation)
+      end
     end
 
     def compile_content(content)
