@@ -33,10 +33,14 @@ module Mumukit
             expectations: expectations,
             smellsSet: {
               tag: 'AllSmells',
-              exclude: exceptions
+              exclude: (exceptions + default_smell_exceptions)
             }
           }
       }
+    end
+
+    def default_smell_exceptions
+      []
     end
 
     def compile_sample(request)
