@@ -82,6 +82,9 @@ module Mumukit
     end
 
     def parse_response(response)
+      if response['tag'] == 'AnalysisFailed'
+        raise Mumukit::CompilationError, response['reason']
+      end
       response['expectationResults'].map do |it|
         {result: it['result'],
          expectation: parse_expectation(it['expectation'])}

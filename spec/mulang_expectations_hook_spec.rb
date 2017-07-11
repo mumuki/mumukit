@@ -55,9 +55,10 @@ describe Mumukit::Templates::MulangExpectationsHook do
   end
 
   context '#run!' do
-    let(:request) { {content: content, expectations: expectations} }
 
     context 'when language is not defined' do
+      let(:request) { {content: content, expectations: expectations} }
+
       before do
         class DemoExpectationsHook < Mumukit::Templates::MulangExpectationsHook
         end
@@ -65,7 +66,22 @@ describe Mumukit::Templates::MulangExpectationsHook do
 
       it { expect { compile_and_run request }.to raise_error(Exception, 'You have to provide a Mulang-compatible language in order to use this hook') }
     end
+
+    context 'when language is provided and there are syntax errors on content' do
+      let(:request) { {content: 'sadsadas', expectations: expectations} }
+
+      before do
+        class DemoExpectationsHook < Mumukit::Templates::MulangExpectationsHook
+          def language
+            'Haskell'
+          end
+        end
+      end
+
+      it { expect { compile_and_run request }.to raise_error(Mumukit::CompilationError, 'Sample code parsing error') }
+    end
   end
+
   context '#mulang_input' do
     context 'with defaults' do
       before do
