@@ -2,8 +2,14 @@ require 'mumukit/inspection'
 
 module Mumukit
   class Templates::MulangExpectationsHook < Mumukit::Templates::FileHook
+    LOGIC_SMELLS = %w(UsesCut UsesFail UsesUnificationOperator HasRedundantReduction)
+    FUNCTIONAL_SMELLS = %w(HasRedundantParameter HasRedundantGuards)
+    OBJECT_ORIENTED_SMELLS = %w(DoesNullTest ReturnsNull)
+    IMPERATIVE_SMELLS = %w(HasRedundantLocalVariableReturn HasAssignmentReturn)
+    EXPRESSIVENESS_SMELLS = %w(HasTooShortBindings HasWrongCaseBindings HasMisspelledBindings)
+    GENERIC_SMELLS = %w(IsLongCode HasCodeDuplication HasRedundantLambda HasRedundantIf DoesTypeTest HasRedundantBooleanComparison)
+
     isolated false
-    # TODO Support externalized languages
     required :language, 'You have to provide a Mulang-compatible language in order to use this hook'
 
     def tempfile_extension
