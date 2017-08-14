@@ -2,7 +2,7 @@ require_relative './spec_helper'
 
 describe Mumukit::Templates::MulangExpectationsHook do
   let(:content) { 'x = 1' }
-  let(:usesX) { {binding: '', inspection: 'Uses:X'} }
+  let(:usesX) { {binding: '*', inspection: 'Uses:X'} }
   let(:expectations) { [usesX] }
 
   after do
@@ -28,12 +28,12 @@ describe Mumukit::Templates::MulangExpectationsHook do
 
     let(:content) { 'f x = f x' }
 
-    let(:declaresComputationWithArity1) { {binding: '', inspection: 'DeclaresComputationWithArity1:f'} }
+    let(:declaresComputationWithArity1) { {binding: '*', inspection: 'DeclaresComputationWithArity1:f'} }
     let(:usesIf) { {binding: 'f', inspection: 'UsesIf'} }
     let(:hasBindingF) { {binding: 'f', inspection: 'HasBinding'} }
     let(:hasBindingG) { {binding: 'g', inspection: 'HasBinding'} }
     let(:redundantParameterSmell) { {binding: 'f', inspection: 'HasRedundantParameter'} }
-    let(:exceptHasTooShortBindings) { {binding: '', inspection: 'Except:HasTooShortBindings'} }
+    let(:exceptHasTooShortBindings) { {binding: '*', inspection: 'Except:HasTooShortBindings'} }
 
     let(:request) { {
       content: content,
@@ -47,8 +47,8 @@ describe Mumukit::Templates::MulangExpectationsHook do
 
     it { expect(result).to include(expectation: usesIf, result: false) }
 
-    it { expect(result).to include(expectation: {binding: '', inspection: 'Declares:=f'}, result: true) }
-    it { expect(result).to include(expectation: {binding: '', inspection: 'Declares:=g'}, result: false) }
+    it { expect(result).to include(expectation: {binding: '*', inspection: 'Declares:=f'}, result: true) }
+    it { expect(result).to include(expectation: {binding: '*', inspection: 'Declares:=g'}, result: false) }
 
     it { expect(result).to include(expectation: redundantParameterSmell, result: false) }
     it { expect(result).to_not include(expectation: {binding: 'f', inspection: 'HasTooShortBindings'}, result: false) }
