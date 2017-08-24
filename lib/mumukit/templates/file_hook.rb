@@ -4,6 +4,7 @@ module Mumukit
 
     attr_accessor :request
 
+
     def compile(request)
       self.request = request
       write_tempfile! compile_file_content(request)
@@ -49,8 +50,9 @@ module Mumukit
       end
     end
 
-    def self.structured(value=true)
+    def self.structured(value=true, separator: nil)
       if value
+        @@separator = separator
         include Mumukit::Templates::WithStructuredResults
       end
     end
