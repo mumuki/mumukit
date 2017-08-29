@@ -65,8 +65,9 @@ module Mumukit
       end
     end
 
-    def self.mashup(*args)
+    def self.mashup(*args, &map_block)
       include Mumukit::Templates::WithMashupFileContent
+      define_method(:map_mashup_fields, &map_block) if block_given?
 
       args = args.present? ? args : [:extra, :content, :test]
 
