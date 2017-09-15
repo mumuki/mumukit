@@ -33,11 +33,12 @@ describe Mumukit::Templates::MulangExpectationsHook do
     let(:hasBindingF) { {binding: 'f', inspection: 'HasBinding'} }
     let(:hasBindingG) { {binding: 'g', inspection: 'HasBinding'} }
     let(:redundantParameterSmell) { {binding: 'f', inspection: 'HasRedundantParameter'} }
-    let(:exceptHasTooShortBindings) { {binding: '*', inspection: 'Except:HasTooShortBindings'} }
+    let(:exceptHasTooShortIdentifiers) { {binding: '*', inspection: 'Except:HasTooShortIdentifiers'} }
+    let(:exceptNonExistingSmell) { {binding: '*', inspection: 'Except:NonExistingSmell'} }
 
     let(:request) { {
       content: content,
-      expectations: [declaresComputationWithArity1, usesIf, hasBindingF, hasBindingG, exceptHasTooShortBindings]} }
+      expectations: [declaresComputationWithArity1, usesIf, hasBindingF, hasBindingG, exceptHasTooShortIdentifiers, exceptNonExistingSmell]} }
 
     let(:result) { compile_and_run request }
 
@@ -51,7 +52,7 @@ describe Mumukit::Templates::MulangExpectationsHook do
     it { expect(result).to include(expectation: {binding: '*', inspection: 'Declares:=g'}, result: false) }
 
     it { expect(result).to include(expectation: redundantParameterSmell, result: false) }
-    it { expect(result).to_not include(expectation: {binding: 'f', inspection: 'HasTooShortBindings'}, result: false) }
+    it { expect(result).to_not include(expectation: {binding: 'f', inspection: 'HasTooShortIdentifiers'}, result: false) }
   end
 
   context '#run!' do
@@ -78,7 +79,7 @@ describe Mumukit::Templates::MulangExpectationsHook do
         end
       end
 
-      it { expect { compile_and_run request }.to raise_error(Mumukit::CompilationError, 'Sample code parsing error') }
+      it { expect { compile_and_run request }.to raise_error(Mumukit::CompilationError, 'Parse error') }
     end
   end
 
