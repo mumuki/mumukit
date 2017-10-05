@@ -57,8 +57,21 @@ class Mumukit::Server::TestServer
     end
   end
 
+  def try!(request)
+    respond_to(request) do |r|
+      results = run_try!(r)
+      Mumukit::Server::ResponseBuilder.build do
+        add_try_results(results)
+      end
+    end
+  end
+
   def run_query!(request)
     compile_and_run runtime.query_hook, request
+  end
+
+  def run_try!(request)
+    compile_and_run runtime.try_hook, request
   end
 
   def run_tests!(request)
