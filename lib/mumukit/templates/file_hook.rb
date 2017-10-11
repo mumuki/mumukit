@@ -52,7 +52,7 @@ module Mumukit
 
     def self.structured(value=true, separator: nil)
       if value
-        @@separator = separator
+        @separator = separator
         include Mumukit::Templates::WithStructuredResults
       end
     end

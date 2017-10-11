@@ -15,7 +15,7 @@ module Mumukit::Templates::WithStructuredResults
   end
 
   def extract_result(result)
-    separator = self.class.class_variable_get :@@separator
+    separator = self.class.instance_variable_get :@separator
     result = result.split(separator).last if separator.present?
     result
   end
