@@ -4,6 +4,6 @@ class Mumukit::Defaults::TryHook < Mumukit::Hook
   end
 
   def run!(compilation)
-    ['unimplemented', :aborted]
+    ['unimplemented', :aborted, {result: 'unimplemented', status: :aborted}]
   end
 end

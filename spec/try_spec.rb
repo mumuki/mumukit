@@ -1,55 +1,22 @@
-require_relative './spec_helper.rb'
-
-class IntegrationTestBaseTryHook < Mumukit::Templates::FileHook
-  def compile_file_content(r)
-    "#{r.test}  #{r.extra}  #{r.content}"
-  end
-end
-
-
-class EchoPathTryRunner < Mumukit::Templates::FileHook
-  isolated true
-
-  def tempfile_extension
-    '_test.txt'
-  end
-
-  def compile_file_content(*)
-    ''
-  end
-
-  def command_line(path)
-    "echo path is #{path}"
-  end
-end
+require_relative './spec_helper'
 
 describe Mumukit::Server::TestServer do
-  let(:server) { Mumukit::Server::TestServer.new }
-  let(:result) { server.test!(request) }
-  let(:request) { req content: 'foo', test: 'bar', expectations: [] }
-  let(:info) { server.info('http://localhost:8080')[:features] }
-
-  before { Mumukit.configure_runtime(nil) }
-
-  context 'when test runner is implemented but no expectations' do
-    before do
-      class DemoTryHook < IntegrationTestBaseTryHook
+  before do
+    class DemoTryHook < Mumukit::Templates::FileHook
+      def compile_file_content(_r)
+        ''
       end
     end
-    after do
-      drop_hook DemoTryHook
-    end
+  end
+  after do
+    drop_hook DemoTryHook
+  end
 
-    it { expect(info[:expectations]).to be false }
+  let(:server) { Mumukit::Server::TestServer.new }
 
-    context 'when test returns structured results' do
-      before { allow_any_instance_of(DemoTryHook).to receive(:run!).and_return([[['foo', :passed, ''], ['baz', :failed, 'bar']]]) }
-
-      it { expect(result).to eq testResults: [
-          {title: 'foo', status: :passed, result: ''},
-          {title: 'baz', status: :failed, result: 'bar'}] }
-    end
-
+  context 'just query' do
+    before { allow_any_instance_of(DemoTryHook).to receive(:run!).and_return(['ok', :passed, {result: 'query_ok', status: :passed}]) }
+    it { expect(server.try!(req query: 'echo something')).to eq out: 'ok', exit: :passed, queryResult: {result: 'query_ok', status: :passed} }
   end
 
 end
