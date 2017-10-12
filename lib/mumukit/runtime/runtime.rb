@@ -7,6 +7,10 @@ class Mumukit::Runtime
     @hook_classes = {}
   end
 
+  def reset!
+    @hook_classes = {}
+  end
+
   def hook_defined?(hook_name)
     hook_name.to_default_mumukit_hook_class rescue raise "Wrong hook #{hook_name}"
 

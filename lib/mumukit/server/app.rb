@@ -55,6 +55,10 @@ class Mumukit::Server::App < Sinatra::Base
     JSON.generate(server.query!(parse_request))
   end
 
+  post '/try' do
+    JSON.generate(server.try!(parse_request))
+  end
+
   get '/*' do
     redirect settings.mumuki_url
   end

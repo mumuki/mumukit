@@ -12,6 +12,10 @@ class Mumukit::Server::ResponseBuilder
     @response.merge!(expectationResults: r) if r.present?
   end
 
+  def add_try_results(r)
+    @response = unstructured_base_response(r)
+    @response.merge!(queryResult: r[2])
+  end
 
   def add_feedback(f)
     @response.merge!(feedback: f) if f.present?
