@@ -7,6 +7,8 @@ describe Mumukit::Server::TestServer do
         ''
       end
     end
+
+    allow_any_instance_of(DemoTryHook).to receive(:run!).and_return(['ok', :passed, {result: 'query_ok', status: :passed}])
   end
   after do
     drop_hook DemoTryHook
@@ -14,8 +16,7 @@ describe Mumukit::Server::TestServer do
 
   let(:server) { Mumukit::Server::TestServer.new }
 
-  context 'just query' do
-    before { allow_any_instance_of(DemoTryHook).to receive(:run!).and_return(['ok', :passed, {result: 'query_ok', status: :passed}]) }
+  context 'valid try' do
     it { expect(server.try!(req query: 'echo something')).to eq out: 'ok', exit: :passed, queryResult: {result: 'query_ok', status: :passed} }
   end
 
