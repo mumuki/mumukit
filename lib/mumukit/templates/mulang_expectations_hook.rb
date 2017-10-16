@@ -34,14 +34,23 @@ module Mumukit
     def compile_json_file_content(request)
       expectations, exceptions = compile_expectations_and_exceptions request
       {
-          sample: compile_sample(request),
-          spec: {
-            expectations: expectations,
-            smellsSet: {
-              tag: 'AllSmells',
-              exclude: (exceptions + default_smell_exceptions)
-            }
-          }
+        sample: compile_sample(request),
+        spec: {
+          expectations: expectations,
+          smellsSet: {
+            tag: 'AllSmells',
+            exclude: (exceptions + default_smell_exceptions)
+          },
+          domainLanguage: domain_language
+        }
+      }
+    end
+
+    def domain_language
+      {
+        caseStyle: "CamelCase",
+        minimumIdentifierSize: 3,
+        jargon: []
       }
     end
 
