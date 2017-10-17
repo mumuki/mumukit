@@ -4,6 +4,7 @@ module Mumukit
 end
 
 require_relative './templates/file_hook'
+require_relative './templates/try_hook'
 require_relative './templates/with_structured_results'
 require_relative './templates/with_metatest'
 require_relative './templates/with_metatest_results'
