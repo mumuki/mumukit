@@ -3,3 +3,13 @@ es:
     memory_exceeded: Limite de memoria excedido. ¿Tu programa está alocando demasiada memoria?
     time_exceeded:  Limite de tiempo de ejecución de %{limit}s excedido. ¿Tu programa tiene recursión o bucle infinito?
     masked_tempfile_basename: solucion
+    interactive:
+      check_last_query_equals: "La consulta debería ser '%{expected}' pero fue '%{actual}'"
+      check_last_query_fails: "La consulta debería fallar pero pasó"
+      check_last_query_matches: "La consulta no cumple con la expresión regular %{regex}"
+      check_last_query_outputs: "La consulta debería devolver '%{expected}' pero devolvió '%{actual}'"
+      check_last_query_passes: "La consulta debería pasar pero falló"
+      check_query_fails: "La consulta '%{query}' debería fallar pero pasó"
+      check_query_outputs: "La consulta '%{query}' debería devolver '%{expected}' pero devolvió '%{actual}'"
+      check_query_passes: "La consulta '%{query}' debería pasar pero falló"
+      goal_passed: "El objetivo se cumplió exitosamente"

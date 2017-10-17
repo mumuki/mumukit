@@ -3,3 +3,13 @@ en:
     memory_exceeded: Memory limit exceeded. Is your program trying to allocate to much memory?
     time_exceeded:  Execution time limit of %{limit}s exceeded. Is your program performing an infinite loop or recursion?
     masked_tempfile_basename: solution
+    interactive:
+      check_last_query_equals: "query should be '%{expected}' but was '%{actual}'"
+      check_last_query_fails: "query should fail but it passed"
+      check_last_query_matches: "query does not match regex %{regex}"
+      check_last_query_outputs: "query output should be '%{expected}' but was '%{actual}'"
+      check_last_query_passes: "query should pass but it failed"
+      check_query_fails: "query '%{query}' should fail but it passed"
+      check_query_outputs: "query '%{query}' output should be '%{expected}' but was '%{actual}'"
+      check_query_passes: "query '%{query}' should pass but it failed"
+      goal_passed: "goal was met successfully"
