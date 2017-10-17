@@ -13,7 +13,7 @@ module Mumukit::Metatest
 
     def check_last_query_matches(_result, goal)
       regex = goal[:regex]
-      fail_t :check_last_query_matches, regex.to_s unless regex.matches? @request.query
+      fail_t :check_last_query_matches, regex: regex.inspect unless regex.matches? @request.query
     end
 
     def check_last_query_fails(result, _goal)
@@ -45,7 +45,7 @@ module Mumukit::Metatest
     end
 
     def render_success_output(_value)
-      I18n.t :goal_passed
+      I18n.t locale(:goal_passed)
     end
 
     def fail_t(sym, *args)
