@@ -10,6 +10,7 @@ module Mumukit::RuntimeInfo
         comment_type: Mumukit.config.comment_type,
         features: {
             query: query_hook?,
+            try: try_hook?,
             expectations: expectations_hook?,
             feedback: feedback_hook?,
             secure: validation_hook?,
