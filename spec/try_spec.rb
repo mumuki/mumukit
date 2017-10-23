@@ -15,6 +15,8 @@ describe Mumukit::Server::TestServer do
 
   let(:server) { Mumukit::Server::TestServer.new }
 
+  it { expect(server.info('http://localhost')[:features][:try]).to be true }
+
   context 'valid try' do
     before { allow_any_instance_of(DemoTryHook).to receive(:run!).and_return(['ok', :passed, {result: 'query_ok', status: :passed}]) }
     it { expect(server.try!(req query: 'echo something', goal: {kind: :last_query_passes})).to eq out: 'ok', exit: :passed, queryResult: {result: 'query_ok', status: :passed} }
