@@ -17,7 +17,9 @@ class Mumukit::Server::TestServer
   end
 
   def parse_request(sinatra_request)
-    OpenStruct.new parse_request_headers(sinatra_request).merge(parse_request_body(sinatra_request))
+    OpenStruct.new(parse_request_headers(sinatra_request).merge(parse_request_body(sinatra_request))).tap do |request|
+      request.content = Mumukit::Fileset.new(request.content) unless request.content.is_a? String
+    end
   end
 
   def parse_request_headers(sinatra_request)
