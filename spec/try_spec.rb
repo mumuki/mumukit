@@ -26,21 +26,16 @@ end
 describe Mumukit::Metatest::InteractiveChecker do
   before do
     class DemoTryHook < Mumukit::Templates::TryHook
-      isolated true
-
       def command_line(f)
-        ''
+        'dont care'
       end
 
       def compile_file_content(r)
-        ''
+        'dont care'
       end
 
-      def post_process_file(_file, result, status)
-        check results
-      end
-
-      def results
+      def run_file!(*)
+        ['', :passed]
       end
     end
   end
@@ -51,6 +46,9 @@ describe Mumukit::Metatest::InteractiveChecker do
   let(:hook) { DemoTryHook.new }
   let(:file) { hook.compile(request) }
   let(:result) { hook.run!(file) }
+  let(:structured_results) { { } }
+
+  before { allow_any_instance_of(DemoTryHook).to receive(:to_structured_results).and_return structured_results }
 
   context 'try with last_query_equals goal' do
     let(:goal) { { kind: 'last_query_equals', query: 'echo something' } }
@@ -84,19 +82,19 @@ describe Mumukit::Metatest::InteractiveChecker do
     let(:goal) { { kind: 'last_query_outputs', output: 'something' } }
 
     context 'and query with said output' do
-      before { allow_any_instance_of(DemoTryHook).to receive(:results).and_return query: {result: 'something'} }
+      let(:structured_results) { { query: {result: 'something'} } }
       let(:request) { struct goal: goal }
       it { expect(result[1]).to eq :passed }
     end
 
     context 'and query with a different output' do
-      before { allow_any_instance_of(DemoTryHook).to receive(:results).and_return query: {result: 'something else'} }
+      let(:structured_results) { { query: {result: 'something else'} } }
       let(:request) { struct goal: goal }
       it { expect(result[1]).to eq :failed }
     end
 
     context 'and query with no output' do
-      before { allow_any_instance_of(DemoTryHook).to receive(:results).and_return query: {result: ''} }
+      let(:structured_results) { { query: {result: ''} } }
       let(:request) { struct goal: goal }
       it { expect(result[1]).to eq :failed }
     end
@@ -106,13 +104,13 @@ describe Mumukit::Metatest::InteractiveChecker do
     let(:goal) { { kind: 'query_fails', query: 'cd somewhere' } }
 
     context 'and query that makes said query pass' do
-      before { allow_any_instance_of(DemoTryHook).to receive(:results).and_return status: :passed }
+      let(:structured_results) { { status: :passed } }
       let(:request) { struct goal: goal }
       it { expect(result[1]).to eq :failed }
     end
 
     context 'and query that makes said query fail' do
-      before { allow_any_instance_of(DemoTryHook).to receive(:results).and_return status: :failed }
+      let(:structured_results) { { status: :failed } }
       let(:request) { struct goal: goal }
       it { expect(result[1]).to eq :passed }
     end
@@ -122,13 +120,13 @@ describe Mumukit::Metatest::InteractiveChecker do
     let(:goal) { { kind: 'query_passes', query: 'cd somewhere' } }
 
     context 'and query that makes said query pass' do
-      before { allow_any_instance_of(DemoTryHook).to receive(:results).and_return status: :passed }
+      let(:structured_results) { { status: :passed } }
       let(:request) { struct goal: goal }
       it { expect(result[1]).to eq :passed }
     end
 
     context 'nd query that does not make said query fail' do
-      before { allow_any_instance_of(DemoTryHook).to receive(:results).and_return status: :failed }
+      let(:structured_results) { { status: :failed } }
       let(:request) { struct goal: goal }
       it { expect(result[1]).to eq :failed }
     end
@@ -138,13 +136,13 @@ describe Mumukit::Metatest::InteractiveChecker do
     let(:goal) { { kind: 'query_outputs', query: 'ls', output: 'somewhere' } }
 
     context 'and query that generates said output' do
-      before { allow_any_instance_of(DemoTryHook).to receive(:results).and_return goal: 'somewhere' }
+      let(:structured_results) { { goal: 'somewhere' } }
       let(:request) { struct goal: goal }
       it { expect(result[1]).to eq :passed }
     end
 
     context 'and query that does not generate said output' do
-      before { allow_any_instance_of(DemoTryHook).to receive(:results).and_return goal: '' }
+      let(:structured_results) { { goal: '' } }
       let(:request) { struct goal: goal }
       it { expect(result[1]).to eq :failed }
     end
@@ -154,13 +152,13 @@ describe Mumukit::Metatest::InteractiveChecker do
     let(:goal) { { kind: 'last_query_passes' } }
 
     context 'and query that passes' do
-      before { allow_any_instance_of(DemoTryHook).to receive(:results).and_return query: {status: :passed} }
+      let(:structured_results) { { query: {status: :passed} } }
       let(:request) { struct goal: goal }
       it { expect(result[1]).to eq :passed }
     end
 
     context 'and query that fails' do
-      before { allow_any_instance_of(DemoTryHook).to receive(:results).and_return query: {status: :failed} }
+      let(:structured_results) { { query: {status: :failed} } }
       let(:request) { struct goal: goal }
       it { expect(result[1]).to eq :failed }
     end
@@ -170,13 +168,13 @@ describe Mumukit::Metatest::InteractiveChecker do
     let(:goal) { { kind: 'last_query_fails' } }
 
     context 'and query that fails' do
-      before { allow_any_instance_of(DemoTryHook).to receive(:results).and_return query: {status: :failed} }
+      let(:structured_results) { { query: {status: :failed} } }
       let(:request) { struct goal: goal }
       it { expect(result[1]).to eq :passed }
     end
 
     context 'and query that passes' do
-      before { allow_any_instance_of(DemoTryHook).to receive(:results).and_return query: {status: :passed} }
+      let(:structured_results) { { query: {status: :passed} } }
       let(:request) { struct goal: goal }
       it { expect(result[1]).to eq :failed }
     end
