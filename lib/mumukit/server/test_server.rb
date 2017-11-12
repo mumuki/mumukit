@@ -64,11 +64,9 @@ class Mumukit::Server::TestServer
   end
 
   def run_expectations!(request)
-    if request.expectations
-      compile_and_run(runtime.expectations_hook, request) { [] }
-    else
-      []
-    end
+    return [] if request.expectations.nil?
+
+    compile_and_run(runtime.expectations_hook, request)
   end
 
   def run_feedback!(request, results)
@@ -89,7 +87,7 @@ class Mumukit::Server::TestServer
     compilation = hook.compile(preprocess request)
     hook.run!(compilation)
   rescue Mumukit::CompilationError => e
-    block_given? ? yield(e) : [e.message, :errored]
+    [e.message, :errored]
   end
 
   def preprocess(request)
