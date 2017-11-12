@@ -32,19 +32,10 @@ class Mumukit::Server::TestServer
 
   def test!(request)
     respond_to(request) do |r|
-      test_results = run_tests! r
-      expectation_results = run_expectations! r
-
-      results = OpenStruct.new(test_results: test_results,
-                               expectation_results: expectation_results)
-
-      feedback = run_feedback! r, results
-
-      Mumukit::Server::ResponseBuilder.build do
-        add_test_results(test_results)
-        add_expectation_results(expectation_results)
-        add_feedback(feedback)
-      end
+      pipeline = Mumukit::Server::TestPipeline.new self, r
+      pipeline.evaluate!
+      pipeline.generate_feedback!
+      pipeline.response
     end
   end
 
@@ -66,14 +57,6 @@ class Mumukit::Server::TestServer
     end
   end
 
-  def run_query!(request)
-    compile_and_run runtime.query_hook, request
-  end
-
-  def run_try!(request)
-    compile_and_run runtime.try_hook, request
-  end
-
   def run_tests!(request)
     return ['', :passed] if request.test.blank?
 
@@ -93,6 +76,14 @@ class Mumukit::Server::TestServer
   end
 
   private
+
+  def run_query!(request)
+    compile_and_run runtime.query_hook, request
+  end
+
+  def run_try!(request)
+    compile_and_run runtime.try_hook, request
+  end
 
   def compile_and_run(hook, request)
     compilation = hook.compile(preprocess request)
