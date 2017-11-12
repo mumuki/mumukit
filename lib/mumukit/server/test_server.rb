@@ -64,9 +64,9 @@ class Mumukit::Server::TestServer
   end
 
   def run_expectations!(request)
-    return [] if request.expectations.nil?
+    return [] if request.expectations.nil? || request.content.nil?
 
-    compile_and_run(runtime.expectations_hook, request)
+    compile_and_run runtime.expectations_hook, request
   end
 
   def run_feedback!(request, results)
@@ -84,7 +84,7 @@ class Mumukit::Server::TestServer
   end
 
   def compile_and_run(hook, request)
-    compilation = hook.compile(preprocess request)
+    compilation = hook.compile(request)
     hook.run!(compilation)
   rescue Mumukit::CompilationError => e
     [e.message, :errored]
@@ -99,7 +99,7 @@ class Mumukit::Server::TestServer
   end
 
   def respond_to(request)
-    yield request.tap { |r| validate_request! r }
+    yield preprocess request.tap { |r| validate_request! r }
   rescue Mumukit::RequestValidationError => e
     {exit: :aborted, out: e.message}
   rescue Exception => e
