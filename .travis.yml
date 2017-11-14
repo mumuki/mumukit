@@ -9,7 +9,7 @@ addons:
 services:
 - docker
 before_install:
-- docker pull ubuntu:xenial
+- docker pull alpine
 - wget https://github.com/mumuki/mulang/releases/download/v3.1.1/mulang
 - mv mulang bin/
 - chmod +x bin/mulang

@@ -16,21 +16,22 @@ module Mumukit
 
       command = yield(*filenames).split
 
+      configure_container! command, binds, volumes
+    end
+
+    def configure_container!(command, binds, volumes)
       self.container = Docker::Container.create(
-          'Image' => Mumukit.config.docker_image,
-          'Cmd' => command,
-          'NetworkDisabled' => true,
-          'HostConfig' => {
-              'Binds' => binds},
-          'Volumes' => volumes)
+        'Image' => Mumukit.config.docker_image,
+        'Cmd' => command,
+        'NetworkDisabled' => true,
+        'HostConfig' => {
+            'Binds' => binds},
+        'Volumes' => volumes)
     end
 
     def run!
-      container.start
-      container.wait(Mumukit.config.command_time_limit)
-
-      exit = container.json['State']['ExitCode']
-      out = container.streaming_logs(stdout: true, stderr: true)
+      run_container!
+      exit, out = fetch_container_state!
 
       if exit == 0
         [out, :passed]
@@ -39,6 +40,17 @@ module Mumukit
       end
     rescue Docker::Error::TimeoutError => e
       [I18n.t('mumukit.time_exceeded', limit: Mumukit.config.command_time_limit), :aborted]
+    end
+
+    def run_container!
+      container.start
+      container.wait(Mumukit.config.command_time_limit)
+    end
+
+    def fetch_container_state!
+      exit = container.json['State']['ExitCode']
+      out = container.streaming_logs(stdout: true, stderr: true)
+      [exit, out]
     end
 
     def destroy!

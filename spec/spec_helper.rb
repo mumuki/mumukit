@@ -7,7 +7,7 @@ require_relative '../lib/mumukit'
 
 Mumukit.runner_name = 'demo'
 Mumukit.configure do |c|
-  c.docker_image = 'ubuntu:xenial'
+  c.docker_image = 'alpine'
 end
 
 RSpec.configure do |config|

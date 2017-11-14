@@ -15,7 +15,7 @@ describe Mumukit::Templates::MulangExpectationsHook do
 
   let(:hook) { DemoExpectationsHook.new('mulang_path' => './bin/mulang') }
 
-  context 'integration' do
+  context 'when code is well formed' do
     before do
       class DemoExpectationsHook < Mumukit::Templates::MulangExpectationsHook
         include_smells true
@@ -55,69 +55,64 @@ describe Mumukit::Templates::MulangExpectationsHook do
     it { expect(result).to_not include(expectation: {binding: 'f', inspection: 'HasTooShortIdentifiers'}, result: false) }
   end
 
-  context '#run!' do
+  context 'when language is not defined' do
+    let(:request) { {content: content, expectations: expectations} }
 
-    context 'when language is not defined' do
-      let(:request) { {content: content, expectations: expectations} }
-
-      before do
-        class DemoExpectationsHook < Mumukit::Templates::MulangExpectationsHook
-        end
+    before do
+      class DemoExpectationsHook < Mumukit::Templates::MulangExpectationsHook
       end
-
-      it { expect { compile_and_run request }.to raise_error(Exception, 'You have to provide a Mulang-compatible language in order to use this hook') }
     end
 
-    context 'when language is provided and there are syntax errors on content' do
-      let(:request) { {content: 'sadsadas', expectations: expectations} }
-
-      before do
-        class DemoExpectationsHook < Mumukit::Templates::MulangExpectationsHook
-          def language
-            'Haskell'
-          end
-        end
-      end
-
-      it { expect { compile_and_run request }.to raise_error(Mumukit::CompilationError, 'Parse error') }
-    end
+    it { expect { compile_and_run request }.to raise_error(Exception, 'You have to provide a Mulang-compatible language in order to use this hook') }
   end
 
-  context '#mulang_input' do
-    context 'with defaults' do
-      before do
-        class DemoExpectationsHook < Mumukit::Templates::MulangExpectationsHook
-          def language
-            'Haskell'
-          end
+  context 'when language is provided and there are syntax errors on content' do
+    let(:request) { {content: 'sadsadas', expectations: expectations} }
+
+    before do
+      class DemoExpectationsHook < Mumukit::Templates::MulangExpectationsHook
+        def language
+          'Haskell'
         end
       end
-
-      it { expect(hook.compile_json_file_content content: content, expectations: expectations)
-                .to include sample: {
-                              tag: 'CodeSample',
-                              content: 'x = 1',
-                              language: 'Haskell' } }
     end
 
-    context 'when transform_content is provided' do
-      before do
-        class DemoExpectationsHook < Mumukit::Templates::MulangExpectationsHook
-          def language
-            'Haskell'
-          end
+    it { expect { compile_and_run request }.to raise_error(Mumukit::CompilationError, 'Parse error') }
+  end
 
-          def compile_content(content)
-            "// #{content} //"
-          end
+  context 'with defaults' do
+    before do
+      class DemoExpectationsHook < Mumukit::Templates::MulangExpectationsHook
+        def language
+          'Haskell'
         end
       end
+    end
 
-      it { expect(hook.compile_json_file_content content: content, expectations: expectations)
+    it { expect(hook.compile_json_file_content content: content, expectations: expectations)
               .to include sample: {
                             tag: 'CodeSample',
-                            content: '// x = 1 //',
-                            language: 'Haskell'} }
+                            content: 'x = 1',
+                            language: 'Haskell' } }
+  end
+
+  context 'when transform_content is provided' do
+    before do
+      class DemoExpectationsHook < Mumukit::Templates::MulangExpectationsHook
+        def language
+          'Haskell'
+        end
+
+        def compile_content(content)
+          "// #{content} //"
+        end
+      end
     end
+
+    it { expect(hook.compile_json_file_content content: content, expectations: expectations)
+            .to include sample: {
+                          tag: 'CodeSample',
+                          content: '// x = 1 //',
+                          language: 'Haskell'} }
   end
 end
