@@ -14,17 +14,13 @@ module Mumukit
 
     def compile(request)
       expectations, exceptions = compile_expectations_and_exceptions request
-      {
-        sample: compile_sample(request),
-        spec: {
-          expectations: expectations,
-          smellsSet: {
-            tag: 'AllSmells',
-            exclude: (exceptions + default_smell_exceptions)
-          },
-          domainLanguage: domain_language
-        }
-      }
+      mulang_code(request).analysis(
+        expectations: expectations,
+        smellsSet: {
+          tag: 'AllSmells',
+          exclude: (exceptions + default_smell_exceptions)
+        },
+        domainLanguage: domain_language)
     end
 
     def run!(analysis)
@@ -46,9 +42,8 @@ module Mumukit
       []
     end
 
-    def compile_sample(request)
-      compiled_content = compile_content(request[:content])
-      Mulang::Code.new(mulang_language, compiled_content).sample
+    def mulang_code(request)
+      Mulang::Code.new(mulang_language, compile_content(request[:content]))
     end
 
     def mulang_language
