@@ -1,7 +1,8 @@
 require 'mumukit/inspection'
+require 'mulang'
 
 module Mumukit
-  class Templates::MulangExpectationsHook < Mumukit::Templates::FileHook
+  class Templates::MulangExpectationsHook < Mumukit::Hook
     LOGIC_SMELLS = %w(UsesCut UsesFail UsesUnificationOperator HasRedundantReduction)
     FUNCTIONAL_SMELLS = %w(HasRedundantParameter HasRedundantGuards)
     OBJECT_ORIENTED_SMELLS = %w(DoesNullTest ReturnsNull)
@@ -9,29 +10,9 @@ module Mumukit
     EXPRESSIVENESS_SMELLS = %w(HasTooShortBindings HasWrongCaseBindings HasMisspelledBindings)
     GENERIC_SMELLS = %w(IsLongCode HasCodeDuplication HasRedundantLambda HasRedundantIf DoesTypeTest HasRedundantBooleanComparison)
 
-    isolated false
     required :language, 'You have to provide a Mulang-compatible language in order to use this hook'
 
-    def tempfile_extension
-      '.json'
-    end
-
-    def command_line(filename)
-      # TODO avoid file generation
-      "cat #{filename} | #{mulang_path} -s 2>&1"
-    end
-
-    def post_process_file(file, result, status)
-      parse_response JSON.pretty_parse(result)
-    rescue JSON::ParserError
-      raise Mumukit::CompilationError, "Can not handle mulang results #{result}"
-    end
-
-    def compile_file_content(request)
-      compile_json_file_content(request).to_json
-    end
-
-    def compile_json_file_content(request)
+    def compile(request)
       expectations, exceptions = compile_expectations_and_exceptions request
       {
         sample: compile_sample(request),
@@ -45,6 +26,13 @@ module Mumukit
         }
       }
     end
+
+    def run!(analysis)
+      parse_response Mulang.analyse(analysis)
+    rescue JSON::ParserError
+      raise Mumukit::CompilationError, "Can not handle mulang results for analysis #{analysis}"
+    end
+
 
     def domain_language
       {
@@ -60,18 +48,11 @@ module Mumukit
 
     def compile_sample(request)
       compiled_content = compile_content(request[:content])
-      if language == 'Mulang'
-        {
-          tag: 'MulangSample',
-          ast: compiled_content
-        }
-      else
-        {
-          tag: 'CodeSample',
-          language: language,
-          content: compiled_content
-        }
-      end
+      Mulang::Code.new(mulang_language, compiled_content).sample
+    end
+
+    def mulang_language
+      language == 'Mulang' ? Mulang::Language::External.new :  Mulang::Language::Native.new(language)
     end
 
     def compile_expectations_and_exceptions(request)
