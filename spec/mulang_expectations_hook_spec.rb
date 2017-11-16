@@ -89,7 +89,7 @@ describe Mumukit::Templates::MulangExpectationsHook do
       end
     end
 
-    it { expect(hook.compile_json_file_content content: content, expectations: expectations)
+    it { expect(hook.compile content: content, expectations: expectations)
               .to include sample: {
                             tag: 'CodeSample',
                             content: 'x = 1',
@@ -109,7 +109,7 @@ describe Mumukit::Templates::MulangExpectationsHook do
       end
     end
 
-    it { expect(hook.compile_json_file_content content: content, expectations: expectations)
+    it { expect(hook.compile content: content, expectations: expectations)
             .to include sample: {
                           tag: 'CodeSample',
                           content: '// x = 1 //',
