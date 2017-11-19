@@ -70,6 +70,6 @@ class Mumukit::Server::App < Sinatra::Base
     message = Mumukit::ContentType::Plain.format_exception env['sinatra.error']
     logger.error "Unhandled error #{message}"
 
-    {status: :errored, exit: message}.to_json
+    {exit: :errored, out: message}.to_json
   end
 end

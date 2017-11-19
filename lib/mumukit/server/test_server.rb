@@ -102,7 +102,7 @@ class Mumukit::Server::TestServer
     yield preprocess request.tap { |r| validate_request! r }
   rescue Mumukit::RequestValidationError => e
     {exit: :aborted, out: e.message}
-  rescue Exception => e
+  rescue StandardError => e
     {exit: :errored, out: content_type.format_exception(e)}
   end
 
