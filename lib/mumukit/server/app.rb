@@ -65,11 +65,8 @@ class Mumukit::Server::App < Sinatra::Base
 
   error StandardError do
     content_type :json
-    status 200
-
+    status 500
     message = Mumukit::ContentType::Plain.format_exception env['sinatra.error']
-    logger.error "Unhandled error #{message}"
-
     {exit: :errored, out: message}.to_json
   end
 end
