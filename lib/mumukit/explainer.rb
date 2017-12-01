@@ -5,7 +5,8 @@ class Mumukit::Explainer
         .compact
         .map do |key, binding|
           if binding.key?(:type)
-            binding.merge message: I18n.t(key)
+            explanation = binding.merge message: I18n.t(key), line: binding[:line].to_i
+            explanation.tap {|it| it.merge! column: binding[:column].to_i if binding.key? :column}
           else
             "* #{I18n.t key, binding}"
           end
