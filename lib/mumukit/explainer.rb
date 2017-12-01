@@ -3,14 +3,18 @@ class Mumukit::Explainer
     explain_methods
         .map { |selector, key| eval_explain(selector, key, content, test_results) }
         .compact
-        .map { |explain| I18n.t(explain[:key], explain[:binding]) }
-        .map { |it| "* #{it}" }
-        .join("\n")
+        .map do |key, binding|
+          if binding.key?(:type)
+            binding.merge message: I18n.t(key)
+          else
+            "* #{I18n.t key, binding}"
+          end
+        end
   end
 
   def eval_explain(selector, key, content, test_results)
     send(selector, content, test_results).try do |it|
-      {key: key, binding: it}
+      [key, it]
     end
   end
 
