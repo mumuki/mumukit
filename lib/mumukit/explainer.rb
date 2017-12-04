@@ -1,7 +1,7 @@
 class Mumukit::Explainer
   def explain(content, test_results)
     explain_methods
-        .map { |selector, key| eval_explain(selector, key, content, test_results) }
+        .flat_map { |selector, key| eval_explain(selector, key, content, test_results) }
         .compact
         .map do |key, binding|
           if binding.key?(:type)
@@ -15,7 +15,7 @@ class Mumukit::Explainer
 
   def eval_explain(selector, key, content, test_results)
     send(selector, content, test_results).try do |it|
-      [key, it]
+      it.map {|binding| [key, binding]}
     end
   end
 
