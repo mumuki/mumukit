@@ -33,6 +33,7 @@ class Mumukit::Runner
           [Mumukit::Directives::Sections.new,
            Mumukit::Directives::Interpolations.new('test'),
            Mumukit::Directives::Interpolations.new('extra'),
+           Mumukit::Directives::Interpolations.new('content'),
            Mumukit::Directives::Flags.new],
           config.comment_type)
     else
