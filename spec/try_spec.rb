@@ -50,6 +50,12 @@ describe Mumukit::Metatest::InteractiveChecker do
 
   before { allow_any_instance_of(DemoTryHook).to receive(:to_structured_results).and_return structured_results }
 
+  context 'when using string keys' do
+    let(:goal) { { 'kind' => 'last_query_equals', 'value' => 'echo something' } }
+    let(:request) { struct query: 'echo something', goal: goal }
+    it { expect(result[1]).to eq :passed }
+  end
+
   context 'try with last_query_equals goal' do
     let(:goal) { { kind: 'last_query_equals', value: 'echo something' } }
 
