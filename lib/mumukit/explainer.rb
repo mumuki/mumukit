@@ -3,14 +3,7 @@ class Mumukit::Explainer
     explain_methods
         .flat_map { |selector, key| eval_explain(selector, key, content, test_results) }
         .compact
-        .map do |key, binding|
-          if binding.key?(:type)
-            explanation = binding.merge message: I18n.t(key), line: binding[:line].to_i
-            explanation.tap {|it| it.merge! column: binding[:column].to_i if binding.key? :column}
-          else
-            "* #{I18n.t key, binding}"
-          end
-        end
+        .map { |explain| translate_and_format(*explain) }
   end
 
   def eval_explain(selector, key, content, test_results)
@@ -24,5 +17,20 @@ class Mumukit::Explainer
         .instance_methods(false)
         .flat_map { |it| it.to_s.captures(/explain_(.*)/).map { [it, $1] } }
         .compact
+  end
+
+  def translate_and_format(key, binding)
+    if binding.key?(:type)
+      explanation = binding.merge message: I18n.t(key)
+      merge_numeric_key explanation, binding, :line
+      merge_numeric_key explanation, binding, :column
+      explanation
+    else
+      "* #{I18n.t key, binding}"
+    end
+  end
+
+  def merge_numeric_key(explanation, binding, key)
+    explanation.merge! key binding[key].to_i if binding.key? key
   end
 end
