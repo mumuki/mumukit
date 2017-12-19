@@ -21,6 +21,7 @@ class Mumukit::Server::TestPipeline
     builder.add_test_results @test_results
     builder.add_expectation_results @expectation_results
     builder.add_feedback @feedback
+    builder.add_inline_errors @inline_errors
     builder.build
   end
 

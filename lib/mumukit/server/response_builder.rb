@@ -21,6 +21,10 @@ class Mumukit::Server::ResponseBuilder
     @response.merge!(feedback: f) if f.present?
   end
 
+  def add_inline_errors(e)
+    @response.merge!(inline_errors: e) if e.present?
+  end
+
   def build
     @response
   end
