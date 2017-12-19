@@ -6,13 +6,13 @@ module Mumukit::Metatest
     end
 
     def check_last_query_equals(_result, goal)
-      expected = goal[:query]
+      expected = goal[:value]
       actual = @request.query
       fail_t :check_last_query_equals, expected: expected, actual: actual unless expected == actual
     end
 
     def check_last_query_matches(_result, goal)
-      regex = goal[:regex]
+      regex = goal[:regexp]
       fail_t :check_last_query_matches, regex: regex.inspect unless regex.matches? @request.query
     end
 
