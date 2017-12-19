@@ -31,6 +31,6 @@ class Mumukit::Explainer
   end
 
   def merge_numeric_key(explanation, binding, key)
-    explanation.merge! key binding[key].to_i
+    explanation.merge! key => binding[key].to_i
   end
 end
