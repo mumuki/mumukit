@@ -1,7 +1,9 @@
 module Mumukit
   class Templates::TryHook < Templates::FileHook
     def compile(request)
-      @goal = {postconditions: [[request.goal.with_indifferent_access[:kind], request.goal]]}
+      request_goal = request.goal.with_indifferent_access
+
+      @goal = {postconditions: [[request_goal[:kind], request_goal]]}
       @checker = Metatest::InteractiveChecker.new request
       super request
     end

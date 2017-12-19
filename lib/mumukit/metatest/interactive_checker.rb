@@ -6,13 +6,13 @@ module Mumukit::Metatest
     end
 
     def check_last_query_equals(_result, goal)
-      expected = goal[:query]
+      expected = goal[:value]
       actual = @request.query
       fail_t :check_last_query_equals, expected: expected, actual: actual unless expected == actual
     end
 
     def check_last_query_matches(_result, goal)
-      regex = goal[:regex]
+      regex = goal[:regexp]
       fail_t :check_last_query_matches, regex: regex.inspect unless regex.matches? @request.query
     end
 
@@ -21,7 +21,7 @@ module Mumukit::Metatest
     end
 
     def check_last_query_outputs(result, goal)
-      expected = goal.with_indifferent_access[:output]
+      expected = goal[:output]
       actual = result[:query][:result]
       fail_t :check_last_query_outputs, expected: expected, actual: actual unless expected == actual
     end
@@ -31,17 +31,17 @@ module Mumukit::Metatest
     end
 
     def check_query_passes(result, goal)
-      fail_t :check_query_passes, query: goal.with_indifferent_access[:query] unless result[:status] == :passed
+      fail_t :check_query_passes, query: goal[:query] unless result[:status] == :passed
     end
 
     def check_query_fails(result, goal)
-      fail_t :check_query_fails, query: goal.with_indifferent_access[:query] unless result[:status] == :failed
+      fail_t :check_query_fails, query: goal[:query] unless result[:status] == :failed
     end
 
     def check_query_outputs(result, goal)
-      expected = goal.with_indifferent_access[:output]
+      expected = goal[:output]
       actual = result[:goal]
-      fail_t :check_query_outputs, query: goal.with_indifferent_access[:query], expected: expected, actual: actual unless expected == actual
+      fail_t :check_query_outputs, query: goal[:query], expected: expected, actual: actual unless expected == actual
     end
 
     def render_success_output(_value)
