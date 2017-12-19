@@ -23,14 +23,14 @@ class Mumukit::Explainer
     if binding.key?(:type)
       explanation = binding.merge message: I18n.t(key)
       merge_numeric_key explanation, binding, :line
-      merge_numeric_key explanation, binding, :column
+      merge_numeric_key explanation, binding, :column if binding.key? :column
       explanation
     else
-      "* #{I18n.t key, binding}"
+      { message: "* #{I18n.t key, binding}" }
     end
   end
 
   def merge_numeric_key(explanation, binding, key)
-    explanation.merge! key binding[key].to_i if binding.key? key
+    explanation.merge! key binding[key].to_i
   end
 end
