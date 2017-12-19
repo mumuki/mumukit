@@ -7,6 +7,7 @@ describe Mumukit::Runtime do
   it { expect(runtime.info[:features][:secure]).to be false }
   it { expect(runtime.info[:features][:sandboxed]).to be false }
   it { expect(runtime.info[:features][:feedback]).to be false }
+  it { expect(runtime.info[:worker_image]).to eq 'alpine' }
   it { expect(runtime.info[:features][:query]).to be false }
   it { expect(runtime.metadata_hook?).to be false }
   it { expect(runtime.metadata_hook).to be_a Mumukit::Defaults::MetadataHook }

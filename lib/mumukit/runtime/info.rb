@@ -6,6 +6,7 @@ module Mumukit::RuntimeInfo
         escualo_base_version: ENV['ESCUALO_BASE_VERSION'],
         escualo_service_version: ENV['ESCUALO_SERVICE_VERSION'],
         mumukit_version: Mumukit::VERSION,
+        worker_image: Mumukit.config.docker_image,
         output_content_type: Mumukit.config.content_type,
         comment_type: Mumukit.config.comment_type,
         features: {
