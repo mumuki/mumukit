@@ -12,8 +12,10 @@ class Mumukit::Server::TestPipeline
   end
 
   def generate_feedback!
-    @feedback = @server.run_feedback! @request,
+    feedback = @server.run_feedback! @request,
                                      struct(test_results: @test_results, expectation_results: @expectation_results)
+    @inline_errors, @feedback = feedback.partition {|it| it.key? :type}
+    @feedback = @feedback.map(&:values).join "\n"
   end
 
   def response
