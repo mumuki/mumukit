@@ -146,7 +146,7 @@ describe Mumukit::Server::TestServer do
 
       context 'when feedback is given' do
         before { allow_any_instance_of(DemoTestHook).to receive(:run!).and_return(['ok', :passed]) }
-        before { allow_any_instance_of(DemoFeedbackHook).to receive(:run!).and_return('Keep up the good work!') }
+        before { allow_any_instance_of(DemoFeedbackHook).to receive(:run!).and_return([ { message: 'Keep up the good work!' } ]) }
         it { expect(result[:feedback]).to eq('Keep up the good work!') }
       end
     end
