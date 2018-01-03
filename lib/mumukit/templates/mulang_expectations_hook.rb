@@ -8,7 +8,7 @@ module Mumukit
     OBJECT_ORIENTED_SMELLS = %w(DoesNullTest ReturnsNull)
     IMPERATIVE_SMELLS = %w(HasRedundantLocalVariableReturn HasAssignmentReturn)
     EXPRESSIVENESS_SMELLS = %w(HasTooShortBindings HasWrongCaseBindings HasMisspelledBindings)
-    GENERIC_SMELLS = %w(IsLongCode HasCodeDuplication HasRedundantLambda HasRedundantIf DoesTypeTest HasRedundantBooleanComparison)
+    GENERIC_SMELLS = %w(IsLongCode HasCodeDuplication HasRedundantLambda HasRedundantIf DoesTypeTest HasRedundantBooleanComparison HasEmptyIfBranches)
 
     required :language, 'You have to provide a Mulang-compatible language in order to use this hook'
 
