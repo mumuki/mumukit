@@ -8,6 +8,8 @@ es:
       check_last_query_fails: "La consulta debería fallar pero pasó"
       check_last_query_matches: "La consulta no cumple con la expresión regular %{regex}"
       check_last_query_outputs: "La consulta debería devolver '%{expected}' pero devolvió '%{actual}'"
+      check_last_query_includes: "La consulta debería incluir '%{expected}' pero devolvió '%{actual}'"
+      check_last_query_like: "La consulta debería ser como '%{expected}' pero devolvió '%{actual}'"
       check_last_query_passes: "La consulta debería pasar pero falló"
       check_query_fails: "La consulta '%{query}' debería fallar pero pasó"
       check_query_outputs: "La consulta '%{query}' debería devolver '%{expected}' pero devolvió '%{actual}'"
