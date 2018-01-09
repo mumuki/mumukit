@@ -106,6 +106,38 @@ describe Mumukit::Metatest::InteractiveChecker do
     end
   end
 
+  context 'try with last_query_output_includes goal' do
+    let(:goal) { { kind: 'last_query_output_includes', output: 'something' } }
+
+    context 'and query with output that includes it' do
+      let(:structured_results) { { query: {result: 'anything something everything'} } }
+      let(:request) { struct goal: goal }
+      it { expect(result[1]).to eq :passed }
+    end
+
+    context 'and query with output that does not include it' do
+      let(:structured_results) { { query: {result: 'nothing'} } }
+      let(:request) { struct goal: goal }
+      it { expect(result[1]).to eq :failed }
+    end
+  end
+
+  context 'try with last_query_output_like? goal' do
+    let(:goal) { { kind: 'last_query_output_like', output: 'Some thing' } }
+
+    context 'and query with output that is like it' do
+      let(:structured_results) { { query: {result: 'something'} } }
+      let(:request) { struct goal: goal }
+      it { expect(result[1]).to eq :passed }
+    end
+
+    context 'and query with output that is not like it' do
+      let(:structured_results) { { query: {result: 'nothing'} } }
+      let(:request) { struct goal: goal }
+      it { expect(result[1]).to eq :failed }
+    end
+  end
+
   context 'try with query_fails goal' do
     let(:goal) { { kind: 'query_fails', query: 'cd somewhere' } }
 
