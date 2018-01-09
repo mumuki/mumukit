@@ -21,9 +21,21 @@ module Mumukit::Metatest
     end
 
     def check_last_query_outputs(result, goal)
+      compare_last_query_by(:check_last_query_outputs, result, goal) { |expected, actual| expected == actual }
+    end
+
+    def check_last_query_output_includes(result, goal)
+      compare_last_query_by(:check_last_query_output_includes, result, goal) { |expected, actual| actual.include? expected }
+    end
+
+    def check_last_query_output_like(result, goal)
+      compare_last_query_by(:check_last_query_output_like, result, goal) { |expected, actual| normalize(expected) == normalize(actual) }
+    end
+
+    def compare_last_query_by(sym, result, goal, &condition)
       expected = goal[:output]
       actual = result[:query][:result]
-      fail_t :check_last_query_outputs, expected: expected, actual: actual unless expected == actual
+      fail_t sym, expected: expected, actual: actual unless condition.call expected, actual
     end
 
     def check_last_query_passes(result, _goal)
@@ -55,5 +67,10 @@ module Mumukit::Metatest
     def locale(sym)
       'mumukit.interactive.' + sym.to_s
     end
+
+    def normalize(a_string)
+      a_string.delete(" \t\r\n").downcase
+    end
+
   end
 end
