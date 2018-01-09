@@ -8,6 +8,8 @@ en:
       check_last_query_fails: "query should fail but it passed"
       check_last_query_matches: "query does not match regex %{regex}"
       check_last_query_outputs: "query output should be '%{expected}' but was '%{actual}'"
+      check_last_query_includes: "query output should include '%{expected}' but was '%{actual}'"
+      check_last_query_like: "query output should be like '%{expected}' but was '%{actual}'"
       check_last_query_passes: "query should pass but it failed"
       check_query_fails: "query '%{query}' should fail but it passed"
       check_query_outputs: "query '%{query}' output should be '%{expected}' but was '%{actual}'"
