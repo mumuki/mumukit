@@ -122,7 +122,7 @@ describe Mumukit::Metatest::InteractiveChecker do
     end
   end
 
-  context 'try with last_query_output_like? goal' do
+  context 'try with last_query_output_like goal' do
     let(:goal) { { kind: 'last_query_output_like', output: 'Some thing' } }
 
     context 'and query with output that is like it' do
