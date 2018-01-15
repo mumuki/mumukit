@@ -64,6 +64,26 @@ describe Mumukit::Server::TestServer do
     it { expect(result).to eq out: "path is solution_test.txt\n", exit: :passed }
   end
 
+  describe 'with precompile hook' do
+    before do
+      class DemoTestHook < Mumukit::Defaults::TestHook
+        def run!(request)
+          [request.something, :passed]
+        end
+      end
+      class DemoPrecompileHook < Mumukit::Hook
+        def compile(request)
+          struct request.to_h.merge(something: 'something precompiled')
+        end
+      end
+    end
+    after do
+      drop_hook DemoTestHook
+      drop_hook DemoPrecompileHook
+    end
+    it { expect(result).to eq out: "something precompiled", exit: :passed }
+  end
+
   describe 'line number offset' do
     before do
       class DemoTestHook < LineNumberTestRunner

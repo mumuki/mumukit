@@ -10,6 +10,7 @@ module Mumukit::RuntimeInfo
         output_content_type: Mumukit.config.content_type,
         comment_type: Mumukit.config.comment_type,
         features: {
+            precompile: precompile_hook?,
             query: query_hook?,
             try: try_hook?,
             expectations: expectations_hook?,

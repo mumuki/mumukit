@@ -91,7 +91,7 @@ class Mumukit::Server::TestServer
   end
 
   def preprocess(request)
-    Mumukit.directives_pipeline.transform(request)
+    runtime.precompile_hook.compile Mumukit.directives_pipeline.transform(request)
   end
 
   def validate_request!(request)
