@@ -1,6 +1,6 @@
 en:
   mumukit:
-    memory_exceeded: Memory limit exceeded. Is your program trying to allocate to much memory?
+    memory_exceeded: Memory limit exceeded. Is your program trying to allocate too much memory?
     time_exceeded:  Execution time limit of %{limit}s exceeded. Is your program performing an infinite loop or recursion?
     masked_tempfile_basename: solution
     interactive:
