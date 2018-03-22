@@ -22,6 +22,10 @@ module Mumukit
     current_runner.name
   end
 
+  def self.runner_url
+    Rack::Request.new(Mumukit::Env.env).base_url
+  end
+
   def self.configure_defaults(&block)
     Mumukit::Runner.configure_defaults(&block)
   end
