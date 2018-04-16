@@ -46,6 +46,7 @@ Mumukit.configure_defaults do |config|
   config.stateful = false
   config.command_time_limit = 4
   config.command_size_limit = 1024
+  config.process_expectations_on_empty_content = false
 end
 
 require 'mumukit/content_type'

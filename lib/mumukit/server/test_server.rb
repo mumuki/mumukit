@@ -64,7 +64,7 @@ class Mumukit::Server::TestServer
   end
 
   def run_expectations!(request)
-    return [] if request.expectations.nil? || request.content.nil?
+    return [] if should_skip_expectations?(request)
 
     compile_and_run runtime.expectations_hook, request
   end
@@ -96,6 +96,10 @@ class Mumukit::Server::TestServer
 
   def validate_request!(request)
     runtime.validation_hook.validate! request
+  end
+
+  def should_skip_expectations?(request)
+    request.expectations.nil? || (request.content.nil? && !Mumukit.config.process_expectations_on_empty_content)
   end
 
   def respond_to(request)
