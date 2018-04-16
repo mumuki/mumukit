@@ -55,52 +55,6 @@ describe Mumukit::Templates::MulangExpectationsHook do
     it { expect(result).to_not include(expectation: {binding: 'f', inspection: 'HasTooShortIdentifiers'}, result: false) }
   end
 
-  context 'when content is empty but extra is not' do
-    before do
-      class DemoExpectationsHook < Mumukit::Templates::MulangExpectationsHook
-        include_smells true
-
-        def language
-          'Haskell'
-        end
-      end
-      Mumukit.configure do |config|
-        config.process_expectations_on_empty_content = true
-      end
-    end
-
-    let(:content) { '' }
-    let(:extra) { 'f x = f x' }
-
-    let(:declaresComputationWithArity1) { {binding: '*', inspection: 'DeclaresComputationWithArity1:f'} }
-    let(:usesIf) { {binding: 'f', inspection: 'UsesIf'} }
-    let(:hasBindingF) { {binding: 'f', inspection: 'HasBinding'} }
-    let(:hasBindingG) { {binding: 'g', inspection: 'HasBinding'} }
-    let(:redundantParameterSmell) { {binding: 'f', inspection: 'HasRedundantParameter'} }
-    let(:exceptHasTooShortIdentifiers) { {binding: '*', inspection: 'Except:HasTooShortIdentifiers'} }
-    let(:exceptNonExistingSmell) { {binding: '*', inspection: 'Except:NonExistingSmell'} }
-
-    let(:request) { {
-      content: content,
-      extra: extra,
-      expectations: [declaresComputationWithArity1, usesIf, hasBindingF, hasBindingG, exceptHasTooShortIdentifiers, exceptNonExistingSmell]} }
-
-    let(:result) { compile_and_run request }
-
-    it { expect(result.length).to eq 5 }
-
-    it { expect(result).to include(expectation: declaresComputationWithArity1, result: true) }
-
-    it { expect(result).to include(expectation: usesIf, result: false) }
-
-    it { expect(result).to include(expectation: {binding: '*', inspection: 'Declares:=f'}, result: true) }
-    it { expect(result).to include(expectation: {binding: '*', inspection: 'Declares:=g'}, result: false) }
-
-    it { expect(result).to include(expectation: redundantParameterSmell, result: false) }
-    it { expect(result).to_not include(expectation: {binding: 'f', inspection: 'HasTooShortIdentifiers'}, result: false) }
-  end
-
-
   context 'when language is not defined' do
     let(:request) { {content: content, expectations: expectations} }
 
