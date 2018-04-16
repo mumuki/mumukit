@@ -225,6 +225,67 @@ describe Mumukit::Server::TestServer do
   end
 
 
+  context 'when content is empty but extra is not' do
+    after do
+      drop_hook DemoExpectationsHook
+      Mumukit.configure do |config|
+        config.process_expectations_on_empty_content = false
+      end
+    end
+    context 'and process empty content flag is true' do
+      before do
+        class DemoExpectationsHook < Mumukit::Templates::MulangExpectationsHook
+          include_smells true
+
+          def language
+            'Haskell'
+          end
+
+          def mulang_code(request)
+            Mulang::Code.new(mulang_language, compile_content(request))
+          end
+
+          def compile_content(request)
+            request[:content].presence || request[:extra]
+          end
+
+        end
+        Mumukit.configure do |config|
+          config.process_expectations_on_empty_content = true
+        end
+      end
+
+
+      let(:expectation_results) { [{expectation: {binding: '*', inspection: 'DeclaresComputationWithArity1:foo'}, result: true}] }
+      let(:result) { server.test!(req content: '', extra: 'foo x = x', expectations: [{binding: '*', inspection: 'DeclaresComputationWithArity1:foo'}]) }
+
+      it { expect(result).to eq out: '', exit: :passed, expectationResults: expectation_results }
+    end
+    context 'and process empty content flag is false' do
+      before do
+        class DemoExpectationsHook < Mumukit::Templates::MulangExpectationsHook
+          include_smells true
+
+          def language
+            'Haskell'
+          end
+
+          def mulang_code(request)
+            Mulang::Code.new(mulang_language, compile_content(request))
+          end
+
+          def compile_content(request)
+            request[:content].presence || request[:extra]
+          end
+        end
+      end
+
+      let(:result) { server.test!(req extra: 'foo x = x', expectations: [{binding: '*', inspection: 'DeclaresComputationWithArity1:foo'}]) }
+
+      it { expect(result).to eq out: '', exit: :passed }
+    end
+  end
+
   context 'when request is implemented' do
     before do
       class DemoValidationHook < Mumukit::Hook
