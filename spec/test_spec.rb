@@ -286,6 +286,50 @@ describe Mumukit::Server::TestServer do
     end
   end
 
+  context 'when test is empty' do
+    after do
+      drop_hook DemoExpectationsHook
+      Mumukit.configure do |config|
+        config.run_test_hook_on_empty_test = false
+      end
+    end
+    context 'and run test hook flag is true' do
+      before do
+        class DemoExpectationsHook < Mumukit::Templates::MulangExpectationsHook
+          include_smells true
+
+          def language
+            'Haskell'
+          end
+
+        end
+        Mumukit.configure do |config|
+          config.run_test_hook_on_empty_test = true
+        end
+      end
+
+
+      let(:result) { server.test!(req content: '', extra: 'foo x = x') }
+
+      it { expect(result).to eq out: 'unimplemented', exit: :aborted}
+    end
+    context 'and run test hook flag is true' do
+      before do
+        class DemoExpectationsHook < Mumukit::Templates::MulangExpectationsHook
+          include_smells true
+
+          def language
+            'Haskell'
+          end
+        end
+      end
+
+      let(:result) { server.test!(req extra: 'foo x = x') }
+
+      it { expect(result).to eq out: '', exit: :passed }
+    end
+  end
+
   context 'when request is implemented' do
     before do
       class DemoValidationHook < Mumukit::Hook
