@@ -58,7 +58,7 @@ class Mumukit::Server::TestServer
   end
 
   def run_tests!(request)
-    return ['', :passed] if request.test.blank?
+    return ['', :passed] if should_skip_tests?(request.test)
 
     compile_and_run runtime.test_hook, request
   end
@@ -100,6 +100,10 @@ class Mumukit::Server::TestServer
 
   def should_skip_expectations?(request)
     request.expectations.nil? || (request.content.nil? && !Mumukit.config.process_expectations_on_empty_content)
+  end
+
+  def should_skip_tests?(tests)
+    tests.blank? && !Mumukit.config.run_test_hook_on_empty_test
   end
 
   def respond_to(request)
