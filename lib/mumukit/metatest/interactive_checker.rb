@@ -17,7 +17,7 @@ module Mumukit::Metatest
     end
 
     def check_last_query_fails(result, _goal)
-      fail_t :check_last_query_fails unless result[:query][:status] == :failed
+      fail_t :check_last_query_fails unless result[:query][:status].failed?
     end
 
     def check_last_query_outputs(result, goal)
@@ -39,15 +39,15 @@ module Mumukit::Metatest
     end
 
     def check_last_query_passes(result, _goal)
-      fail_t :check_last_query_passes unless result[:query][:status] == :passed
+      fail_t :check_last_query_passes unless result[:query][:status].passed?
     end
 
     def check_query_passes(result, goal)
-      fail_t :check_query_passes, query: goal[:query] unless result[:status] == :passed
+      fail_t :check_query_passes, query: goal[:query] unless result[:status].passed?
     end
 
     def check_query_fails(result, goal)
-      fail_t :check_query_fails, query: goal[:query] unless result[:status] == :failed
+      fail_t :check_query_fails, query: goal[:query] unless result[:status].failed?
     end
 
     def check_query_outputs(result, goal)
