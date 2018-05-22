@@ -6,6 +6,7 @@ require 'json'
 class Mumukit::Server::App < Sinatra::Base
   configure do
     set :mumuki_url, 'http://mumuki.io'
+    set :show_exceptions, false
     enable :logging
   end
 
