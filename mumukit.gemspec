@@ -31,7 +31,7 @@ Gem::Specification.new do |spec|
   spec.add_dependency 'docker-api', '~> 1.22.2'
   spec.add_dependency 'excon', '~> 0.46'
 
-  spec.add_dependency 'mulang', '~> 3.4'
+  spec.add_dependency 'mulang', '~> 4.0'
 
   spec.add_dependency 'mumukit-inspection', '~> 3.1'
   spec.add_dependency 'mumukit-core', '~> 1.3'
