@@ -17,4 +17,10 @@ describe Mumukit do
     expect(Mumukit.runner_url).to eq 'http://example.org'
   end
 
+  it "should add the repo_url property" do
+    get '/info'
+
+    expect(JSON.parse(last_response.body)["repo_url"]).to eq 'https://github.com/mumuki/mumuki-demo-runner'
+  end
+
 end
