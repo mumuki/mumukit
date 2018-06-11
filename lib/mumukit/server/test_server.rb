@@ -10,7 +10,10 @@ class Mumukit::Server::TestServer
   end
 
   def info(url)
-    runtime.info.merge(runtime.metadata_hook.metadata).merge(url: url)
+    runtime.info
+        .merge(repo_url: default_repo_url)
+        .merge(runtime.metadata_hook.metadata)
+        .merge(url: url)
   end
 
   def start_request!(_request)
@@ -114,4 +117,7 @@ class Mumukit::Server::TestServer
     {exit: :errored, out: content_type.format_exception(e)}
   end
 
+  def default_repo_url
+    "https://github.com/mumuki/mumuki-#{Mumukit.runner_name}-runner"
+  end
 end
