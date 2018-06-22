@@ -25,29 +25,25 @@ class Mumukit::Runner
   end
 
   def run_test!(request)
-    respond_to(request) do |r|
+    respond_to(request) do |r, response_builder|
       pipeline = Mumukit::Runner::TestPipeline.new self, r
       pipeline.evaluate!
       pipeline.generate_feedback!
-      pipeline.response
+      pipeline.prepare_response! response_builder
     end
   end
 
   def run_query!(request)
-    respond_to(request) do |r|
+    respond_to(request) do |r, response_builder|
       results = run_query_hook!(r)
-      Mumukit::Runner::ResponseBuilder.build do
-        add_query_results(results)
-      end
+      response_builder.add_query_results(results)
     end
   end
 
   def run_try!(request)
-    respond_to(request) do |r|
+    respond_to(request) do |r, response_builder|
       results = run_try_hook!(r)
-      Mumukit::Runner::ResponseBuilder.build do
-        add_try_results(results)
-      end
+      response_builder.add_try_results(results)
     end
   end
 
@@ -62,7 +58,10 @@ class Mumukit::Runner
   private
 
   def respond_to(request)
-    yield run_precompile_hook request.tap { |r| run_validation_hook! r }
+    run_validation_hook! request
+    response_builder = Mumukit::Runner::ResponseBuilder.new
+    yield run_precompile_hook(request), response_builder
+    response_builder.build
   rescue Mumukit::RequestValidationError => e
     {exit: :aborted, out: e.message}
   rescue => e

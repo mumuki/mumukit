@@ -15,12 +15,10 @@ class Mumukit::Runner::TestPipeline
     @feedback = @runner.run_feedback_hook! @request, struct(test_results: @test_results, expectation_results: @expectation_results)
   end
 
-  def response
-    builder = Mumukit::Runner::ResponseBuilder.new
+  def prepare_response!(builder)
     builder.add_test_results @test_results
     builder.add_expectation_results @expectation_results
     builder.add_feedback @feedback
-    builder.build
   end
 
   def static_errors?(raw)
