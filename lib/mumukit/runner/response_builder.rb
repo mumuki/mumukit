@@ -1,4 +1,4 @@
-class Mumukit::Server::ResponseBuilder
+class Mumukit::Runner::ResponseBuilder
 
   def add_test_results(r)
     @response = base_response(r)

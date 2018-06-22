@@ -1,52 +1,72 @@
+class Mumukit::Runner
+end
+
+require_relative './runner/pipeline'
+require_relative './runner/configuration'
+require_relative './runner/compilation'
+require_relative './runner/hooks'
+require_relative './runner/response_builder'
+require_relative './runner/test_pipeline'
 
 class Mumukit::Runner
+  include Mumukit::Runner::Pipeline
+  include Mumukit::Runner::Configuration
+  include Mumukit::Runner::Compilation
+  include Mumukit::Runner::Hooks
+
   attr_reader :name, :runtime
 
   def initialize(name)
     @name = name
   end
 
-  def configure
-    @config ||= self.class.default_config.clone
-    yield @config
+  def info
+    runtime.info.merge(runtime.metadata_hook.metadata)
+  end
+
+  def run_test!(request)
+    respond_to(request) do |r|
+      pipeline = Mumukit::Runner::TestPipeline.new self, r
+      pipeline.evaluate!
+      pipeline.generate_feedback!
+      pipeline.response
+    end
+  end
+
+  def run_query!(request)
+    respond_to(request) do |r|
+      results = run_query_hook!(r)
+      Mumukit::Runner::ResponseBuilder.build do
+        add_query_results(results)
+      end
+    end
+  end
+
+  def run_try!(request)
+    respond_to(request) do |r|
+      results = run_try_hook!(r)
+      Mumukit::Runner::ResponseBuilder.build do
+        add_try_results(results)
+      end
+    end
   end
 
   def configure_runtime(config)
     @runtime = Mumukit::Runtime.new(config)
   end
 
-  def config
-    @config or raise 'This runner has not being configured yet'
-  end
-
   def prefix
     name.camelize
   end
 
-  def directives_pipeline
-    @pipeline ||= new_directives_pipeline
+  private
+
+  def respond_to(request)
+    yield run_precompile_hook request.tap { |r| run_validation_hook! r }
+  rescue Mumukit::RequestValidationError => e
+    {exit: :aborted, out: e.message}
+  rescue => e
+    {exit: :errored, out: config.content_type.format_exception(e)}
   end
 
-  def new_directives_pipeline
-    if config.preprocessor_enabled
-      Mumukit::Directives::Pipeline.new(
-          [Mumukit::Directives::Sections.new,
-           Mumukit::Directives::Interpolations.new('test'),
-           Mumukit::Directives::Interpolations.new('extra'),
-           Mumukit::Directives::Interpolations.new('content'),
-           Mumukit::Directives::Flags.new],
-          config.comment_type)
-    else
-      Mumukit::Directives::NullPipeline
-    end
-  end
-
-  def self.default_config
-    @default_config
-  end
-
-  def self.configure_defaults
-    @default_config ||= OpenStruct.new
-    yield @default_config
-  end
 end

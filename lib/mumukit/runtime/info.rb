@@ -9,6 +9,7 @@ module Mumukit::RuntimeInfo
         worker_image: Mumukit.config.docker_image,
         output_content_type: Mumukit.config.content_type,
         comment_type: Mumukit.config.comment_type,
+        repo_url: Mumukit.config.repo_url || default_repo_url,
         features: {
             precompile: precompile_hook?,
             query: query_hook?,
@@ -29,5 +30,9 @@ module Mumukit::RuntimeInfo
 
   def any_hook_include?(hooks, mixin)
     hooks.any? { |it| hook_includes?(it, mixin) }
+  end
+
+  def default_repo_url
+    "https://github.com/mumuki/mumuki-#{Mumukit.runner_name}-runner"
   end
 end
