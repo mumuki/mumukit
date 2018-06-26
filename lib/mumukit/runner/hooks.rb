@@ -38,6 +38,6 @@ module Mumukit::Runner::Hooks
   end
 
   def should_skip_tests?(tests)
-    tests.blank? && !config.run_test_hook_on_empty_test_hook
+    tests.blank? && !config.run_test_hook_on_empty_test
   end
 end
