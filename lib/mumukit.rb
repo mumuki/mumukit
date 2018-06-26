@@ -35,6 +35,7 @@ module Mumukit
   end
 end
 
+require_relative 'mumukit/with_content_type'
 require_relative 'mumukit/runner'
 
 Mumukit.configure_defaults do |config|
@@ -56,7 +57,6 @@ require_relative 'mumukit/version'
 require_relative 'mumukit/env'
 require_relative 'mumukit/cookie'
 require_relative 'mumukit/with_tempfile'
-require_relative 'mumukit/with_content_type'
 require_relative 'mumukit/with_command_line'
 require_relative 'mumukit/hook'
 require_relative 'mumukit/runtime'

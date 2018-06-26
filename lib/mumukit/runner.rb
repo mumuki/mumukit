@@ -13,6 +13,7 @@ class Mumukit::Runner
   include Mumukit::Runner::Configuration
   include Mumukit::Runner::Compilation
   include Mumukit::Runner::Hooks
+  include Mumukit::WithContentType
 
   attr_reader :name, :runtime
 
@@ -65,7 +66,11 @@ class Mumukit::Runner
   rescue Mumukit::RequestValidationError => e
     {exit: :aborted, out: e.message}
   rescue => e
-    {exit: :errored, out: config.content_type.format_exception(e)}
+    {exit: :errored, out: content_type.format_exception(e)}
+  end
+
+  def content_type_config
+    config.content_type
   end
 
 end
