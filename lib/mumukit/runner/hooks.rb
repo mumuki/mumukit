@@ -1,6 +1,6 @@
 module Mumukit::Runner::Hooks
   def run_test_hook!(request)
-    return ['', :passed] if should_skip_tests?(request.test)
+    return ['<skipped>', :passed] if should_skip_tests?(request.test)
 
     compile_and_run! runtime.test_hook, request
   end
