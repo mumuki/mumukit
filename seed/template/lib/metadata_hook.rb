@@ -1,4 +1,4 @@
-class <CONSTANT>MetadataHook < Mumukit::Hook
+class Mumukit::<CONSTANT>::MetadataHook < Mumukit::Hook
   def metadata
     {language: {
         name: '...',

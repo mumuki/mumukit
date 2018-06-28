@@ -4,7 +4,11 @@ require 'pathname'
 module Mumukit
   class IsolatedEnvironment
 
-    attr_accessor :container
+    attr_accessor :container, :config
+
+    def initialize(config)
+      @config = config
+    end
 
     def configure!(*files)
 
@@ -21,7 +25,7 @@ module Mumukit
 
     def configure_container!(command, binds, volumes)
       self.container = Docker::Container.create(
-        'Image' => Mumukit.config.docker_image,
+        'Image' => config.docker_image,
         'Cmd' => command,
         'NetworkDisabled' => true,
         'HostConfig' => {
@@ -39,12 +43,12 @@ module Mumukit
         [out, :failed]
       end
     rescue Docker::Error::TimeoutError => e
-      [I18n.t('mumukit.time_exceeded', limit: Mumukit.config.command_time_limit), :aborted]
+      [I18n.t('mumukit.time_exceeded', limit: config.command_time_limit), :aborted]
     end
 
     def run_container!
       container.start
-      container.wait(Mumukit.config.command_time_limit)
+      container.wait(config.command_time_limit)
     end
 
     def fetch_container_state!

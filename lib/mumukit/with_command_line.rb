@@ -5,15 +5,15 @@ module Mumukit
     SIGXCPU = 24
 
     def command_size_limit
-      Mumukit.config.command_size_limit
+      config.command_size_limit
     end
 
     def command_time_limit
-      Mumukit.config.command_time_limit
+      config.command_time_limit
     end
 
     def limit_command
-      Mumukit.config.limit_script
+      config.limit_script
     end
 
     def run_command(command)

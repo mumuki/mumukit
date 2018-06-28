@@ -1,6 +1,10 @@
 require 'spec_helper'
 
 class BaseTestRunner < Mumukit::Templates::FileHook
+  def initialize
+    super(struct docker_image: 'alpine')
+  end
+
   def command_line(path)
     "cat #{path}"
   end
@@ -72,31 +76,17 @@ describe Mumukit::Templates::FileHook do
 end
 
 describe Mumukit::Runtime do
-  let(:runtime) { Mumukit::Runtime.new({}) }
+  let(:runtime) { Mumukit::Runtime.new(hooks: hooks) }
 
   context 'when test runner is isolated' do
-    before do
-      class DemoTestHook < IsolatedEnvTestRunner
-      end
-    end
+    let(:hooks) { { test: Class.new(IsolatedEnvTestRunner) } }
 
-    after do
-      drop_hook DemoTestHook
-    end
-
-    it { expect(runtime.test_hook?).to be true }
+    it { expect(runtime.hook_defined?(:test)).to be true }
     it { expect(runtime.info[:features][:sandboxed]).to be true }
   end
 
   context 'when test runner is embedded' do
-    before do
-      class DemoTestHook < EmbeddedEnvTestRunner
-      end
-    end
-
-    after do
-      drop_hook DemoTestHook
-    end
+    let(:hooks) { { test: Class.new(EmbeddedEnvTestRunner) } }
 
     it { expect(runtime.info[:features][:sandboxed]).to be false }
   end

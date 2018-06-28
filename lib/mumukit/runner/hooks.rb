@@ -2,33 +2,33 @@ module Mumukit::Runner::Hooks
   def run_test_hook!(request)
     return ['<skipped>', :passed] if should_skip_tests?(request.test)
 
-    compile_and_run! runtime.test_hook, request
+    compile_and_run! :test, request
   end
 
   def run_expectations_hook!(request)
     return [] if should_skip_expectations?(request)
 
-    compile_and_run! runtime.expectations_hook, request
+    compile_and_run! :expectations, request
   end
 
   def run_feedback_hook!(request, results)
-    runtime.feedback_hook.run!(request, results)
+    runtime.new_hook(:feedback).run!(request, results)
   end
 
   def run_query_hook!(request)
-    compile_and_run! runtime.query_hook, request
+    compile_and_run! :query, request
   end
 
   def run_try_hook!(request)
-    compile_and_run! runtime.try_hook, request
+    compile_and_run! :try, request
   end
 
   def run_precompile_hook(request)
-    runtime.precompile_hook.compile directives_pipeline.transform(request)
+    runtime.new_hook(:precompile).compile directives_pipeline.transform(request)
   end
 
   def run_validation_hook!(request)
-    runtime.validation_hook.validate! request
+    runtime.new_hook(:validation).validate! request
   end
 
   private

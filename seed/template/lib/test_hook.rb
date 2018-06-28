@@ -1,4 +1,4 @@
-class <CONSTANT>TestHook < Mumukit::Templates::FileHook
+class Mumukit::<CONSTANT>::TestHook < Mumukit::Templates::FileHook
   mashup
   isolated true
 

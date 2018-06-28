@@ -1,31 +1,29 @@
 require_relative './spec_helper'
 require 'ostruct'
 
-describe Mumukit::Server::TestServer do
-  before do
-    class DemoTryHook < Mumukit::Templates::TryHook
+describe Mumukit::Runner do
+  let(:try_hook) do
+    Class.new(Mumukit::Templates::TryHook) do
       def compile_file_content(_r)
         ''
       end
     end
   end
-  after do
-    drop_hook DemoTryHook
-  end
 
-  let(:server) { Mumukit::Server::TestServer.new }
+  let(:runner ) { Mumukit::Runner.create(hooks: {try: try_hook}) }
 
-  it { expect(server.info('http://localhost')[:features][:try]).to be true }
+
+  it { expect(runner.info[:features][:try]).to be true }
 
   context 'valid try' do
-    before { allow_any_instance_of(DemoTryHook).to receive(:run!).and_return(['ok', :passed, {result: 'query_ok', status: :passed}]) }
-    it { expect(server.try!(req query: 'echo something', goal: {kind: :last_query_passes})).to eq out: 'ok', exit: :passed, queryResult: {result: 'query_ok', status: :passed} }
+    before { allow_any_instance_of(try_hook).to receive(:run!).and_return(['ok', :passed, {result: 'query_ok', status: :passed}]) }
+    it { expect(runner.run_try!(req query: 'echo something', goal: {kind: :last_query_passes})).to eq out: 'ok', exit: :passed, queryResult: {result: 'query_ok', status: :passed} }
   end
 end
 
 describe Mumukit::Metatest::InteractiveChecker do
-  before do
-    class DemoTryHook < Mumukit::Templates::TryHook
+  let(:try_hook) do
+    Class.new(Mumukit::Templates::TryHook) do
       def command_line(f)
         'dont care'
       end
@@ -39,16 +37,13 @@ describe Mumukit::Metatest::InteractiveChecker do
       end
     end
   end
-  after do
-    drop_hook DemoTryHook
-  end
 
-  let(:hook) { DemoTryHook.new }
+  let(:hook) { try_hook.new }
   let(:file) { hook.compile(request) }
   let(:result) { hook.run!(file) }
   let(:structured_results) { { } }
 
-  before { allow_any_instance_of(DemoTryHook).to receive(:to_structured_results).and_return structured_results }
+  before { allow_any_instance_of(try_hook).to receive(:to_structured_results).and_return structured_results }
 
   context 'when using string keys' do
     let(:goal) { { 'kind' => 'last_query_equals', 'value' => 'echo something' } }

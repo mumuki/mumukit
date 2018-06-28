@@ -5,19 +5,15 @@ describe Mumukit::Templates::MulangExpectationsHook do
   let(:usesX) { {binding: '*', inspection: 'Uses:X'} }
   let(:expectations) { [usesX] }
 
-  after do
-    drop_hook DemoExpectationsHook
-  end
-
   def compile_and_run(request)
     hook.run! hook.compile(request)
   end
 
-  let(:hook) { DemoExpectationsHook.new('mulang_path' => './bin/mulang') }
+  let(:hook) { expectations_hook.new('mulang_path' => './bin/mulang') }
 
   context 'when code is well formed' do
-    before do
-      class DemoExpectationsHook < Mumukit::Templates::MulangExpectationsHook
+    let(:expectations_hook) do
+      Class.new(Mumukit::Templates::MulangExpectationsHook) do
         include_smells true
 
         def language
@@ -58,8 +54,8 @@ describe Mumukit::Templates::MulangExpectationsHook do
   context 'when language is not defined' do
     let(:request) { {content: content, expectations: expectations} }
 
-    before do
-      class DemoExpectationsHook < Mumukit::Templates::MulangExpectationsHook
+    let(:expectations_hook) do
+      Class.new(Mumukit::Templates::MulangExpectationsHook) do
       end
     end
 
@@ -69,8 +65,8 @@ describe Mumukit::Templates::MulangExpectationsHook do
   context 'when language is provided and there are syntax errors on content' do
     let(:request) { {content: 'sadsadas', expectations: expectations} }
 
-    before do
-      class DemoExpectationsHook < Mumukit::Templates::MulangExpectationsHook
+    let(:expectations_hook) do
+      Class.new(Mumukit::Templates::MulangExpectationsHook) do
         def language
           'Haskell'
         end
@@ -81,8 +77,8 @@ describe Mumukit::Templates::MulangExpectationsHook do
   end
 
   context 'with defaults' do
-    before do
-      class DemoExpectationsHook < Mumukit::Templates::MulangExpectationsHook
+    let(:expectations_hook) do
+      Class.new(Mumukit::Templates::MulangExpectationsHook) do
         def language
           'Haskell'
         end
@@ -97,8 +93,8 @@ describe Mumukit::Templates::MulangExpectationsHook do
   end
 
   context 'when transform_content is provided' do
-    before do
-      class DemoExpectationsHook < Mumukit::Templates::MulangExpectationsHook
+    let(:expectations_hook) do
+      Class.new(Mumukit::Templates::MulangExpectationsHook) do
         def language
           'Haskell'
         end

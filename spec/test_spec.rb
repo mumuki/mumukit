@@ -40,58 +40,49 @@ class LineNumberTestRunner < Mumukit::Templates::FileHook
   end
 end
 
-describe Mumukit::Server::TestServer do
-  let(:server) { Mumukit::Server::TestServer.new }
-  let(:result) { server.test!(request) }
+describe Mumukit::Runner do
+  let(:hooks) { { test: test_hook } }
+  let(:config) { {} }
+  let(:runner) { Mumukit::Runner.create(config: config, hooks: hooks) }
+  let(:result) { runner.run_test!(request) }
   let(:request) { req content: 'foo', test: 'bar', expectations: [] }
-  let(:info) { server.info('http://localhost:8080')[:features] }
-
-  before { Mumukit.configure_runtime(nil) }
+  let(:info) { runner.info[:features] }
 
   context 'when there are not tests and no expectations' do
-    it { expect(server.test!(req content: 'foo')).to eq out: '', exit: :passed }
+    let(:hooks) { {} }
+    it { expect(runner.run_test!(req content: 'foo')).to eq out: '<skipped>', exit: :passed }
   end
 
-
   describe 'filename hiding' do
-    before do
-      class DemoTestHook < EchoPathTestRunner
-      end
-    end
-    after do
-      drop_hook DemoTestHook
-    end
+    let(:config) { { docker_image: 'alpine' } }
+    let(:test_hook) { Class.new(EchoPathTestRunner) }
     it { expect(result).to eq out: "path is solution_test.txt\n", exit: :passed }
   end
 
   describe 'with precompile hook' do
-    before do
-      class DemoTestHook < Mumukit::Defaults::TestHook
+    let(:hooks) { { test: test_hook, precompile: precompile_hook } }
+    let(:test_hook) do
+      Class.new(Mumukit::Defaults::TestHook) do
         def run!(request)
           [request.something, :passed]
         end
       end
-      class DemoPrecompileHook < Mumukit::Hook
+    end
+
+    let(:precompile_hook) do
+      Class.new(Mumukit::Hook) do
         def compile(request)
           struct request.to_h.merge(something: 'something precompiled')
         end
       end
     end
-    after do
-      drop_hook DemoTestHook
-      drop_hook DemoPrecompileHook
-    end
+
     it { expect(result).to eq out: "something precompiled", exit: :passed }
   end
 
   describe 'line number offset' do
-    before do
-      class DemoTestHook < LineNumberTestRunner
-      end
-    end
-    after do
-      drop_hook DemoTestHook
-    end
+    let(:config) { {docker_image: 'alpine'} }
+    let(:test_hook) { Class.new(LineNumberTestRunner) }
 
     context 'no extra' do
       it { expect(result[:out])
@@ -106,24 +97,18 @@ describe Mumukit::Server::TestServer do
   end
 
   context 'when test runner is implemented but no expectations' do
-    before do
-      class DemoTestHook < IntegrationTestBaseTestHook
-      end
-    end
-    after do
-      drop_hook DemoTestHook
-    end
+    let(:test_hook) { Class.new(IntegrationTestBaseTestHook) }
 
     it { expect(info[:expectations]).to be false }
 
     context 'when test passes' do
-      before { allow_any_instance_of(DemoTestHook).to receive(:run!).and_return(['ok', :passed]) }
+      before { allow_any_instance_of(test_hook).to receive(:run!).and_return(['ok', :passed]) }
 
       it { expect(result).to eq out: 'ok', exit: :passed }
     end
 
     context 'when test returns structured results' do
-      before { allow_any_instance_of(DemoTestHook).to receive(:run!).and_return([[['foo', :passed, ''], ['baz', :failed, 'bar']]]) }
+      before { allow_any_instance_of(test_hook).to receive(:run!).and_return([[['foo', :passed, ''], ['baz', :failed, 'bar']]]) }
 
       it { expect(result).to eq testResults: [
           {title: 'foo', status: :passed, result: ''},
@@ -131,74 +116,60 @@ describe Mumukit::Server::TestServer do
     end
 
     context 'when test fails' do
-      before { allow_any_instance_of(DemoTestHook).to receive(:run!).and_return(['nok', :failed]) }
+      before { allow_any_instance_of(test_hook).to receive(:run!).and_return(['nok', :failed]) }
 
       it { expect(result).to eq out: 'nok', exit: :failed }
     end
 
     context 'when test runner crashes' do
-      before { allow_any_instance_of(DemoTestHook).to receive(:run!).and_raise('ups!') }
+      before { allow_any_instance_of(test_hook).to receive(:run!).and_raise('ups!') }
       it { expect(result[:exit]).to eq(:errored) }
       it { expect(result[:out]).to include('ups!') }
     end
 
     context 'when test runner compilation crashes' do
-      before { allow_any_instance_of(DemoTestHook).to receive(:run!).and_raise(Mumukit::CompilationError, "this file has syntax errors") }
+      before { allow_any_instance_of(test_hook).to receive(:run!).and_raise(Mumukit::CompilationError, "this file has syntax errors") }
       it { expect(result).to eq out: 'this file has syntax errors', exit: :errored }
     end
 
     context 'when test is aborted' do
-      before { allow_any_instance_of(DemoTestHook).to receive(:run!).and_return(['out of memory error', :aborted]) }
+      before { allow_any_instance_of(test_hook).to receive(:run!).and_return(['out of memory error', :aborted]) }
 
       it { expect(result).to eq out: 'out of memory error', exit: :aborted }
     end
     context 'when feedback runner is implemented' do
-      before do
-        class DemoFeedbackHook < Mumukit::Hook
-        end
-      end
-
-      after do
-        drop_hook DemoFeedbackHook
-      end
+      let(:hooks) { { test: test_hook, feedback: feedback_hook } }
+      let(:feedback_hook) { Class.new(Mumukit::Hook) }
 
       it { expect(info[:feedback]).to be true }
 
       context 'when feedback is given' do
-        before { allow_any_instance_of(DemoTestHook).to receive(:run!).and_return(['ok', :passed]) }
-        before { allow_any_instance_of(DemoFeedbackHook).to receive(:run!).and_return('Keep up the good work!') }
+        before { allow_any_instance_of(test_hook).to receive(:run!).and_return(['ok', :passed]) }
+        before { allow_any_instance_of(feedback_hook).to receive(:run!).and_return('Keep up the good work!') }
         it { expect(result[:feedback]).to eq('Keep up the good work!') }
       end
     end
   end
 
   context 'when expectations and test runner are implemented' do
-    before do
-      class DemoExpectationsHook < Mumukit::Hook
-      end
-      class DemoTestHook < IntegrationTestBaseTestHook
-      end
-    end
-
-    after do
-      drop_hook DemoTestHook
-      drop_hook DemoExpectationsHook
-    end
+    let(:hooks) { { test: test_hook, expectations: expectations_hook } }
+    let(:test_hook) { Class.new(IntegrationTestBaseTestHook) }
+    let(:expectations_hook) { Class.new(Mumukit::Hook) }
 
     it { expect(info[:expectations]).to be true }
 
     context 'when both passed' do
       let(:expectation_results) { [{expectation: {binding: :foo, inspection: :HasUsage}, result: true}] }
-      before { allow_any_instance_of(DemoTestHook).to receive(:run!).and_return(['ok', :passed]) }
-      before { allow_any_instance_of(DemoExpectationsHook).to receive(:compile) }
-      before { allow_any_instance_of(DemoExpectationsHook).to receive(:run!).and_return(expectation_results) }
+      before { allow_any_instance_of(test_hook).to receive(:run!).and_return(['ok', :passed]) }
+      before { allow_any_instance_of(expectations_hook).to receive(:compile) }
+      before { allow_any_instance_of(expectations_hook).to receive(:run!).and_return(expectation_results) }
 
       it { expect(result).to eq out: 'ok', exit: :passed, expectationResults: expectation_results }
     end
     context 'when expectations crash' do
-      before { allow_any_instance_of(DemoTestHook).to receive(:run!).and_return(['ok', :passed]) }
-      before { allow_any_instance_of(DemoExpectationsHook).to receive(:compile) }
-      before { allow_any_instance_of(DemoExpectationsHook).to receive(:run!).and_raise('ups!') }
+      before { allow_any_instance_of(test_hook).to receive(:run!).and_return(['ok', :passed]) }
+      before { allow_any_instance_of(expectations_hook).to receive(:compile) }
+      before { allow_any_instance_of(expectations_hook).to receive(:run!).and_raise('ups!') }
 
       it { expect(result[:exit]).to eq(:errored) }
       it { expect(result[:out]).to include('ups!') }
@@ -206,35 +177,26 @@ describe Mumukit::Server::TestServer do
   end
 
   context 'when there are no tests but expectations' do
-    before do
-      class DemoExpectationsHook < Mumukit::Hook
-      end
-    end
-
-    after do
-      drop_hook DemoExpectationsHook
-    end
+    let(:hooks) { { expectations: expectations_hook } }
+    let(:expectations_hook) { Class.new(Mumukit::Hook) }
 
     let(:expectation_results) { [{expectation: {binding: :foo, inspection: :HasUsage}, result: true}] }
-    let(:result) { server.test!(req content: 'foo', expectations: [{binding: :foo, inspection: :HasUsage}]) }
+    let(:result) { runner.run_test!(req content: 'foo', expectations: [{binding: :foo, inspection: :HasUsage}]) }
 
-    before { allow_any_instance_of(DemoExpectationsHook).to receive(:compile) }
-    before { allow_any_instance_of(DemoExpectationsHook).to receive(:run!).and_return(expectation_results) }
+    before { allow_any_instance_of(expectations_hook).to receive(:compile) }
+    before { allow_any_instance_of(expectations_hook).to receive(:run!).and_return(expectation_results) }
 
-    it { expect(result).to eq out: '', exit: :passed, expectationResults: expectation_results }
+    it { expect(result).to eq out: '<skipped>', exit: :passed, expectationResults: expectation_results }
   end
 
 
   context 'when content is empty but extra is not' do
-    after do
-      drop_hook DemoExpectationsHook
-      Mumukit.configure do |config|
-        config.process_expectations_on_empty_content = false
-      end
-    end
     context 'and process empty content flag is true' do
-      before do
-        class DemoExpectationsHook < Mumukit::Templates::MulangExpectationsHook
+      let(:hooks) { { expectations: expectations_hook } }
+      let(:config) { { process_expectations_on_empty_content: true } }
+
+      let(:expectations_hook) do
+        Class.new(Mumukit::Templates::MulangExpectationsHook) do
           include_smells true
 
           def language
@@ -250,20 +212,17 @@ describe Mumukit::Server::TestServer do
           end
 
         end
-        Mumukit.configure do |config|
-          config.process_expectations_on_empty_content = true
-        end
       end
-
 
       let(:expectation_results) { [{expectation: {binding: '*', inspection: 'DeclaresComputationWithArity1:foo'}, result: true}] }
-      let(:result) { server.test!(req content: '', extra: 'foo x = x', expectations: [{binding: '*', inspection: 'DeclaresComputationWithArity1:foo'}]) }
+      let(:result) { runner.run_test!(req content: '', extra: 'foo x = x', expectations: [{binding: '*', inspection: 'DeclaresComputationWithArity1:foo'}]) }
 
-      it { expect(result).to eq out: '', exit: :passed, expectationResults: expectation_results }
+      it { expect(result).to eq out: '<skipped>', exit: :passed, expectationResults: expectation_results }
     end
     context 'and process empty content flag is false' do
-      before do
-        class DemoExpectationsHook < Mumukit::Templates::MulangExpectationsHook
+      let(:hooks) { { expectations: expectations_hook } }
+      let(:expectations_hook) do
+        Class.new(Mumukit::Templates::MulangExpectationsHook) do
           include_smells true
 
           def language
@@ -280,22 +239,19 @@ describe Mumukit::Server::TestServer do
         end
       end
 
-      let(:result) { server.test!(req extra: 'foo x = x', expectations: [{binding: '*', inspection: 'DeclaresComputationWithArity1:foo'}]) }
+      let(:result) { runner.run_test!(req extra: 'foo x = x', expectations: [{binding: '*', inspection: 'DeclaresComputationWithArity1:foo'}]) }
 
-      it { expect(result).to eq out: '', exit: :passed }
+      it { expect(result).to eq out: '<skipped>', exit: :passed }
     end
   end
 
   context 'when test is empty' do
-    after do
-      drop_hook DemoExpectationsHook
-      Mumukit.configure do |config|
-        config.run_test_hook_on_empty_test = false
-      end
-    end
     context 'and run test hook flag is true' do
-      before do
-        class DemoExpectationsHook < Mumukit::Templates::MulangExpectationsHook
+      let(:hooks) { { expectations: expectations_hook } }
+      let(:config) {  { run_test_hook_on_empty_test: true } }
+
+      let(:expectations_hook) do
+        Class.new(Mumukit::Templates::MulangExpectationsHook) do
           include_smells true
 
           def language
@@ -303,19 +259,14 @@ describe Mumukit::Server::TestServer do
           end
 
         end
-        Mumukit.configure do |config|
-          config.run_test_hook_on_empty_test = true
-        end
       end
-
-
-      let(:result) { server.test!(req content: '', extra: 'foo x = x') }
-
+      let(:result) { runner.run_test!(req content: '', extra: 'foo x = x') }
       it { expect(result).to eq out: 'unimplemented', exit: :aborted}
     end
     context 'and run test hook flag is true' do
-      before do
-        class DemoExpectationsHook < Mumukit::Templates::MulangExpectationsHook
+      let(:hooks) { { expectations: expectations_hook } }
+      let(:expectations_hook) do
+        Class.new(Mumukit::Templates::MulangExpectationsHook) do
           include_smells true
 
           def language
@@ -324,27 +275,21 @@ describe Mumukit::Server::TestServer do
         end
       end
 
-      let(:result) { server.test!(req extra: 'foo x = x') }
+      let(:result) { runner.run_test!(req extra: 'foo x = x') }
 
-      it { expect(result).to eq out: '', exit: :passed }
+      it { expect(result).to eq out: '<skipped>', exit: :passed }
     end
   end
 
   context 'when request is implemented' do
-    before do
-      class DemoValidationHook < Mumukit::Hook
-      end
-    end
-
-    after do
-      drop_hook DemoValidationHook
-    end
+    let(:hooks) { { validation: validation_hook } }
+    let(:validation_hook) { Class.new(Mumukit::Hook) }
 
     it { expect(info[:secure]).to be true }
 
     context 'when validation fails' do
       before do
-        allow_any_instance_of(DemoValidationHook).to receive(:validate!).and_raise(Mumukit::RequestValidationError.new('never use File.new'))
+        allow_any_instance_of(validation_hook).to receive(:validate!).and_raise(Mumukit::RequestValidationError.new('never use File.new'))
       end
       it { expect(result[:exit]).to eq(:aborted) }
       it { expect(result[:out]).to eq('never use File.new') }
