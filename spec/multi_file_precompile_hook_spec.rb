@@ -11,14 +11,14 @@ describe Mumukit::Templates::MultiFilePrecompileHook do
     end
   end
 
-  let(:request) { req({
-    'main.js'.to_sym => "console.log('hello');   import(\"anotherFile.js\");   console.log('!!');",
-    'anotherFile.js'.to_sym => 'alert("WORLD");'
-  }) }
+  let(:request) {
+    req "main.js": 'console.log("hello");   import("anotherFile.js");   console.log("!!");',
+        "anotherFile.js": 'alert("WORLD");'
+  }
 
   describe 'content consolidation' do
     let(:content) { SomeMultiFilePrecompileHook.new.compile(request).content }
 
-    it { expect(content).to eq "console.log('hello');   alert(\"WORLD\");   console.log('!!');" }
+    it { expect(content).to eq 'console.log("hello");   alert("WORLD");   console.log("!!");' }
   end
 end
