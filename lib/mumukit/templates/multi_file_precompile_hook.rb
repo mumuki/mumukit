@@ -1,6 +1,6 @@
 module Mumukit
   class Templates::MultiFilePrecompileHook < Mumukit::Hook
-    include Mumukit::WithMultipleFiles
+    include Mumukit::Templates::WithMultipleFiles
 
     def compile(request)
       files = files_of request
