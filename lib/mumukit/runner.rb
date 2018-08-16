@@ -11,6 +11,12 @@ class Mumukit::Runner
     yield @config
   end
 
+  def reconfigure(&block)
+    @config = nil
+    @pipeline = nil
+    configure &block
+  end
+
   def configure_runtime(config)
     @runtime = Mumukit::Runtime.new(config)
   end
@@ -46,7 +52,7 @@ class Mumukit::Runner
   end
 
   def new_sections_directive
-    Mumukit::Directives::Sections.new nest_sections: Mumukit.config.multifile_support
+    Mumukit::Directives::Sections.new nest_sections: Mumukit.config.multifile
   end
 
   def new_flags_directive

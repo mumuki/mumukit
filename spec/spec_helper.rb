@@ -6,13 +6,13 @@ require 'rspec'
 require_relative '../lib/mumukit'
 
 Mumukit.runner_name = 'demo'
-Mumukit.configure do |c|
-  c.docker_image = 'alpine'
-end
 
 RSpec.configure do |config|
   config.before(:each) do
     Mumukit.runtime.reset!
+    Mumukit.reconfigure do |c|
+      c.docker_image = 'alpine'
+    end
   end
 end
 

@@ -1,6 +1,12 @@
 require_relative './spec_helper.rb'
 
 describe Mumukit::Templates::MultiFilePrecompileHook do
+  before do
+    Mumukit.configure do |config|
+      config.multifile = true
+    end
+  end
+
   class SomeMultiFilePrecompileHook < Mumukit::Templates::MultiFilePrecompileHook
     def main_file
       'main.js'

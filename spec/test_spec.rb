@@ -107,25 +107,30 @@ describe Mumukit::Server::TestServer do
 
   describe 'with multifile precompile hook' do
     let(:request) {
-      req content: '
+      req test: 'something', content: '
 /*<main.js#*/
 console.log("hello");
-import("a-file.js");
-import("another-file.js");
+import("afile.js");
+import("anotherfile.js");
 /*#main.js>*/
 
-/*<a-file.js#*/
+/*<afile.js#*/
 alert("world");
-/*#a-file.js>*/
+/*#afile.js>*/
 
-/*<another-file.js#*/
+/*<anotherfile.js#*/
 alert("!");
-/*#another-file.js>*/'
+/*#anotherfile.js>*/'
     }
+
+
     before do
+      Mumukit.configure do |config|
+        config.multifile = true
+      end
       class DemoTestHook < Mumukit::Defaults::TestHook
         def run!(request)
-          [request.content, :passed]
+          [request.content.strip.squeeze("\n"), :passed]
         end
       end
       class DemoPrecompileHook < Mumukit::Templates::MultiFilePrecompileHook
@@ -142,7 +147,7 @@ alert("!");
       drop_hook DemoTestHook
       drop_hook DemoPrecompileHook
     end
-    it { expect(result).to eq out: 'console.log("hello");   alert("WORLD");   console.log("!!");', exit: :passed }
+    it { expect(result).to eq out: "console.log(\"hello\");\nalert(\"world\");\nalert(\"!\");", exit: :passed }
   end
 
 
