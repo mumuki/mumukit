@@ -30,15 +30,27 @@ class Mumukit::Runner
   def new_directives_pipeline
     if config.preprocessor_enabled
       Mumukit::Directives::Pipeline.new(
-          [Mumukit::Directives::Sections.new,
-           Mumukit::Directives::Interpolations.new('test'),
-           Mumukit::Directives::Interpolations.new('extra'),
-           Mumukit::Directives::Interpolations.new('content'),
-           Mumukit::Directives::Flags.new],
+          [new_sections_directive,
+           new_interpolations_directive('test'),
+           new_interpolations_directive('extra'),
+           new_interpolations_directive('content'),
+           new_flags_directive],
           config.comment_type)
     else
       Mumukit::Directives::NullPipeline
     end
+  end
+
+  def new_interpolations_directive(key)
+    Mumukit::Directives::Interpolations.new(key)
+  end
+
+  def new_sections_directive
+    Mumukit::Directives::Sections.new nest_sections: Mumukit.config.multifile_support
+  end
+
+  def new_flags_directive
+    Mumukit::Directives::Flags.new
   end
 
   def self.default_config

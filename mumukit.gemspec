@@ -35,6 +35,6 @@ Gem::Specification.new do |spec|
 
   spec.add_dependency 'mumukit-inspection', '~> 3.1'
   spec.add_dependency 'mumukit-core', '~> 1.3'
-  spec.add_dependency 'mumukit-directives', '~> 0.3'
+  spec.add_dependency 'mumukit-directives', '~> 0.4'
   spec.add_dependency 'mumukit-content-type', '>= 0.2', '< 2'
 end

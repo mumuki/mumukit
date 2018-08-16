@@ -9,6 +9,7 @@ module Mumukit::RuntimeInfo
         worker_image: Mumukit.config.docker_image,
         output_content_type: Mumukit.config.content_type,
         comment_type: Mumukit.config.comment_type,
+        multifile_support: Mumukit.config.multifile_support,
         features: {
             precompile: precompile_hook?,
             query: query_hook?,

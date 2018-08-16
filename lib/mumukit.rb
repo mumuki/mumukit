@@ -48,6 +48,7 @@ Mumukit.configure_defaults do |config|
   config.command_size_limit = 1024
   config.process_expectations_on_empty_content = false
   config.run_test_hook_on_empty_test = false
+  config.multifile_support = false
 end
 
 require 'mumukit/content_type'
