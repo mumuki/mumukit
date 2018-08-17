@@ -31,7 +31,7 @@ module Mumukit
   end
 
   class << self
-    delegate :prefix, :config, :configure, :runtime, :configure_runtime, :directives_pipeline, to: :current_runner
+    delegate :prefix, :config, :configure, :reconfigure, :runtime, :configure_runtime, :directives_pipeline, to: :current_runner
   end
 end
 
@@ -48,6 +48,7 @@ Mumukit.configure_defaults do |config|
   config.command_size_limit = 1024
   config.process_expectations_on_empty_content = false
   config.run_test_hook_on_empty_test = false
+  config.multifile = false
 end
 
 require 'mumukit/content_type'

@@ -10,17 +10,18 @@ module Mumukit::RuntimeInfo
         output_content_type: Mumukit.config.content_type,
         comment_type: Mumukit.config.comment_type,
         features: {
-            precompile: precompile_hook?,
-            query: query_hook?,
-            try: try_hook?,
-            expectations: expectations_hook?,
-            feedback: feedback_hook?,
-            secure: validation_hook?,
-            stateful: Mumukit.config.stateful,
-            preprocessor: Mumukit.config.preprocessor_enabled,
+          precompile: precompile_hook?,
+          query: query_hook?,
+          try: try_hook?,
+          expectations: expectations_hook?,
+          feedback: feedback_hook?,
+          secure: validation_hook?,
+          stateful: Mumukit.config.stateful,
+          multifile: Mumukit.config.multifile,
+          preprocessor: Mumukit.config.preprocessor_enabled,
 
-            sandboxed: any_hook_include?([:test, :query], Mumukit::Templates::WithIsolatedEnvironment),
-            structured: any_hook_include?([:test], Mumukit::Templates::WithStructuredResults) || Mumukit.config.structured
+          sandboxed: any_hook_include?([:test, :query], Mumukit::Templates::WithIsolatedEnvironment),
+          structured: any_hook_include?([:test], Mumukit::Templates::WithStructuredResults) || Mumukit.config.structured
         }
     }
   end

@@ -105,6 +105,52 @@ describe Mumukit::Server::TestServer do
     end
   end
 
+  describe 'with multifile precompile hook' do
+    let(:request) {
+      req test: 'something', content: '
+/*<main.js#*/
+console.log("hello");
+import("afile.js");
+import("anotherfile.js");
+/*#main.js>*/
+
+/*<afile.js#*/
+alert("world");
+/*#afile.js>*/
+
+/*<anotherfile.js#*/
+alert("!");
+/*#anotherfile.js>*/'
+    }
+
+
+    before do
+      Mumukit.configure do |config|
+        config.multifile = true
+      end
+      class DemoTestHook < Mumukit::Defaults::TestHook
+        def run!(request)
+          [request.content.strip.squeeze("\n"), :passed]
+        end
+      end
+      class DemoPrecompileHook < Mumukit::Templates::MultiFilePrecompileHook
+        def main_file
+          'main.js'
+        end
+
+        def consolidate(main_content, files)
+          main_content.gsub(/(import\(\"([\w\.]+)\"\);)/) { files[$2] }
+        end
+      end
+    end
+    after do
+      drop_hook DemoTestHook
+      drop_hook DemoPrecompileHook
+    end
+    it { expect(result).to eq out: "console.log(\"hello\");\nalert(\"world\");\nalert(\"!\");", exit: :passed }
+  end
+
+
   context 'when test runner is implemented but no expectations' do
     before do
       class DemoTestHook < IntegrationTestBaseTestHook

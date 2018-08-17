@@ -4,7 +4,6 @@ module Mumukit
 
     attr_accessor :request
 
-
     def compile(request)
       self.request = request
       write_tempfile! compile_file_content(request)
