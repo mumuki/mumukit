@@ -3,10 +3,10 @@ module Mumukit
     include Mumukit::Templates::WithMultipleFiles
 
     def compile(request)
-      files = files_of request
-      content = files.empty? ? single_file_content(request) : multi_file_content(files)
-
-      struct request.to_h.merge content: content
+      request
+        .to_h
+        .merge(content: files_content(request))
+        .to_struct
     end
 
     def main_file
@@ -17,14 +17,33 @@ module Mumukit
       raise NotImplementedError
     end
 
-    def single_file_content(request)
+    private
+
+    def files_content(request)
+      files = files_of request
+      if files.empty?
+        no_files_content request
+      elsif files.count == 1
+        single_file_content files
+      else
+        multi_file_content files
+      end
+    end
+
+    def no_files_content(request)
       request.content
     end
 
-    def multi_file_content(files)
-      return files.values.first if files.count == 1
+    def single_file_content(files)
+      files.values.first
+    end
 
-      consolidate(files[main_file] || '', files)
+    def multi_file_content(files)
+      consolidate main_file_content(files), files
+    end
+
+    def main_file_content(files)
+      files[main_file] || ''
     end
   end
 end
