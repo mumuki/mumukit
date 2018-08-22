@@ -12,7 +12,7 @@ module Mumukit
       dirnames = filenames.map { |it| Pathname.new(it).dirname }
 
       binds = dirnames.map { |it| "#{it}:#{it}" }
-      volumes = Hash[[dirnames.map { |it| [it, {}] }]]
+      volumes = Hash[dirnames.map { |it| [it, {}] }]
 
       command = yield(*filenames).split
 
