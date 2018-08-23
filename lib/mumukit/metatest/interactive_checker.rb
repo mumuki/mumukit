@@ -7,7 +7,7 @@ module Mumukit::Metatest
 
     def check_last_query_equals(_result, goal)
       expected = goal[:value]
-      actual = @request.query
+      actual = @request.query.strip
       fail_t :check_last_query_equals, expected: expected, actual: actual unless expected == actual
     end
 
@@ -21,15 +21,15 @@ module Mumukit::Metatest
     end
 
     def check_last_query_outputs(result, goal)
-      compare_last_query_by(:check_last_query_outputs, result, goal) { |expected, actual| expected == actual }
+      compare_last_query_by(:check_last_query_outputs, result, goal) {|expected, actual| expected == actual}
     end
 
     def check_last_query_output_includes(result, goal)
-      compare_last_query_by(:check_last_query_output_includes, result, goal) { |expected, actual| actual.include? expected }
+      compare_last_query_by(:check_last_query_output_includes, result, goal) {|expected, actual| actual.include? expected}
     end
 
     def check_last_query_output_like(result, goal)
-      compare_last_query_by(:check_last_query_output_like, result, goal) { |expected, actual| normalize(expected) == normalize(actual) }
+      compare_last_query_by(:check_last_query_output_like, result, goal) {|expected, actual| normalize(expected) == normalize(actual)}
     end
 
     def compare_last_query_by(sym, result, goal, &condition)
