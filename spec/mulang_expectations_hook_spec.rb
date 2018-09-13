@@ -30,6 +30,7 @@ describe Mumukit::Templates::MulangExpectationsHook do
 
     let(:declaresComputationWithArity1) { {binding: '*', inspection: 'DeclaresComputationWithArity1:f'} }
     let(:usesIf) { {binding: 'f', inspection: 'UsesIf'} }
+    let(:containsFx) { {binding: '*', inspection: 'SourceContains:f x'} }
     let(:hasBindingF) { {binding: 'f', inspection: 'HasBinding'} }
     let(:hasBindingG) { {binding: 'g', inspection: 'HasBinding'} }
     let(:redundantParameterSmell) { {binding: 'f', inspection: 'HasRedundantParameter'} }
@@ -38,15 +39,24 @@ describe Mumukit::Templates::MulangExpectationsHook do
 
     let(:request) { {
       content: content,
-      expectations: [declaresComputationWithArity1, usesIf, hasBindingF, hasBindingG, exceptHasTooShortIdentifiers, exceptNonExistingSmell]} }
+      expectations: [
+        declaresComputationWithArity1,
+        usesIf,
+        containsFx,
+        hasBindingF,
+        hasBindingG,
+        exceptHasTooShortIdentifiers,
+        exceptNonExistingSmell ] } }
 
     let(:result) { compile_and_run request }
 
-    it { expect(result.length).to eq 5 }
+    it { expect(result.length).to eq 6 }
 
     it { expect(result).to include(expectation: declaresComputationWithArity1, result: true) }
 
     it { expect(result).to include(expectation: usesIf, result: false) }
+
+    it { expect(result).to include(expectation: containsFx, result: true) }
 
     it { expect(result).to include(expectation: {binding: '*', inspection: 'Declares:=f'}, result: true) }
     it { expect(result).to include(expectation: {binding: '*', inspection: 'Declares:=g'}, result: false) }
@@ -80,39 +90,45 @@ describe Mumukit::Templates::MulangExpectationsHook do
     it { expect { compile_and_run request }.to raise_error(Mumukit::CompilationError, 'Parse error') }
   end
 
-  context 'with defaults' do
-    before do
-      class DemoExpectationsHook < Mumukit::Templates::MulangExpectationsHook
-        def language
-          'Haskell'
-        end
-      end
+  describe 'compile_mulang_analysis' do
+    let(:sample) do
+      hook.compile_mulang_analysis(
+        {content: content, expectations: expectations},
+        {ast: [], source: [], exceptions: []})
     end
 
-    it { expect(hook.compile content: content, expectations: expectations)
-              .to include sample: {
+    context 'with defaults' do
+      before do
+        class DemoExpectationsHook < Mumukit::Templates::MulangExpectationsHook
+          def language
+            'Haskell'
+          end
+        end
+      end
+
+      it { expect(sample).to include sample: {
+                              tag: 'CodeSample',
+                              content: 'x = 1',
+                              language: 'Haskell' } }
+    end
+
+    context 'when transform_content is provided' do
+      before do
+        class DemoExpectationsHook < Mumukit::Templates::MulangExpectationsHook
+          def language
+            'Haskell'
+          end
+
+          def compile_content(content)
+            "// #{content} //"
+          end
+        end
+      end
+
+      it { expect(sample).to include sample: {
                             tag: 'CodeSample',
-                            content: 'x = 1',
-                            language: 'Haskell' } }
-  end
-
-  context 'when transform_content is provided' do
-    before do
-      class DemoExpectationsHook < Mumukit::Templates::MulangExpectationsHook
-        def language
-          'Haskell'
-        end
-
-        def compile_content(content)
-          "// #{content} //"
-        end
-      end
+                            content: '// x = 1 //',
+                            language: 'Haskell'} }
     end
-
-    it { expect(hook.compile content: content, expectations: expectations)
-            .to include sample: {
-                          tag: 'CodeSample',
-                          content: '// x = 1 //',
-                          language: 'Haskell'} }
   end
 end
