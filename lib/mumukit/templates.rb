@@ -16,5 +16,6 @@ require_relative './templates/with_cookie'
 
 require_relative './templates/file_hook'
 require_relative './templates/try_hook'
+require_relative './templates/expectations_hook'
 require_relative './templates/mulang_expectations_hook'
 require_relative './templates/multi_file_precompile_hook'

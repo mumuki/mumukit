@@ -1,8 +1,7 @@
-require 'mumukit/inspection'
 require 'mulang'
 
 module Mumukit
-  class Templates::MulangExpectationsHook < Mumukit::Hook
+  class Templates::MulangExpectationsHook < Mumukit::Templates::ExpectationsHook
     LOGIC_SMELLS = %w(UsesCut UsesFail UsesUnificationOperator HasRedundantReduction)
     FUNCTIONAL_SMELLS = %w(HasRedundantParameter HasRedundantGuards)
     OBJECT_ORIENTED_SMELLS = %w(DoesNullTest ReturnsNull)
@@ -12,18 +11,21 @@ module Mumukit
 
     required :language, 'You have to provide a Mulang-compatible language in order to use this hook'
 
-    def compile(request)
-      expectations, exceptions = compile_expectations_and_exceptions request
+    def run!(spec)
+      super(spec) + run_mulang_analysis(compile_mulang_analysis(spec[:request], spec[:expectations]))
+    end
+
+    def compile_mulang_analysis(request, expectations)
       mulang_code(request).analysis(
-        expectations: expectations,
+        expectations: expectations[:ast],
         smellsSet: {
           tag: 'AllSmells',
-          exclude: (exceptions + default_smell_exceptions)
+          exclude: (expectations[:exceptions] + default_smell_exceptions)
         },
         domainLanguage: domain_language)
     end
 
-    def run!(analysis)
+    def run_mulang_analysis(analysis)
       parse_response Mulang.analyse(analysis)
     rescue JSON::ParserError
       raise Mumukit::CompilationError, "Can not handle mulang results for analysis #{analysis}"
@@ -50,30 +52,8 @@ module Mumukit
       language == 'Mulang' ? Mulang::Language::External.new :  Mulang::Language::Native.new(language)
     end
 
-    def compile_expectations_and_exceptions(request)
-      expectations = []
-      exceptions = []
-      request[:expectations].each do |it|
-        fill_expectations_and_excetions it.deep_symbolize_keys, expectations, exceptions
-      end
-      [expectations, exceptions]
-    end
-
-    def fill_expectations_and_excetions(expectation, expectations, exceptions)
-      inspection = expectation[:inspection]
-      if inspection&.start_with? 'Except:'
-        exceptions << inspection[7..-1]
-      else
-        expectations << compile_expectation(expectation)
-      end
-    end
-
     def compile_content(content)
       content
-    end
-
-    def compile_expectation(expectation)
-      Mumukit::Inspection::Expectation.parse(expectation).as_v2.to_h
     end
 
     def parse_response(response)
