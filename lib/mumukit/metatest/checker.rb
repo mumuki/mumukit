@@ -1,10 +1,39 @@
 module Mumukit::Metatest
   class Checker
-    def check(result, example)
-      check_assertions result, example[:postconditions], example
-      [example[:name], :passed, render_success_output(result)]
+
+    ## Check an input against a metatest example.
+    ## The example has the following shape:
+    ##
+    ## ```
+    ## {
+    ##   name: 'an example name',
+    ##   postconditions: {
+    ##     an_assertion: assertion_config,
+    ##     another_assertion: assertion_config,
+    ##   }
+    ## }
+    ## ```
+    ##
+    ## Alternatively, the `postconditions` key may be omitted:
+    ##
+    ## ```
+    ## {
+    ##   name: 'an example name',
+    ##   an_assertion: assertion_config,
+    ##   another_assertion: assertion_config,
+    ## }
+    ##
+    def check(input, example)
+      check_assertions input, postconditions_for(example), example
+      [example[:name], :passed, render_success_output(input)]
     rescue => e
-      [example[:name], :failed, render_error_output(result, e.message)]
+      [example[:name], :failed, render_error_output(input, e.message)]
+    end
+
+    ## If no postconditions are included in the example,
+    ## all the example except by the name is considered as postconditions
+    def postconditions_for(example)
+      example[:postconditions] || example.except(:name)
     end
 
     def render_success_output(value)
@@ -15,14 +44,14 @@ module Mumukit::Metatest
       error
     end
 
-    def check_assertions(result, assertions_hash, example)
+    def check_assertions(input, assertions_hash, example)
       assertions_hash.each do |assertion_name, assertion_config|
-        check_assertion assertion_name, result, assertion_config, example
+        check_assertion assertion_name, input, assertion_config, example
       end
     end
 
-    def check_assertion(assertion_name, result, assertion_config, _example)
-      send "check_#{assertion_name}", result, assertion_config
+    def check_assertion(assertion_name, input, assertion_config, _example)
+      send "check_#{assertion_name}", input, assertion_config
     end
 
     def fail(message)

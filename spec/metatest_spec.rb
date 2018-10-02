@@ -17,20 +17,40 @@ describe 'metatest' do
                                      runner: Mumukit::Metatest::IdentityRunner.new
   end
 
-  let(:examples) {
-    [{
-         name: 'has passion',
-         postconditions: {include: 'passion'}
-     }]
-  }
+  describe 'full mode' do
+    let(:examples) {
+      [{
+           name: 'has passion',
+           postconditions: {include: 'passion'}
+       }]
+    }
 
-  context 'pass' do
-    let(:compilation) { 'escualo is passion' }
-    it { expect(result).to eq [[['has passion', :passed, nil]]] }
+    context 'pass' do
+      let(:compilation) { 'escualo is passion' }
+      it { expect(result).to eq [[['has passion', :passed, nil]]] }
+    end
+    context 'fails' do
+      let(:compilation) { 'escualo is poison' }
+      it { expect(result).to eq [[['has passion', :failed, "expected 'escualo is poison' to include 'passion'"]]] }
+    end
   end
-  context 'fails' do
-    let(:compilation) { 'escualo is poison' }
-    it { expect(result).to eq [[['has passion', :failed, "expected 'escualo is poison' to include 'passion'"]]] }
+
+  describe 'implicit postconditions' do
+    let(:examples) {
+      [{
+           name: 'kibi walked',
+           include: 'walked'
+       }]
+    }
+
+    context 'pass' do
+      let(:compilation) { 'then kibi walked' }
+      it { expect(result).to eq [[['kibi walked', :passed, nil]]] }
+    end
+    context 'fails' do
+      let(:compilation) { 'then kibi run' }
+      it { expect(result).to eq [[['kibi walked', :failed, "expected 'then kibi run' to include 'walked'"]]] }
+    end
   end
 end
 
