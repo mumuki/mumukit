@@ -38,8 +38,10 @@ class Mumukit::Server::ResponseBuilder
       structured_base_response(test_results)
     elsif unstructured_test_result?(test_results)
       unstructured_base_response(test_results)
+    elsif mixed_test_result?(test_results)
+      mixed_base_response(test_results)
     else
-      raise "Invalid test results format: #{test_results}. You must either return [results_array] or [results_string, status]"
+      raise "Invalid test results format: #{test_results}. You must either return [results_array], [results_string, status], or [results_array, results_string, status]"
     end
   end
 
@@ -49,6 +51,10 @@ class Mumukit::Server::ResponseBuilder
 
   def unstructured_test_result?(test_results)
     test_results.size == 2 && test_results[0].is_a?(String)
+  end
+
+  def mixed_test_result?(test_results)
+    test_results.size == 3 && test_results[0].is_a?(Array) && test_results[1].is_a?(String)
   end
 
   def structured_base_response(test_results)
@@ -63,4 +69,7 @@ class Mumukit::Server::ResponseBuilder
      out: test_results[0]}
   end
 
+  def mixed_base_response(test_results)
+    structured_base_response(test_results).merge out: test_results[1], exit: test_results[2]
+  end
 end
