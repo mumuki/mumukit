@@ -41,7 +41,7 @@ class Mumukit::Server::ResponseBuilder
     elsif mixed_test_result?(test_results)
       mixed_base_response(test_results)
     else
-      raise "Invalid test results format: #{test_results}. You must either return [results_array], [results_string, status], or [results_array, results_string, status]"
+      raise "Invalid test results format: #{test_results}. You must either return [results_array], [results_string, status] or [results_array, results_string, status]"
     end
   end
 
