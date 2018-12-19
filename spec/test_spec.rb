@@ -52,7 +52,6 @@ describe Mumukit::Server::TestServer do
     it { expect(server.test!(req content: 'foo')).to eq out: '', exit: :passed }
   end
 
-
   describe 'filename hiding' do
     before do
       class DemoTestHook < EchoPathTestRunner

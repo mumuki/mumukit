@@ -28,9 +28,13 @@ class Mumukit::Server::TestServer
   end
 
   def parse_request_body(sinatra_request)
-    JSON.parse(sinatra_request.body.read).tap do |it|
-      I18n.locale = it['locale'] || :en
-    end rescue {}
+    begin
+      parse_body(sinatra_request).tap do |it|
+        I18n.locale = it['locale'] || :en
+      end
+    rescue StandardError => e
+      raise StandardError.new("Error parsing request body. Cause: #{e}")
+    end
   end
 
   def test!(request)
@@ -119,5 +123,11 @@ class Mumukit::Server::TestServer
 
   def default_repo_url
     "https://github.com/mumuki/mumuki-#{Mumukit.runner_name}-runner"
+  end
+
+  def parse_body(sinatra_request)
+    json = sinatra_request.body.read
+    return {} if json.empty?
+    JSON.parse json
   end
 end
