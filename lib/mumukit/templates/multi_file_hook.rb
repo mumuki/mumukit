@@ -1,5 +1,7 @@
 module Mumukit
   class Templates::MultiFileHook < Mumukit::Templates::FileHook
+    include Mumukit::Templates::WithMultipleFiles
+
     def compile(request)
       self.request = request
       compile_file_content(request).map { |filename, content| write_tempfile!(content, filename) }
