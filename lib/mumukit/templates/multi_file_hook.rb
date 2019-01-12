@@ -1,5 +1,5 @@
 module Mumukit
-  class Templates::MultiFileHook < Mumukit::Templates::FileHook
+  class Templates::MultiFileHook < Templates::FileHook
     include Mumukit::Templates::WithMultipleFiles
 
     def compile(request)

@@ -122,16 +122,17 @@ alert("!");
 /*#anotherfile.js>*/'
     }
 
-
     before do
       Mumukit.configure do |config|
         config.multifile = true
       end
+
       class DemoTestHook < Mumukit::Defaults::TestHook
         def run!(request)
           [request.content.strip.squeeze("\n"), :passed]
         end
       end
+
       class DemoPrecompileHook < Mumukit::Templates::MultiFilePrecompileHook
         def main_file
           'main.js'
@@ -142,13 +143,54 @@ alert("!");
         end
       end
     end
+
     after do
       drop_hook DemoTestHook
       drop_hook DemoPrecompileHook
     end
+
     it { expect(result).to eq out: "console.log(\"hello\");\nalert(\"world\");\nalert(\"!\");", exit: :passed }
   end
 
+  describe 'with multifile test hook', {solo: true} do
+    let(:request) {
+      req test: 'something', content: '
+/*<File1.java#*/class File1 {}/*#File1.java>*/
+/*<File2.java#*/class File2 {}/*#File2.java>*/'
+    }
+
+    before do
+      Mumukit.configure do |config|
+        config.multifile = true
+      end
+
+      class DemoTestHook < Mumukit::Templates::MultiFileHook
+        isolated false
+
+        def compile_file_content(request)
+          request.content
+        end
+
+        def command_line(file1, file2)
+          "cat #{file1} && echo ...and... && cat #{file2}"
+        end
+
+        private
+
+        def get_name(path)
+          path.split('/').last
+        end
+      end
+    end
+
+    after do
+      drop_hook DemoTestHook
+    end
+
+    it {
+      expect(result).to eq out: "class File1 {}...and...\nclass File2 {}", exit: :passed
+    }
+  end
 
   context 'when test runner is implemented but no expectations' do
     before do
