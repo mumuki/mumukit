@@ -1,5 +1,4 @@
 require 'tempfile'
-require 'tmpdir'
 
 module Mumukit
   module WithTempfile
@@ -8,7 +7,7 @@ module Mumukit
     end
 
     def create_tempfile_as(name)
-      File.new("#{Dir.mktmpdir}/#{name}", 'w+')
+      Utils::NamedTempfile.new(name)
     end
 
     def tempfile_extension

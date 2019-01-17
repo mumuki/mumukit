@@ -16,7 +16,7 @@ module Mumukit
       post_process_file(files, cleanup_raw_result(result), status)
     ensure
       if has_files?(request)
-        files.each { |file| File.delete(file) }
+        files.each { |file| file.unlink }
       else
         files.unlink
       end
