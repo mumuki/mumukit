@@ -6,7 +6,7 @@ module Mumukit
       return super(request) unless has_files?(request)
 
       self.request = request
-      compile_file_content(request).map { |filename, content| write_tempfile!(content, filename) }
+      write_named_tempfiles! compile_file_content(request)
     end
 
     def run!(files)

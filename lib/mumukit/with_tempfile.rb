@@ -1,4 +1,5 @@
 require 'tempfile'
+require 'tmpdir'
 
 module Mumukit
   module WithTempfile
@@ -6,22 +7,29 @@ module Mumukit
       Tempfile.new(['mumuki.compile', tempfile_extension])
     end
 
-    def create_tempfile_as(name)
-      NamedTempfile.new(name)
+    def create_tempfile_as(name, dir)
+      NamedTempfile.new(name, dir)
     end
 
     def tempfile_extension
       ''
     end
 
-    def write_tempfile!(content, name = nil)
-      with_tempfile(name) do |file|
+    def write_tempfile!(content)
+      with_tempfile do |file|
         file.write(content)
       end
     end
 
-    def with_tempfile(name = nil)
-      file = name.nil? ? create_tempfile : create_tempfile_as(name)
+    def write_named_tempfiles!(files)
+      dir = Dir.mktmpdir
+      files.map do |filename, content|
+        name = filename.sanitize_as_filename
+        with_tempfile(create_tempfile_as(name, dir)) { |file| file.write content }
+      end
+    end
+
+    def with_tempfile(file = create_tempfile)
       yield file
       file.close
       file

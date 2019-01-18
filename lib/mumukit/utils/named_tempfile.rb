@@ -1,15 +1,15 @@
-require 'tmpdir'
 require 'fileutils'
+require 'tmpdir'
 
 module Mumukit
   class NamedTempfile < File
-    def initialize(name)
-      @tmp_dir = Dir.mktmpdir
-      super("#{@tmp_dir}/#{name}", 'w+')
+    def initialize(name, tempdir = Dir.mktmpdir)
+      @tempdir = tempdir
+      super("#{tempdir}/#{name}", 'w+')
     end
 
     def unlink
-      FileUtils.rm_rf @tmp_dir
+      FileUtils.rm_rf @tempdir
     end
   end
 end
