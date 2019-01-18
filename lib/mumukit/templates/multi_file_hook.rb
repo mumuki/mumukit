@@ -15,11 +15,7 @@ module Mumukit
       result, status = run_files!(*files)
       post_process_file(files, cleanup_raw_result(result), status)
     ensure
-      if has_files?(request)
-        files.each { |file| file.unlink }
-      else
-        files.unlink
-      end
+      [files].flatten.each { |file| file.unlink }
     end
   end
 end
