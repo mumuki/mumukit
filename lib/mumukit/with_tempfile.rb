@@ -7,7 +7,7 @@ module Mumukit
     end
 
     def create_tempfile_as(name)
-      Utils::NamedTempfile.new(name)
+      NamedTempfile.new(name)
     end
 
     def tempfile_extension
