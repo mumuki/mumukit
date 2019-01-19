@@ -7,7 +7,6 @@ module Mumukit
       Tempfile.new(['mumuki.compile', tempfile_extension])
     end
 
-
     def tempfile_extension
       ''
     end
@@ -22,7 +21,7 @@ module Mumukit
       dir = Dir.mktmpdir
       files.map do |filename, content|
         name = filename.sanitize_as_filename
-        File.open("#{dir}/#{filename.sanitize_as_filename}", 'w+') { |file| file.write content; file }
+        File.open("#{dir}/#{filename.sanitize_as_filename}", 'w') { |file| file.write content; file }
       end.try { |it| struct dir: dir, files: it }
     end
 
