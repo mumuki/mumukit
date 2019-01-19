@@ -1,5 +1,4 @@
 require 'fileutils'
-require 'tmpdir'
 
 module Mumukit
   class Templates::MultiFileHook < Templates::FileHook
