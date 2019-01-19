@@ -53,8 +53,8 @@ end
 
 require 'mumukit/content_type'
 
-require_relative 'mumukit/utils/named_tempfile'
-require_relative 'mumukit/utils/string'
+require_relative 'mumukit/named_tempfile'
+require_relative 'mumukit/string'
 require_relative 'mumukit/version'
 require_relative 'mumukit/env'
 require_relative 'mumukit/cookie'
