@@ -22,11 +22,12 @@ module Mumukit
       dir = Dir.mktmpdir
       files.map do |filename, content|
         name = filename.sanitize_as_filename
-        with_tempfile(File.new("#{dir}/#{filename.sanitize_as_filename}", 'w+')) { |file| file.write content }
+        File.open("#{dir}/#{filename.sanitize_as_filename}", 'w+') { |file| file.write content; file }
       end.try { |it| struct dir: dir, files: it }
     end
 
-    def with_tempfile(file = create_tempfile)
+    def with_tempfile
+      file = create_tempfile
       yield file
       file.close
       file
