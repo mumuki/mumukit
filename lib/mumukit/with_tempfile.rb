@@ -1,4 +1,5 @@
 require 'tempfile'
+require 'tmpdir'
 
 module Mumukit
   module WithTempfile
@@ -14,6 +15,13 @@ module Mumukit
       with_tempfile do |file|
         file.write(content)
       end
+    end
+
+    def write_tempdir!(files)
+      dir = Dir.mktmpdir
+      files.map do |filename, content|
+        File.open("#{dir}/#{filename.sanitize_as_filename}", 'w') { |file| file.write content; file }
+      end.try { |it| struct dir: dir, files: it }
     end
 
     def with_tempfile

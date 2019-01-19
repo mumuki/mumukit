@@ -5,8 +5,10 @@ module Mumukit
       include Mumukit::WithCommandLine
     end
 
-    def run_file!(file)
-      run_command command_line(file.path)
+    def run_files!(*files)
+      run_command command_line(*files.map {|f| f.path})
     end
+
+    alias_method 'run_file!', 'run_files!'
   end
 end

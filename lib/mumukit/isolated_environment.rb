@@ -7,12 +7,11 @@ module Mumukit
     attr_accessor :container
 
     def configure!(*files)
-
       filenames = files.map { |it| File.absolute_path(it.path) }
-      dirnames = filenames.map { |it| Pathname.new(it).dirname }
+      dirnames = filenames.map { |it| Pathname.new(it).dirname }.uniq
 
       binds = dirnames.map { |it| "#{it}:#{it}" }
-      volumes = Hash[[dirnames.map { |it| [it, {}] }]]
+      volumes = Hash[dirnames.map { |it| [[it, {}]] }]
 
       command = yield(*filenames).split
 
