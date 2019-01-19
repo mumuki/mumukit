@@ -7,9 +7,6 @@ module Mumukit
       Tempfile.new(['mumuki.compile', tempfile_extension])
     end
 
-    def create_tempfile_as(name, dir)
-      NamedTempfile.new(name, dir)
-    end
 
     def tempfile_extension
       ''
@@ -21,12 +18,12 @@ module Mumukit
       end
     end
 
-    def write_named_tempfiles!(files)
+    def write_tempdir!(files)
       dir = Dir.mktmpdir
       files.map do |filename, content|
         name = filename.sanitize_as_filename
-        with_tempfile(create_tempfile_as(name, dir)) { |file| file.write content }
-      end
+        with_tempfile(File.new("#{dir}/#{filename.sanitize_as_filename}", 'w+')) { |file| file.write content }
+      end.try { |it| struct dir: dir, files: it }
     end
 
     def with_tempfile(file = create_tempfile)

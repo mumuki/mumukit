@@ -53,7 +53,6 @@ end
 
 require 'mumukit/content_type'
 
-require_relative 'mumukit/named_tempfile'
 require_relative 'mumukit/string'
 require_relative 'mumukit/version'
 require_relative 'mumukit/env'

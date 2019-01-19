@@ -1,21 +1,26 @@
+require 'fileutils'
+require 'tmpdir'
+
 module Mumukit
   class Templates::MultiFileHook < Templates::FileHook
     include Mumukit::Templates::WithMultipleFiles
 
     def compile(request)
-      return super(request) unless has_files?(request)
+      return super unless has_files?(request)
 
       self.request = request
-      write_named_tempfiles! compile_file_content(request)
+      write_tempdir! compile_file_content(request)
     end
 
-    def run!(files)
-      return super(files) unless has_files?(request)
+    def run!(tempdir)
+      return super unless has_files?(request)
 
-      result, status = run_files!(*files)
-      post_process_file(files, cleanup_raw_result(result), status)
-    ensure
-      [files].flatten.each { |file| file.unlink }
+      begin
+        result, status = run_files!(*tempdir.files)
+        post_process_file(tempdir.files, cleanup_raw_result(result), status)
+      ensure
+        FileUtils.rm_rf tempdir.dir
+      end
     end
   end
 end
