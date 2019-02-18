@@ -15,6 +15,7 @@ require_relative './templates/with_code_smells'
 require_relative './templates/with_cookie'
 
 require_relative './templates/file_hook'
+require_relative './templates/query_hook'
 require_relative './templates/multi_file_hook'
 require_relative './templates/try_hook'
 require_relative './templates/expectations_hook'
