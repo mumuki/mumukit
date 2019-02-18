@@ -15,7 +15,7 @@ describe Mumukit::Server::TestServer do
 
       def error_patterns
         [
-          ErrorPattern::Errored.new(/^syntax error: /)
+          Mumukit::ErrorPattern::Errored.new(/^syntax error: /)
         ]
       end
     end
