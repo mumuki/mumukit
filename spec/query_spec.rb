@@ -2,7 +2,7 @@ require_relative './spec_helper'
 
 describe Mumukit::Server::TestServer do
   before do
-    class DemoQueryHook < Mumukit::Templates::FileHook
+    class DemoQueryHook < Mumukit::Templates::QueryHook
       isolated false
 
       def command_line(filename)
@@ -11,6 +11,12 @@ describe Mumukit::Server::TestServer do
 
       def compile_file_content(req)
         "#{req.extra}\n#{req.content}\nprint('=> ' + (#{req.query}).inspect)"
+      end
+
+      def error_patterns
+        [
+          ErrorPattern::Errored.new(/^syntax error: /)
+        ]
       end
     end
   end
@@ -43,4 +49,9 @@ describe Mumukit::Server::TestServer do
     it { expect(server.query!(req query: 'x', content: 'x = y', extra: 'y = 3')[:out]).to eq '=> 3' }
   end
 
+  context 'with error defined in patterns' do
+    before { allow_any_instance_of(DemoQueryHook).to receive(:run_file!) { ['syntax error: unexpected end-of-input', :failed] } }
+    
+    it { expect(server.query!(req query: '[].map {')).to eq(exit: :errored, out: 'unexpected end-of-input') }
+  end
 end
