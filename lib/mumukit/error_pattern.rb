@@ -1,8 +1,7 @@
 module Mumukit
   class ErrorPattern
-    def initialize(regexp, &transform)
+    def initialize(regexp)
       @regexp = regexp
-      @transform = transform || proc { |result, status| [result, status] }
     end
 
     def matches?(result)
@@ -14,18 +13,18 @@ module Mumukit
     end
 
     def transform(result, status)
-      @transform.call sanitize(result), status
+      [sanitize(result), status]
     end
 
     class Errored < ErrorPattern
-      def initialize(regexp)
-        super(regexp) { |result, _status| [result, :errored] }
+      def transform(result, _status)
+        super(result, :errored)
       end
     end
 
     class Failed < ErrorPattern
-      def initialize(regexp)
-        super(regexp) { |result, _status| [result, :failed] }
+      def transform(result, _status)
+        super(result, :failed)
       end
     end
   end
