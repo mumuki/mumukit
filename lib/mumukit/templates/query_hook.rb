@@ -1,5 +1,5 @@
 module Mumukit::Templates
-  class QueryHook < FileHook
+  module QueryHook
     def post_process_file(_file, result, status)
       error_patterns.each { |it| return it.transform(result, status) if it.matches? result } if status.failed?
       super

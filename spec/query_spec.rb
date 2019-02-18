@@ -2,7 +2,9 @@ require_relative './spec_helper'
 
 describe Mumukit::Server::TestServer do
   before do
-    class DemoQueryHook < Mumukit::Templates::QueryHook
+    class DemoQueryHook < Mumukit::Templates::FileHook
+      include Mumukit::Templates::QueryHook
+
       isolated false
 
       def command_line(filename)
