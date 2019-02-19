@@ -74,5 +74,9 @@ module Mumukit
         define_method(:mashup_fields) { args }
       end
     end
+
+    def self.with_error_patterns
+      include Mumukit::Templates::WithErrorPatterns
+    end
   end
 end
