@@ -13,7 +13,8 @@ module Mumukit
       binds = dirnames.map { |it| "#{it}:#{it}" }
       volumes = Hash[dirnames.map { |it| [[it, {}]] }]
 
-      command = yield(*filenames).split
+      command = yield(*filenames)
+      command = command.split if String === command
 
       configure_container! command, binds, volumes
     end
