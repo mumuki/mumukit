@@ -31,7 +31,7 @@ describe Mumukit do
 
       response = JSON.parse(last_response.body)
       expect(response['exit']).to eq 'errored'
-      expect(response['out']).to include "Error parsing request body. Cause: 765: unexpected token at '{ BAD\u0026JSON: 3 }'"
+      expect(response['out']).to match /Error parsing request body\. Cause: \d+: unexpected token at '{ BAD.JSON: 3 }'/
     end
 
     it 'should throw an error if the request has a non-existing locale' do
