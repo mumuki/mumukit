@@ -16,12 +16,17 @@ class Mumukit::Hook
     @config[name]
   end
 
+  # The rack `env`
   def env
     Mumukit::Env.env
   end
 
+  # The rack `env` logger.
+  #
+  # Use `Mumukit::Env.logger` or `Mumukit::Env.root_logger` if you need a
+  # logger outside a hook context
   def logger
-    env['rack.logger']
+    Mumukit::Env.rack_logger
   end
 
   def should_forward_to_config?(args, name)
