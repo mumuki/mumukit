@@ -2,7 +2,6 @@ require 'sinatra/base'
 require 'yaml'
 require 'json'
 
-
 class Mumukit::Server::App < Sinatra::Base
   configure do
     set :mumuki_url, 'http://mumuki.io'
