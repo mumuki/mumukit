@@ -83,3 +83,7 @@ Finally, `mumukit` templates provides the following _extensions_ - features that
   * `isolated`: lets to run commands within docker or in native environment
 * `Mumukit::Templates::MulangExpectationsHook`
   * `include_smells`: lets to include in the result smells produced by _mulang_
+  
+## Server extensions
+
+If you need to serve assets, you can include the `Mumukit::Server::WithAssets` mixin which enables cross origin requests and provides `get_asset` and `get_local_asset` methods
