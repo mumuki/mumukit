@@ -30,6 +30,8 @@ Gem::Specification.new do |spec|
   spec.add_dependency 'puma'
   spec.add_dependency 'docker-api', '~> 1.22.2'
   spec.add_dependency 'excon', '~> 0.46'
+  spec.add_dependency 'sinatra-cross_origin', '~> 0.4'
+  spec.add_dependency 'mime-types', '~> 3.2'
 
   spec.add_dependency 'mulang', '~> 4.0'
 
