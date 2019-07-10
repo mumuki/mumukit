@@ -24,7 +24,7 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency 'simplecov'
   spec.add_development_dependency 'rack-test'
 
-  spec.add_dependency 'sinatra', '~> 1.4'
+  spec.add_dependency 'sinatra', '~> 2.0'
   spec.add_dependency 'activesupport'
   spec.add_dependency 'i18n', '~> 0.7'
   spec.add_dependency 'puma'
