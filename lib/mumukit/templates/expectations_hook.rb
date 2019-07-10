@@ -21,8 +21,8 @@ module Mumukit
     private
 
     def compile_expectations(request)
-      expectations = {ast: [], source: [], exceptions: []}
-      request[:expectations].each do |it|
+      expectations = {ast: [], source: [], exceptions: [], custom: request[:custom_expectations] }
+      request[:expectations].to_a.each do |it|
         fill_expectations it.deep_symbolize_keys, expectations
       end
       expectations
