@@ -49,6 +49,7 @@ Mumukit.configure_defaults do |config|
   config.process_expectations_on_empty_content = false
   config.run_test_hook_on_empty_test = false
   config.multifile = false
+  config.settings = false
 end
 
 require 'mumukit/content_type'
