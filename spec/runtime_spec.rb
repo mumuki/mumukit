@@ -11,6 +11,7 @@ describe Mumukit::Runtime do
   it { expect(runtime.info[:features][:query]).to be false }
   it { expect(runtime.info[:features][:precompile]).to be false }
   it { expect(runtime.info[:features][:multifile]).to be false }
+  it { expect(runtime.info[:features][:settings]).to be false }
 
   it { expect(runtime.metadata_hook?).to be false }
   it { expect(runtime.metadata_hook).to be_a Mumukit::Defaults::MetadataHook }

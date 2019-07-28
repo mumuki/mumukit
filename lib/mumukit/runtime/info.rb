@@ -19,6 +19,7 @@ module Mumukit::RuntimeInfo
           stateful: Mumukit.config.stateful,
           multifile: Mumukit.config.multifile,
           preprocessor: Mumukit.config.preprocessor_enabled,
+          settings: Mumukit.config.settings,
 
           sandboxed: any_hook_include?([:test, :query], Mumukit::Templates::WithIsolatedEnvironment),
           structured: any_hook_include?([:test], Mumukit::Templates::WithStructuredResults) || Mumukit.config.structured
