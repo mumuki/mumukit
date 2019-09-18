@@ -1,5 +1,3 @@
-require 'mumukit/inspection'
-
 module Mumukit
   class Templates::ExpectationsHook < Mumukit::Hook
     SOURCE_EXPECTATION_EVALUATORS = {
@@ -40,7 +38,7 @@ module Mumukit
     end
 
     def compile_expectation(expectation)
-      Mumukit::Inspection::Expectation.parse(expectation).as_v2.to_h
+      Mulang::Expectation.parse(expectation).as_v2.to_h
     end
 
     def compile_source_expectation(expectation)
@@ -62,7 +60,7 @@ module Mumukit
       end
 
       def self.parse(expectation)
-        parsed = Mumukit::Inspection::Expectation.parse(expectation)
+        parsed = Mulang::Expectation.parse(expectation)
         evaluator = parse_evaluator(parsed.inspection)
         new parsed, evaluator
       end
