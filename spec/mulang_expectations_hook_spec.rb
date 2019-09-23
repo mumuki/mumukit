@@ -26,43 +26,70 @@ describe Mumukit::Templates::MulangExpectationsHook do
       end
     end
 
-    let(:content) { 'f x = f x' }
+    context 'when using expectations' do
+      let(:content) { 'f x = f x' }
 
-    let(:declaresComputationWithArity1) { {binding: '*', inspection: 'DeclaresComputationWithArity1:f'} }
-    let(:usesIf) { {binding: 'f', inspection: 'UsesIf'} }
-    let(:containsFx) { {binding: '*', inspection: 'SourceContains:f x'} }
-    let(:hasBindingF) { {binding: 'f', inspection: 'HasBinding'} }
-    let(:hasBindingG) { {binding: 'g', inspection: 'HasBinding'} }
-    let(:redundantParameterSmell) { {binding: 'f', inspection: 'HasRedundantParameter'} }
-    let(:exceptHasTooShortIdentifiers) { {binding: '*', inspection: 'Except:HasTooShortIdentifiers'} }
-    let(:exceptNonExistingSmell) { {binding: '*', inspection: 'Except:NonExistingSmell'} }
+      let(:declaresComputationWithArity1) { {binding: '*', inspection: 'DeclaresComputationWithArity1:f'} }
+      let(:usesIf) { {binding: 'f', inspection: 'UsesIf'} }
+      let(:containsFx) { {binding: '*', inspection: 'SourceContains:f x'} }
+      let(:hasBindingF) { {binding: 'f', inspection: 'HasBinding'} }
+      let(:hasBindingG) { {binding: 'g', inspection: 'HasBinding'} }
+      let(:redundantParameterSmell) { {binding: 'f', inspection: 'HasRedundantParameter'} }
+      let(:exceptHasTooShortIdentifiers) { {binding: '*', inspection: 'Except:HasTooShortIdentifiers'} }
+      let(:exceptNonExistingSmell) { {binding: '*', inspection: 'Except:NonExistingSmell'} }
 
-    let(:request) { {
-      content: content,
-      expectations: [
-        declaresComputationWithArity1,
-        usesIf,
-        containsFx,
-        hasBindingF,
-        hasBindingG,
-        exceptHasTooShortIdentifiers,
-        exceptNonExistingSmell ] } }
+      let(:request) { {
+        content: content,
+        expectations: [
+          declaresComputationWithArity1,
+          usesIf,
+          containsFx,
+          hasBindingF,
+          hasBindingG,
+          exceptHasTooShortIdentifiers,
+          exceptNonExistingSmell ] } }
 
-    let(:result) { compile_and_run request }
+      let(:result) { compile_and_run request }
 
-    it { expect(result.length).to eq 6 }
+      it { expect(result.length).to eq 6 }
 
-    it { expect(result).to include(expectation: declaresComputationWithArity1, result: true) }
+      it { expect(result).to include(expectation: declaresComputationWithArity1, result: true) }
 
-    it { expect(result).to include(expectation: usesIf, result: false) }
+      it { expect(result).to include(expectation: usesIf, result: false) }
 
-    it { expect(result).to include(expectation: containsFx, result: true) }
+      it { expect(result).to include(expectation: containsFx, result: true) }
 
-    it { expect(result).to include(expectation: {binding: '*', inspection: 'Declares:=f'}, result: true) }
-    it { expect(result).to include(expectation: {binding: '*', inspection: 'Declares:=g'}, result: false) }
+      it { expect(result).to include(expectation: {binding: '*', inspection: 'Declares:=f'}, result: true) }
+      it { expect(result).to include(expectation: {binding: '*', inspection: 'Declares:=g'}, result: false) }
 
-    it { expect(result).to include(expectation: redundantParameterSmell, result: false) }
-    it { expect(result).to_not include(expectation: {binding: 'f', inspection: 'HasTooShortIdentifiers'}, result: false) }
+      it { expect(result).to include(expectation: redundantParameterSmell, result: false) }
+      it { expect(result).to_not include(expectation: {binding: 'f', inspection: 'HasTooShortIdentifiers'}, result: false) }
+    end
+
+    context 'when using custom expectations' do
+      let(:content) { 'foo x = baz (y + 1)' }
+      let(:custom_expectations) do
+        %q{
+          expectation "assigns variable": assigns;
+          expectation "calls something": calls;
+          expectation "calls something with math": calls with math;
+        }
+      end
+
+      let(:request) { {content: content, custom_expectations: custom_expectations} }
+
+      let(:result) { compile_and_run request }
+
+      it { expect(result.length).to eq 3 }
+
+      it do
+        expect(result).to eq [
+          {expectation: {inspection: "assigns variable", binding: "<<custom>>"}, result: false},
+          {expectation: {inspection: "calls something", binding: "<<custom>>"}, result: true},
+          {expectation: {inspection: "calls something with math", binding: "<<custom>>"}, result: true}
+        ]
+      end
+    end
   end
 
   context 'when language is not defined' do

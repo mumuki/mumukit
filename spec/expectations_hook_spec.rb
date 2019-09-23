@@ -1,6 +1,6 @@
 require_relative './spec_helper'
 
-describe Mumukit::Templates::MulangExpectationsHook do
+describe Mumukit::Templates::ExpectationsHook do
   def compile_and_run(request)
     hook.run! hook.compile(request)
   end
@@ -14,29 +14,6 @@ describe Mumukit::Templates::MulangExpectationsHook do
 
   after do
     drop_hook DemoExpectationsHook
-  end
-
-  context 'with custom expectations' do
-    let(:content) { 'procedure Foo() { Put(Red) Put(Blue) }' }
-    let(:custom_expectations) do
-      %q{
-        test "assigns variable": assigns;
-        test "calls something": calls;
-      }
-    end
-
-    let(:request) { struct content: content, custom_expectations: custom_expectations }
-
-    let(:result) { compile_and_run request }
-
-    it { expect(result.length).to eq 2 }
-
-    it do
-      expect(result).to eq [
-        {expectation: {inspection: "assigns variable", binding: "<<custom>>"}, result: true},
-        {expectation: {inspection: "calls something", binding: "<<custom>>"}, result: true}
-      ]
-    end
   end
 
   context 'with standard expectations' do
