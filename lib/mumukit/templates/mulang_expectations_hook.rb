@@ -18,6 +18,7 @@ module Mumukit
     def compile_mulang_analysis(request, expectations)
       mulang_code(request).analysis(
         expectations: expectations[:ast],
+        customExpectations: expectations[:custom],
         smellsSet: {
           tag: 'AllSmells',
           exclude: (expectations[:exceptions] + default_smell_exceptions)

@@ -1,5 +1,3 @@
-require 'mumukit/inspection'
-
 module Mumukit
   class Templates::ExpectationsHook < Mumukit::Hook
     SOURCE_EXPECTATION_EVALUATORS = {
@@ -21,8 +19,8 @@ module Mumukit
     private
 
     def compile_expectations(request)
-      expectations = {ast: [], source: [], exceptions: []}
-      request[:expectations].each do |it|
+      expectations = {ast: [], source: [], exceptions: [], custom: request[:custom_expectations] }
+      request[:expectations].to_a.each do |it|
         fill_expectations it.deep_symbolize_keys, expectations
       end
       expectations
@@ -40,7 +38,7 @@ module Mumukit
     end
 
     def compile_expectation(expectation)
-      Mumukit::Inspection::Expectation.parse(expectation).as_v2.to_h
+      Mulang::Expectation.parse(expectation).as_v2.to_h
     end
 
     def compile_source_expectation(expectation)
@@ -62,7 +60,7 @@ module Mumukit
       end
 
       def self.parse(expectation)
-        parsed = Mumukit::Inspection::Expectation.parse(expectation)
+        parsed = Mulang::Expectation.parse(expectation)
         evaluator = parse_evaluator(parsed.inspection)
         new parsed, evaluator
       end
