@@ -1,8 +1,12 @@
 require 'mumukit/core'
 require 'mumukit/directives'
+require 'mumukit/inspection'
 require 'ostruct'
+require 'mulang'
 
 I18n.load_translations_path File.join(__dir__, 'locales', '*.yml')
+
+Mulang::Inspection.register_extension! Mumukit::Inspection::Source
 
 module Mumukit
   def self.current_runner=(runner)

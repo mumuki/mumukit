@@ -1,5 +1,9 @@
 require_relative './spec_helper'
 
+describe Mulang::Expectation do
+  it { expect(Mulang::Expectation.parse(binding: '*', inspection: 'SourceContains:f x').translate).to eq 'solution must use <strong>f x</strong>' }
+end
+
 describe Mumukit::Templates::MulangExpectationsHook do
   let(:content) { 'x = 1' }
   let(:usesX) { {binding: '*', inspection: 'Uses:X'} }
