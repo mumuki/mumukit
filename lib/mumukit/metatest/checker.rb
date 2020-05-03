@@ -25,9 +25,9 @@ module Mumukit::Metatest
     ##
     def check(input, example)
       check_assertions input, postconditions_for(example), example
-      [example[:name], :passed, render_success_output(input)]
+      build_passed_test_result example, input
     rescue => e
-      [example[:name], :failed, render_error_output(input, e.message)]
+      build_failed_test_result example, input, e
     end
 
     ## If no postconditions are included in the example,
@@ -64,6 +64,14 @@ module Mumukit::Metatest
 
     def error(message)
       raise Mumukit::Metatest::Errored, message
+    end
+
+    def build_passed_test_result(example, input)
+      [example[:name], :passed, render_success_output(input)]
+    end
+
+    def build_failed_test_result(example, input, e)
+      [example[:name], :failed, render_error_output(input, e.message)]
     end
   end
 end
