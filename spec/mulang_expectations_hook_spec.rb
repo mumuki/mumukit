@@ -55,7 +55,7 @@ describe Mumukit::Templates::MulangExpectationsHook do
 
       let(:result) { compile_and_run request }
 
-      it { expect(result.length).to eq 6 }
+      it { expect(result.length).to eq 7 }
 
       it { expect(result).to include(expectation: declaresComputationWithArity1, result: true) }
 

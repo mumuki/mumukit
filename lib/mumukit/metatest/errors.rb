@@ -1,10 +1,17 @@
 module Mumukit::Metatest
-  class Aborted < StandardError
+  class BaseError < StandardError
+    attr_reader :details
+    def initialize(message = "", details = nil)
+      super(message)
+      @details = details
+    end
+  end
+  class Aborted < BaseError
   end
 
-  class Errored < StandardError
+  class Errored < BaseError
   end
 
-  class Failed < StandardError
+  class Failed < BaseError
   end
 end
