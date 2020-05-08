@@ -25,9 +25,9 @@ module Mumukit::Metatest
     ##
     def check(input, example)
       check_assertions input, postconditions_for(example), example
-      [example[:name], :passed, render_success_output(input)]
+      build_passed_test_result example, input
     rescue => e
-      [example[:name], :failed, render_error_output(input, e.message)]
+      build_failed_test_result example, input, e
     end
 
     ## If no postconditions are included in the example,
@@ -40,8 +40,19 @@ module Mumukit::Metatest
       nil
     end
 
-    def render_error_output(value, error)
-      error
+    # Implementors should override this method if they want access to
+    # the error details
+    def render_error_output_with_details(value, error_message, _error_details)
+      render_error_output value, error_message
+    end
+
+    # Implementors may override this method instead of `render_error_output_with_details`
+    # if they don't want to handle error details.
+    #
+    # This method is only for backward compatibility. New code
+    # should use `render_error_output_with_details`.
+    def render_error_output(value, error_message)
+      error_message
     end
 
     def check_assertions(input, assertions_hash, example)
@@ -54,16 +65,24 @@ module Mumukit::Metatest
       send "check_#{assertion_name}", input, assertion_config
     end
 
-    def fail(message)
-      raise Mumukit::Metatest::Failed, message
+    def fail(message, details: nil)
+      raise Mumukit::Metatest::Failed.new(message, details)
     end
 
-    def abort(message)
-      raise Mumukit::Metatest::Aborted, message
+    def abort(message, details: nil)
+      raise Mumukit::Metatest::Aborted.new(message, details)
     end
 
-    def error(message)
-      raise Mumukit::Metatest::Errored, message
+    def error(message, details: nil)
+      raise Mumukit::Metatest::Errored.new(message, details)
+    end
+
+    def build_passed_test_result(example, input)
+      [example[:name], :passed, render_success_output(input)]
+    end
+
+    def build_failed_test_result(example, input, e)
+      [example[:name], :failed, render_error_output_with_details(input, e.message, e.details)]
     end
   end
 end
