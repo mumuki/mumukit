@@ -1,3 +1,3 @@
 module Mumukit
-  VERSION = '2.34.1'
+  VERSION = '2.35.0'
 end
