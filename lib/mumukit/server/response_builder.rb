@@ -58,10 +58,16 @@ class Mumukit::Server::ResponseBuilder
   end
 
   def structured_base_response(test_results)
-    {testResults: test_results[0].map { |title, status, result|
-      {title: title,
-       status: status,
-       result: result} }}
+    {
+      testResults: test_results[0].map do |title, status, result, summary|
+        { summary: summary&.compact.presence }
+          .compact
+          .merge(
+            title: title,
+            status: status,
+            result: result)
+      end
+    }
   end
 
   def unstructured_base_response(test_results)

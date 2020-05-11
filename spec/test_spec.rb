@@ -272,6 +272,39 @@ alert("!");
           {title: 'baz', status: :failed, result: 'bar'}] }
     end
 
+    context 'when test returns structured results with failed summary' do
+      before { allow_any_instance_of(DemoTestHook).to receive(:run!).and_return([[['foo', :passed, ''], ['baz', :failed, 'bar', {key: 'foobaz', message: 'Foo Baz'}]]]) }
+
+      it { expect(result).to eq testResults: [
+          {title: 'foo', status: :passed, result: ''},
+          {title: 'baz', status: :failed, result: 'bar', summary: {key: 'foobaz', message: 'Foo Baz'}}] }
+    end
+
+    context 'when test returns structured results with empty summary' do
+      before { allow_any_instance_of(DemoTestHook).to receive(:run!).and_return([[['foo', :passed, ''], ['baz', :failed, 'bar', {}]]]) }
+
+      it { expect(result).to eq testResults: [
+          {title: 'foo', status: :passed, result: ''},
+          {title: 'baz', status: :failed, result: 'bar'}] }
+    end
+
+    context 'when test returns structured results with summary with empty keys' do
+      before { allow_any_instance_of(DemoTestHook).to receive(:run!).and_return([[['foo', :passed, ''], ['baz', :failed, 'bar', {key: nil}]]]) }
+
+      it { expect(result).to eq testResults: [
+          {title: 'foo', status: :passed, result: ''},
+          {title: 'baz', status: :failed, result: 'bar'}] }
+    end
+
+
+    context 'when test returns structured results with passed summary' do
+      before { allow_any_instance_of(DemoTestHook).to receive(:run!).and_return([[['foo', :passed, '', {key: 'foobaz', message: 'Foo Baz'}], ['baz', :failed, 'bar']]]) }
+
+      it { expect(result).to eq testResults: [
+          {title: 'foo', status: :passed, result: '', summary: {key: 'foobaz', message: 'Foo Baz'}},
+          {title: 'baz', status: :failed, result: 'bar'}] }
+    end
+
     context 'when test fails' do
       before { allow_any_instance_of(DemoTestHook).to receive(:run!).and_return(['nok', :failed]) }
 
