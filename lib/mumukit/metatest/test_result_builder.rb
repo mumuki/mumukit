@@ -8,7 +8,7 @@ module Mumukit::Metatest
 
     def build
       raise 'missing status' unless status
-      raise "invallid #{status}" unless status.passed? || status.failed?
+      raise "invalid #{status}" unless status.passed? || status.failed?
 
       if summary_message.present? || summary_type.present?
         [title, status, result, summary]
