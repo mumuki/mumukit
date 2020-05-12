@@ -18,7 +18,7 @@ Gem::Specification.new do |spec|
   spec.require_paths = ['lib', 'bin']
 
   spec.add_development_dependency 'bundler', '>= 1.7', '< 3'
-  spec.add_development_dependency 'rake', '~> 10.0'
+  spec.add_development_dependency 'rake', '~> 12.3'
   spec.add_development_dependency 'rspec', '~> 2'
   spec.add_development_dependency 'codeclimate-test-reporter'
   spec.add_development_dependency 'simplecov'
@@ -29,7 +29,9 @@ Gem::Specification.new do |spec|
   spec.add_dependency 'i18n', '~> 0.7'
   spec.add_dependency 'puma'
   spec.add_dependency 'docker-api', '~> 1.22.2'
-  spec.add_dependency 'excon', '~> 0.46'
+  spec.add_dependency 'excon', '~> 0.71'
+
+
   spec.add_dependency 'sinatra-cross_origin', '~> 0.4'
   spec.add_dependency 'mime-types', '~> 3.2'
 
