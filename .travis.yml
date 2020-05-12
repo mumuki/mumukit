@@ -9,6 +9,7 @@ addons:
 services:
 - docker
 before_install:
+- gem install bundler -v 2.0.2
 - docker pull alpine
 after_success:
   - bundle exec codeclimate-test-reporter
