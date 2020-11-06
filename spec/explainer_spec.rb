@@ -8,7 +8,7 @@ end
 
 describe Mumukit::Explainer do
   context 'contains all explain methods' do
-    it { expect(SampleExplainer.new.explain_methods).to eq [[:explain_foo, 'foo']] }
+    it { expect(SampleExplainer.new.send(:explain_methods)).to eq [[:explain_foo, 'foo']] }
   end
 
   context 'explains in html' do

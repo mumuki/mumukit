@@ -5,6 +5,8 @@ class Mumukit::Explainer
     content_type.enumerate(explanations(content, test_results))
   end
 
+  private
+
   def explanations(content, test_results)
     explain_methods
         .map { |selector, key| eval_explain(selector, key, content, test_results) }
