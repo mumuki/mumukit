@@ -64,7 +64,7 @@ module Mumukit::Metatest
 
     # Implementors should override this method if they want access to
     # the error details and produce more complex test results
-    def build_error_output(builder, input, _example, error)
+    def build_error_output(builder, _example, input, error)
       builder.result = render_error_output input, error.message
     end
 
