@@ -8,12 +8,23 @@ class TextChecker < Mumukit::Metatest::Checker
   def check_equal(value, arg)
     fail "expected '#{value}' to equal '#{arg}'" unless value == arg
   end
+
+  def render_error_output(input, error_message)
+    error_message
+  end
+end
+
+class CustomErrorOutputChecker < TextChecker
+  def render_error_output(input, error_message)
+    "'#{input}' is not ok"
+  end
 end
 
 describe 'metatest' do
   let(:result) { framework.test compilation, examples }
+  let(:checker) { TextChecker.new }
   let(:framework) do
-    Mumukit::Metatest::Framework.new checker: TextChecker.new,
+    Mumukit::Metatest::Framework.new checker: checker,
                                      runner: Mumukit::Metatest::IdentityRunner.new
   end
 
@@ -50,6 +61,25 @@ describe 'metatest' do
     context 'fails' do
       let(:compilation) { 'then kibi run' }
       it { expect(result).to eq [[['kibi walked', :failed, "expected 'then kibi run' to include 'walked'"]]] }
+    end
+  end
+
+  describe 'checker with custom input' do
+    let(:checker) { CustomErrorOutputChecker.new }
+    let(:examples) {
+      [{
+         name: 'kibi walked',
+         include: 'walked'
+       }]
+    }
+
+    context 'pass' do
+      let(:compilation) { 'then kibi walked' }
+      it { expect(result).to eq [[['kibi walked', :passed, nil]]] }
+    end
+    context 'fails' do
+      let(:compilation) { 'then kibi run' }
+      it { expect(result).to eq [[['kibi walked', :failed, "'then kibi run' is not ok"]]] }
     end
   end
 end
