@@ -35,7 +35,7 @@ Gem::Specification.new do |spec|
   spec.add_dependency 'sinatra-cross_origin', '~> 0.4'
   spec.add_dependency 'mime-types', '~> 3.2'
 
-  spec.add_dependency 'mulang', '~> 5.1'
+  spec.add_dependency 'mulang', '~> 6.0'
   spec.add_dependency 'mumukit-inspection', '~> 5.0'
 
   spec.add_dependency 'mumukit-core', '~> 1.3'

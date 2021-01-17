@@ -1,7 +1,7 @@
 require_relative './spec_helper'
 
 describe Mulang::Expectation do
-  it { expect(Mulang::Expectation.parse(binding: '*', inspection: 'SourceContains:f x').translate).to eq 'solution must use <strong>f x</strong>' }
+  it { expect(Mulang::Expectation.parse(binding: '*', inspection: 'SourceContains:f x').translate).to eq 'solution must use <code>f x</code>' }
 end
 
 describe Mumukit::Templates::MulangExpectationsHook do
@@ -70,6 +70,22 @@ describe Mumukit::Templates::MulangExpectationsHook do
       it { expect(result).to_not include(expectation: {binding: 'f', inspection: 'HasTooShortIdentifiers'}, result: false) }
     end
 
+    context 'when using settings' do
+      let(:content) { 'successor = \\m -> m + 1' }
+      let(:expectations) { [{ binding: '*', inspection: 'UsesLambda'}] }
+      let(:request) do
+         {
+          content: content,
+          expectations: expectations,
+          settings: {
+            normalization_options: { convertLambdaVariableIntoFunction: false }
+          }
+        }
+      end
+      let(:result) { compile_and_run request }
+      it { expect(result).to eq [{expectation: expectations.first, result: true}] }
+    end
+
     context 'when using custom expectations' do
       let(:content) { 'foo x = baz (y + 1)' }
       let(:custom_expectations) do
@@ -122,9 +138,10 @@ describe Mumukit::Templates::MulangExpectationsHook do
   end
 
   describe 'compile_mulang_analysis' do
+    let(:request) { {content: content} }
     let(:sample) do
       hook.compile_mulang_analysis(
-        {content: content, expectations: expectations},
+        request,
         {ast: [], source: [], exceptions: []})
     end
 
@@ -141,6 +158,39 @@ describe Mumukit::Templates::MulangExpectationsHook do
                               tag: 'CodeSample',
                               content: 'x = 1',
                               language: 'Haskell' } }
+    end
+
+    context 'with settings' do
+      let(:request) { {content: content, settings: { normalization_options: { convertObjectIntoDict: true } } } }
+      before do
+        class DemoExpectationsHook < Mumukit::Templates::MulangExpectationsHook
+          def language
+            'JavaScript'
+          end
+        end
+      end
+
+      it { expect(sample).to eq sample: {
+                                  tag: 'CodeSample',
+                                  content: content,
+                                  language: 'JavaScript' },
+                                spec: {
+                                  customExpectations: nil,
+                                  domainLanguage: {
+                                    caseStyle: "CamelCase",
+                                    jargon: [],
+                                    minimumIdentifierSize: 3
+                                  },
+                                  expectations: [],
+                                  normalizationOptions: {
+                                    convertObjectIntoDict: true
+                                  },
+                                  smellsSet: {
+                                    tag: "AllSmells",
+                                    exclude: []
+                                  }
+                                }
+                              }
     end
 
     context 'when transform_content is provided' do
