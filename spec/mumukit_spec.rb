@@ -14,7 +14,7 @@ describe Mumukit do
     it "should respond with the request's url" do
       get '/info'
 
-      last_response.should be_ok
+      expect(last_response).to be_ok
       expect(Mumukit.runner_url).to eq 'http://example.org'
     end
 

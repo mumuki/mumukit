@@ -15,5 +15,5 @@ describe Mumukit::Runtime do
 
   it { expect(runtime.metadata_hook?).to be false }
   it { expect(runtime.metadata_hook).to be_a Mumukit::Defaults::MetadataHook }
-  it { expect { runtime.foo_hook? }.to raise_error }
+  it { expect { runtime.foo_hook? }.to raise_error("Wrong hook foo") }
 end
