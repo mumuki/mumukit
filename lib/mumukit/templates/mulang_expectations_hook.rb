@@ -24,7 +24,11 @@ module Mumukit
           exclude: (expectations[:exceptions] + default_smell_exceptions)
         },
         domainLanguage: domain_language
-      }.merge({normalizationOptions: normalization_options(request).presence}.compact))
+      }.merge({
+        originalLanguage: original_language,
+        autocorrectionRules: autocorrection_rules.try { |it| positive_and_negative it }.presence,
+        normalizationOptions: normalization_options(request).presence
+      }.compact))
     end
 
     def run_mulang_analysis(analysis)
@@ -32,7 +36,6 @@ module Mumukit
     rescue JSON::ParserError
       raise Mumukit::CompilationError, "Can not handle mulang results for analysis #{analysis}"
     end
-
 
     def domain_language
       {
@@ -44,6 +47,13 @@ module Mumukit
 
     def normalization_options(request)
       request.dig(:settings, :normalization_options) || {}
+    end
+
+    def autocorrection_rules
+      {}
+    end
+
+    def original_language
     end
 
     def default_smell_exceptions
@@ -80,6 +90,12 @@ module Mumukit
       if value
         include Mumukit::Templates::WithCodeSmells
       end
+    end
+
+    private
+
+    def positive_and_negative(rules)
+      rules.flat_map { |k, v| [[k, v], ["Not:#{k}", "Not:#{v}"]] }.to_h
     end
   end
 end
