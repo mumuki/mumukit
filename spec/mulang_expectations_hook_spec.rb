@@ -232,6 +232,54 @@ describe Mumukit::Templates::MulangExpectationsHook do
                               }
     end
 
+    context 'with original language' do
+      let(:request) { {content: content } }
+      before do
+        class DemoExpectationsHook < Mumukit::Templates::MulangExpectationsHook
+          def language
+            'Mulang'
+          end
+
+          def autocorrection_rules
+            {
+              "Uses:+" => "UsesPlus",
+              "Uses:=*" => "UsesMultiply",
+            }
+          end
+
+          def compile_content(*)
+            {tag: :None}
+          end
+        end
+      end
+
+      it { expect(sample).to eq sample: {
+                                  tag: 'MulangSample',
+                                  ast: {tag: :None},
+                                },
+                                spec: {
+                                  customExpectations: nil,
+                                  domainLanguage: {
+                                    caseStyle: "CamelCase",
+                                    jargon: [],
+                                    minimumIdentifierSize: 3
+                                  },
+                                  autocorrectionRules: {
+                                    "Not:Uses:+"=>"Not:UsesPlus",
+                                    "Not:Uses:=*"=>"Not:UsesMultiply",
+                                    "Uses:+"=>"UsesPlus",
+                                    "Uses:=*"=>"UsesMultiply"
+                                  },
+                                  expectations: [],
+                                  smellsSet: {
+                                    tag: "AllSmells",
+                                    exclude: []
+                                  }
+                                }
+                              }
+    end
+
+
     context 'when transform_content is provided' do
       before do
         class DemoExpectationsHook < Mumukit::Templates::MulangExpectationsHook
