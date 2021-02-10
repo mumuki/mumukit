@@ -175,7 +175,7 @@ describe Mumukit::Templates::MulangExpectationsHook do
                                   content: content,
                                   language: 'JavaScript' },
                                 spec: {
-                                  customExpectations: nil,
+                                  includeOutputAst: false,
                                   domainLanguage: {
                                     caseStyle: "CamelCase",
                                     jargon: [],
@@ -216,7 +216,7 @@ describe Mumukit::Templates::MulangExpectationsHook do
                                   ast: {tag: :None},
                                 },
                                 spec: {
-                                  customExpectations: nil,
+                                  includeOutputAst: false,
                                   domainLanguage: {
                                     caseStyle: "CamelCase",
                                     jargon: [],
@@ -258,7 +258,7 @@ describe Mumukit::Templates::MulangExpectationsHook do
                                   ast: {tag: :None},
                                 },
                                 spec: {
-                                  customExpectations: nil,
+                                  includeOutputAst: false,
                                   domainLanguage: {
                                     caseStyle: "CamelCase",
                                     jargon: [],
