@@ -1,11 +1,12 @@
 module Mumukit
   class ErrorPattern
-    def initialize(regexp)
+    def initialize(regexp, status: :failed)
       @regexp = regexp
+      @status = status
     end
 
-    def matches?(result)
-      @regexp.matches? result
+    def matches?(result, status)
+      @status.like?(status) && @regexp.matches?(result)
     end
 
     def sanitize(result)
