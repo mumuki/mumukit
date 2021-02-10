@@ -1,8 +1,9 @@
 module Mumukit
   class ErrorPattern
-    def initialize(regexp, status: :failed)
+    def initialize(regexp, status: :failed, replace: '')
       @regexp = regexp
       @status = status
+      @replacement = replace
     end
 
     def matches?(result, status)
@@ -10,7 +11,7 @@ module Mumukit
     end
 
     def sanitize(result)
-      result.gsub(@regexp, '').strip
+      result.gsub(@regexp, @replacement).strip
     end
 
     def transform(result, status)
