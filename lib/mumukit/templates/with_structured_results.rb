@@ -7,7 +7,7 @@ module Mumukit::Templates::WithStructuredResults
       post_process_unstructured_result(file, result, status)
     end
   rescue JSON::ParserError
-    [result, :errored]
+    post_process_unstructured_result(file, result, :errored)
   end
 
   def post_process_unstructured_result(_file, result, status)

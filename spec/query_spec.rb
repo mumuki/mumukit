@@ -16,7 +16,9 @@ describe Mumukit::Server::TestServer do
 
       def error_patterns
         [
-          Mumukit::ErrorPattern::Errored.new(/^syntax error: /)
+          Mumukit::ErrorPattern::Errored.new(/^syntax error: /),
+          Mumukit::ErrorPattern::Errored.new(/^Warning: /, status: :passed),
+          Mumukit::ErrorPattern::Errored.new(/^Lint message: /, status: :passed, replace: 'Error: ')
         ]
       end
     end
@@ -51,8 +53,22 @@ describe Mumukit::Server::TestServer do
   end
 
   context 'with error defined in patterns' do
-    before { allow_any_instance_of(DemoQueryHook).to receive(:run_file!) { ['syntax error: unexpected end-of-input', :failed] } }
-    
-    it { expect(server.query!(req query: '[].map {')).to eq(exit: :errored, out: 'unexpected end-of-input') }
+    context 'failed status' do
+      before { allow_any_instance_of(DemoQueryHook).to receive(:run_file!) { ['syntax error: unexpected end-of-input', :failed] } }
+
+      it { expect(server.query!(req query: '[].map {')).to eq(exit: :errored, out: 'unexpected end-of-input') }
+    end
+
+    context 'passed status' do
+      before { allow_any_instance_of(DemoQueryHook).to receive(:run_file!) { ['Warning: singleton variables found', :passed] } }
+
+      it { expect(server.query!(req query: '[].map {')).to eq(exit: :errored, out: 'singleton variables found') }
+    end
+
+    context 'passed status with replacement' do
+      before { allow_any_instance_of(DemoQueryHook).to receive(:run_file!) { ['Lint message: unused var', :passed] } }
+
+      it { expect(server.query!(req query: '[].map {')).to eq(exit: :errored, out: 'Error: unused var') }
+    end
   end
 end
