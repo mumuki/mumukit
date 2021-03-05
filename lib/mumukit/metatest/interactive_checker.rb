@@ -12,12 +12,19 @@ module Mumukit::Metatest
     end
 
     def check_last_query_matches(_result, goal)
-      regex = goal[:regexp]
-      fail_t :check_last_query_matches, regex: regex.inspect unless regex.matches? @request.query
+      regexp = goal[:regexp]
+      fail_t :check_last_query_matches, regexp: regexp.inspect unless regexp.match? @request.query
     end
 
     def check_last_query_fails(result, _goal)
       fail_t :check_last_query_fails unless result[:query][:status].failed?
+    end
+
+    def check_queries_match(result, goal)
+      queries = [@request.query] + @request.cookie.to_a
+      fail_t :check_queries_match unless goal[:regexps].all? do |regexp|
+        queries.any? { |query| query.match? regexp }
+      end
     end
 
     def check_last_query_outputs(result, goal)

@@ -6,7 +6,7 @@ en:
     interactive:
       check_last_query_equals: "query should be '%{expected}' but was '%{actual}'"
       check_last_query_fails: "query should fail but it passed"
-      check_last_query_matches: "query does not match regex %{regex}"
+      check_last_query_matches: "query does not match regexp %{regexp}"
       check_last_query_outputs: "query output should be '%{expected}' but was '%{actual}'"
       check_last_query_includes: "query output should include '%{expected}' but was '%{actual}'"
       check_last_query_like: "query output should be like '%{expected}' but was '%{actual}'"
@@ -15,3 +15,4 @@ en:
       check_query_outputs: "query '%{query}' output should be '%{expected}' but was '%{actual}'"
       check_query_passes: "query '%{query}' should pass but it failed"
       goal_passed: "goal was met successfully"
+      check_queries_match: "All the required queries must be executed"

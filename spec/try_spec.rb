@@ -89,6 +89,62 @@ describe Mumukit::Metatest::InteractiveChecker do
     end
   end
 
+
+  context 'try with queries_match' do
+    let(:goal) { { kind: 'queries_match', regexps: ['echo hello', 'echo\W+world'] } }
+
+    context 'and no query matches' do
+      let(:request) { struct query: 'echo foo', goal: goal }
+      it { expect(result[0]).to eq 'All the required queries must be executed' }
+      it { expect(result[1]).to eq :failed }
+    end
+
+    context 'and only one query matches' do
+      let(:request) { struct query: 'echo hello', goal: goal }
+      it { expect(result[0]).to eq 'All the required queries must be executed' }
+      it { expect(result[1]).to eq :failed }
+    end
+
+    context 'and only one query matches, with cookies' do
+      let(:request) { struct query: 'echo hello', goal: goal, cookie: ['date'] }
+      it { expect(result[0]).to eq 'All the required queries must be executed' }
+      it { expect(result[1]).to eq :failed }
+    end
+
+    context 'and query that does not match' do
+      let(:request) { struct query: 'cat somewhere', goal: goal }
+      it { expect(result[0]).to eq 'All the required queries must be executed' }
+      it { expect(result[1]).to eq :failed }
+    end
+
+    context 'and query that does not match, with cookies' do
+      let(:request) { struct query: 'cat somewhere', goal: goal, cookie: ['date'] }
+      it { expect(result[0]).to eq 'All the required queries must be executed' }
+      it { expect(result[1]).to eq :failed }
+    end
+
+    context 'and query and cookie matches' do
+      let(:request) { struct query: 'echo  world', goal: goal, cookie: ['echo hello'] }
+      it { expect(result[1]).to eq :passed }
+    end
+
+    context 'and query and cookie matches, unordered' do
+      let(:request) { struct query: 'echo hello', goal: goal, cookie: ['echo  world'] }
+      it { expect(result[1]).to eq :passed }
+    end
+
+    context 'and cookie matches' do
+      let(:request) { struct query: 'cat hello', goal: goal, cookie: ['echo hello', 'echo  world'] }
+      it { expect(result[1]).to eq :passed }
+    end
+
+    context 'and cookie matches, unordered' do
+      let(:request) { struct query: 'cat hello', goal: goal, cookie: ['echo hello', 'echo  world'] }
+      it { expect(result[1]).to eq :passed }
+    end
+  end
+
+
   context 'try with last_query_outputs goal' do
     let(:goal) { { kind: 'last_query_outputs', output: 'something' } }
 

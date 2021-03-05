@@ -7,7 +7,7 @@ module Mumukit
     end
 
     def matches?(result, status)
-      @status.like?(status) && @regexp.matches?(result)
+      @status.like?(status) && @regexp.match?(result)
     end
 
     def sanitize(result)
