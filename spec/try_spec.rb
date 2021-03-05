@@ -89,6 +89,19 @@ describe Mumukit::Metatest::InteractiveChecker do
     end
   end
 
+  context 'try with last_query_matches goal, with regexp as string' do
+    let(:goal) { { kind: 'last_query_matches', regexp: 'echo .*' } }
+
+    context 'and query that matches' do
+      let(:request) { struct query: 'echo something', goal: goal }
+      it { expect(result[1]).to eq :passed }
+    end
+
+    context 'and query that does not match' do
+      let(:request) { struct query: 'cat somewhere', goal: goal }
+      it { expect(result[1]).to eq :failed }
+    end
+  end
 
   context 'try with queries_match' do
     let(:goal) { { kind: 'queries_match', regexps: ['echo hello', 'echo\W+world'] } }

@@ -7,13 +7,13 @@ module Mumukit::Metatest
 
     def check_last_query_equals(_result, goal)
       expected = goal[:value]
-      actual = @request.query.strip
+      actual = query
       fail_t :check_last_query_equals, expected: expected, actual: actual unless expected == actual
     end
 
     def check_last_query_matches(_result, goal)
       regexp = goal[:regexp]
-      fail_t :check_last_query_matches, regexp: regexp.inspect unless regexp.match? @request.query
+      fail_t :check_last_query_matches, regexp: regexp.inspect unless query.match?(regexp)
     end
 
     def check_last_query_fails(result, _goal)
@@ -21,7 +21,7 @@ module Mumukit::Metatest
     end
 
     def check_queries_match(result, goal)
-      queries = [@request.query] + @request.cookie.to_a
+      queries = [query] + @request.cookie.to_a
       fail_t :check_queries_match unless goal[:regexps].all? do |regexp|
         queries.any? { |query| query.match? regexp }
       end
@@ -79,5 +79,10 @@ module Mumukit::Metatest
       a_string.delete(" \t\r\n").downcase
     end
 
+    private
+
+    def query
+      @request.query.to_s.strip
+    end
   end
 end
