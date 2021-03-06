@@ -1,8 +1,9 @@
 module Mumukit::Metatest
   class InteractiveChecker < Checker
 
-    def initialize(request)
+    def initialize(request, strip_mode: :left_and_right)
       @request = request
+      @strip_mode = strip_mode
     end
 
     def check_last_query_equals(_result, goal)
@@ -82,7 +83,8 @@ module Mumukit::Metatest
     private
 
     def query
-      @request.query.to_s.strip
+      query_s = @request.query.to_s
+      @strip_mode == :right_only ? query_s.rstrip : query_s.strip
     end
   end
 end
