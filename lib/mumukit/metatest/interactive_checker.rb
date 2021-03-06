@@ -1,23 +1,31 @@
 module Mumukit::Metatest
   class InteractiveChecker < Checker
 
-    def initialize(request)
+    def initialize(request, strip_mode: :left_and_right)
       @request = request
+      @strip_mode = strip_mode
     end
 
     def check_last_query_equals(_result, goal)
       expected = goal[:value]
-      actual = @request.query.strip
+      actual = query
       fail_t :check_last_query_equals, expected: expected, actual: actual unless expected == actual
     end
 
     def check_last_query_matches(_result, goal)
-      regex = goal[:regexp]
-      fail_t :check_last_query_matches, regex: regex.inspect unless regex.matches? @request.query
+      regexp = goal[:regexp]
+      fail_t :check_last_query_matches, regexp: regexp.inspect unless query.match?(regexp)
     end
 
     def check_last_query_fails(result, _goal)
       fail_t :check_last_query_fails unless result[:query][:status].failed?
+    end
+
+    def check_queries_match(result, goal)
+      queries = [query] + @request.cookie.to_a
+      fail_t :check_queries_match unless goal[:regexps].all? do |regexp|
+        queries.any? { |query| query.match? regexp }
+      end
     end
 
     def check_last_query_outputs(result, goal)
@@ -72,5 +80,11 @@ module Mumukit::Metatest
       a_string.delete(" \t\r\n").downcase
     end
 
+    private
+
+    def query
+      query_s = @request.query.to_s
+      @strip_mode == :right_only ? query_s.rstrip : query_s.strip
+    end
   end
 end

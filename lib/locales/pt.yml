@@ -6,7 +6,7 @@ pt:
     interactive:
       check_last_query_equals: "a consulta deve ser '%{expected}' mas foi '%{actual}'"
       check_last_query_fails: "a consulta deve falhar, mas passou"
-      check_last_query_matches: "A consulta não corresponde a regex %{regex}"
+      check_last_query_matches: "A consulta não corresponde a regex %{regexp}"
       check_last_query_outputs: "O resultado da consulta deve ser '%{expected}', mas foi '%{actual}'"
       check_last_query_includes: "O resultado da consulta deve incluir '%{expected}', mas foi '%{actual}'"
       check_last_query_like: "O resultado da consulta deve ser como '%{expected}', mas foi '%{actual}'"
@@ -14,4 +14,5 @@ pt:
       check_query_fails: "a consulta '%{query}' deve falhar, mas passou"
       check_query_outputs: "a consulta '%{query}' deve ser '%{expected}', mas foi '%{actual}'"
       check_query_passes: "a consulta '%{query}' deve passar, mas falhou"
+      check_queries_match: "Todas as consultas solicitadas devem ser feitas"
       goal_passed: "O objetivo foi alcançado com sucesso"
