@@ -28,7 +28,7 @@ Gem::Specification.new do |spec|
   spec.add_dependency 'activesupport'
   spec.add_dependency 'i18n', '~> 0.7'
   spec.add_dependency 'puma'
-  spec.add_dependency 'docker-api', '~> 1.22.2'
+  spec.add_dependency 'docker-api', '~> 1.25'
   spec.add_dependency 'excon', '~> 0.71'
 
 
