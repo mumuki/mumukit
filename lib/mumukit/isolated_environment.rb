@@ -11,22 +11,21 @@ module Mumukit
       dirnames = filenames.map { |it| Pathname.new(it).dirname }.uniq
 
       binds = dirnames.map { |it| "#{it}:#{it}" }
-      volumes = Hash[dirnames.map { |it| [[it, {}]] }]
 
       command = yield(*filenames)
       command = command.split if command.is_a? String
 
-      configure_container! command, binds, volumes
+      configure_container! command, binds
     end
 
-    def configure_container!(command, binds, volumes)
+    def configure_container!(command, binds)
       self.container = Docker::Container.create(
-        'Image' => Mumukit.config.docker_image,
-        'Cmd' => command,
-        'NetworkDisabled' => true,
-        'HostConfig' => {
-            'Binds' => binds},
-        'Volumes' => volumes)
+        image: Mumukit.config.docker_image,
+        cmd: command,
+        hostConfig: {
+          binds: binds
+        },
+        networkDisabled: true)
     end
 
     def run!
