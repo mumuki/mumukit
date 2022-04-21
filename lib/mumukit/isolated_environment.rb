@@ -23,7 +23,8 @@ module Mumukit
         image: Mumukit.config.docker_image,
         cmd: command,
         hostConfig: {
-          binds: binds
+          binds: binds,
+          pidsLimit: Mumukit.config.pids_limit
         },
         networkDisabled: true)
     end

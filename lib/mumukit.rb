@@ -50,6 +50,7 @@ Mumukit.configure_defaults do |config|
   config.stateful = false
   config.command_time_limit = 4
   config.command_size_limit = 1024
+  config.pids_limit = ENV['MUMUKI_PIDS_LIMIT'].defaulting(20, &:to_i)
   config.process_expectations_on_empty_content = false
   config.run_test_hook_on_empty_test = false
   config.multifile = false
