@@ -19,6 +19,8 @@ module Mumukit
 
     def write_tempdir!(files)
       dir = Dir.mktmpdir
+      FileUtils.chmod 'o+r', dir
+
       files.map do |filename, content|
         File.open("#{dir}/#{filename.sanitize_as_filename}", 'w') { |file| file.write content; file }
       end.try { |it| struct path: dir, files: it }
