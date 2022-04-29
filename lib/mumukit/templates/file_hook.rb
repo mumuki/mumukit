@@ -6,14 +6,14 @@ module Mumukit
 
     def compile(request)
       self.request = request
-      write_tempfile! compile_file_content(request)
+      write_tempdir! "solution#{tempfile_extension}" => compile_file_content(request)
     end
 
-    def run!(file)
-      result, status = run_file!(file)
-      post_process_file(file, cleanup_raw_result(result), status)
+    def run!(dir)
+      result, status = run_dir!(dir)
+      post_process_file(dir.files.first, cleanup_raw_result(result), status)
     ensure
-      file.unlink
+      FileUtils.rm_rf dir.path
     end
 
     def cleanup_raw_result(result)
@@ -27,7 +27,7 @@ module Mumukit
     required :compile_file_content
     required :command_line
 
-    required :run_file!, 'Wrong configuration. You must include an environment mixin'
+    required :run_dir!, 'Wrong configuration. You must include an environment mixin'
 
     def masked_tempfile_path
       @masked_tempfile_path ||= "#{t 'mumukit.masked_tempfile_basename'}#{tempfile_extension}"

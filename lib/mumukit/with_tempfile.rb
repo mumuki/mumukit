@@ -21,7 +21,7 @@ module Mumukit
       dir = Dir.mktmpdir
       files.map do |filename, content|
         File.open("#{dir}/#{filename.sanitize_as_filename}", 'w') { |file| file.write content; file }
-      end.try { |it| struct dir: dir, files: it }
+      end.try { |it| struct path: dir, files: it }
     end
 
     def with_tempfile

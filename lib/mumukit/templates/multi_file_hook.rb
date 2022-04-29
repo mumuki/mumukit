@@ -1,5 +1,3 @@
-require 'fileutils'
-
 module Mumukit
   class Templates::MultiFileHook < Templates::FileHook
     include Mumukit::Templates::WithMultipleFiles

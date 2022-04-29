@@ -6,11 +6,10 @@ module Mumukit
 
     attr_accessor :container
 
-    def configure!(*files)
-      filenames = files.map { |it| File.absolute_path(it.path) }
-      dirnames = filenames.map { |it| Pathname.new(it).dirname }.uniq
+    def configure!(dir)
+      filenames = dir.files.map { |it| File.absolute_path(it.path) }
 
-      binds = dirnames.map { |it| "#{it}:#{it}" }
+      binds = ["#{dir.path}:#{dir.path}"]
 
       command = yield(*filenames)
       command = command.split if command.is_a? String
