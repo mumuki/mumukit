@@ -13,10 +13,10 @@ module Mumukit
       return super unless has_files?(request)
 
       begin
-        result, status = run_files!(*tempdir.files)
+        result, status = run_dir!(tempdir)
         post_process_file(tempdir.files, cleanup_raw_result(result), status)
       ensure
-        FileUtils.rm_rf tempdir.dir
+        FileUtils.rm_rf tempdir.path
       end
     end
   end

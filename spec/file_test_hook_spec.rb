@@ -33,6 +33,14 @@ class MetatestTestRunner < BaseTestRunner
   end
 end
 
+def new_file(file_path)
+  new_dir 'solution' => File.read(file_path)
+end
+
+def new_dir(files)
+  runner.write_tempdir! files
+end
+
 describe Mumukit::Templates::FileHook do
   context 'with metatest runner' do
     let(:runner) { MetatestTestRunner.new }
@@ -41,7 +49,7 @@ describe Mumukit::Templates::FileHook do
       runner.instance_variable_set :@examples, [{name: 'array test', postconditions: {eq: [1, 2, 3]}}]
     end
 
-    it { expect(runner.run!(File.new 'spec/data/metatest.json')).to eq [[["array test", :failed, "expected '[1, 2, 4]' to equal '[1, 2, 3]'"]]]}
+    it { expect(runner.run!(new_file 'spec/data/metatest.json')).to eq [[["array test", :failed, "expected '[1, 2, 4]' to equal '[1, 2, 3]'"]]]}
   end
 end
 
@@ -53,7 +61,7 @@ describe Mumukit::Templates::FileHook do
       runner.instance_variable_set :@examples, [{name: 'array test', postconditions: {eq: [1, 2, 3]}}]
     end
 
-    it { expect(runner.run!(File.new 'spec/data/metatest.json')).to eq [[["array test", :failed, "expected '[1, 2, 4]' to equal '[1, 2, 3]'"]]]}
+    it { expect(runner.run!(new_file 'spec/data/metatest.json')).to eq [[["array test", :failed, "expected '[1, 2, 4]' to equal '[1, 2, 3]'"]]]}
   end
 end
 
@@ -61,13 +69,13 @@ describe Mumukit::Templates::FileHook do
   context 'with embedded env' do
     let(:runner) { EmbeddedEnvTestRunner.new }
 
-    it { expect(runner.run!(File.new 'spec/data/data.txt')).to eq ["lorem impsum", :passed] }
+    it { expect(runner.run!(new_file 'spec/data/data.txt')).to eq ["lorem impsum", :passed] }
   end
 
   context 'with isolated env' do
     let(:runner) { IsolatedEnvTestRunner.new }
 
-    it { expect(runner.run!(File.new 'spec/data/data.txt')).to eq ["lorem impsum", :passed] }
+    it { expect(runner.run!(new_file 'spec/data/data.txt')).to eq ["lorem impsum", :passed] }
   end
 end
 

@@ -15,11 +15,11 @@ describe Mumukit::IsolatedEnvironment do
     end
   end
 
-  context '#run_files' do
+  context '#run_dir!' do
     let(:runner) { DemoRunner.new }
-    let(:file) { runner.write_tempfile!('echo foo') }
+    let(:dir) { runner.write_tempdir!('solution' => 'echo foo') }
     let!(:volumes_at_start) { Docker::Volume.all.count }
-    let!(:out) { runner.run_files!(file) }
+    let!(:out) { runner.run_dir!(dir) }
     let(:volumes_at_end)    { Docker::Volume.all.count }
 
     it { expect(out).to eq ["foo\n", :passed] }

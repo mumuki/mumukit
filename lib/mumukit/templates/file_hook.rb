@@ -6,7 +6,7 @@ module Mumukit
 
     def compile(request)
       self.request = request
-      write_tempdir! "solution#{tempfile_extension}" => compile_file_content(request)
+      write_tempdir! "mumuki.compile#{tempfile_extension}" => compile_file_content(request)
     end
 
     def run!(dir)

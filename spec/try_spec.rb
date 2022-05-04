@@ -36,7 +36,7 @@ describe Mumukit::Metatest::InteractiveChecker do
         'dont care'
       end
 
-      def run_file!(*)
+      def run_dir!(*)
         ['', :passed]
       end
 

@@ -6,7 +6,7 @@ module Mumukit
     end
 
     def run_dir!(dir)
-      run_command command_line(dir.files.map(&:path))
+      run_command command_line(*dir.files.map(&:path))
     end
   end
 end
