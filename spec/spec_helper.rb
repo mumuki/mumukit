@@ -1,3 +1,5 @@
+Warning[:deprecated] = true
+
 require 'rspec'
 require 'simplecov'
 SimpleCov.start
