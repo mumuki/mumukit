@@ -1,4 +1,4 @@
-Copyright (c) 2015 - 2017 Franco Leonardo Bulgarelli
+Copyright (c) 2015 - 2023 Franco Leonardo Bulgarelli
 
 MIT License
 
