@@ -38,7 +38,7 @@ Gem::Specification.new do |spec|
   spec.add_dependency 'mulang', '~> 6.0', '>= 6.0.4'
   spec.add_dependency 'mumukit-inspection', '~> 6.0'
 
-  spec.add_dependency 'mumukit-core', '~> 1.3'
-  spec.add_dependency 'mumukit-directives', '~> 0.4'
+  spec.add_dependency 'mumukit-core', '~> 1.20'
+  spec.add_dependency 'mumukit-directives', '~> 0.6'
   spec.add_dependency 'mumukit-content-type', '~> 1.10'
 end
