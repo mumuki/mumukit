@@ -28,7 +28,7 @@ Gem::Specification.new do |spec|
   spec.add_dependency 'activesupport'
   spec.add_dependency 'i18n', '~> 0.7'
   spec.add_dependency 'puma'
-  spec.add_dependency 'docker-api', '~> 1.25'
+  spec.add_dependency 'docker-api', '~> 2.0'
   spec.add_dependency 'excon', '~> 0.71'
 
 
@@ -41,4 +41,6 @@ Gem::Specification.new do |spec|
   spec.add_dependency 'mumukit-core', '~> 1.20'
   spec.add_dependency 'mumukit-directives', '~> 0.6'
   spec.add_dependency 'mumukit-content-type', '~> 1.10'
+
+  spec.required_ruby_version = '>= 3.0'
 end
