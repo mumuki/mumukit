@@ -26,7 +26,7 @@ Gem::Specification.new do |spec|
 
   spec.add_dependency 'sinatra', '~> 2.0'
   spec.add_dependency 'activesupport'
-  spec.add_dependency 'i18n', '~> 0.7'
+  spec.add_dependency 'i18n', '>= 0.7', '< 2'
   spec.add_dependency 'puma'
   spec.add_dependency 'docker-api', '~> 2.0'
   spec.add_dependency 'excon', '~> 0.71'

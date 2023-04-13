@@ -7,8 +7,8 @@ class Mumukit::Hook
     @config = (config||{}).with_indifferent_access
   end
 
-  def t(*args)
-    I18n.t(*args)
+  def t(*args, **kwargs)
+    I18n.t(*args, **kwargs)
   end
 
   def method_missing(name, *args, &block)

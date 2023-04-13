@@ -68,8 +68,8 @@ module Mumukit::Metatest
       I18n.t locale(:goal_passed)
     end
 
-    def fail_t(sym, *args)
-      fail I18n.t locale(sym), *args
+    def fail_t(sym, **kwargs)
+      fail I18n.t(locale(sym), **kwargs)
     end
 
     def locale(sym)
