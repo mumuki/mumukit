@@ -8,7 +8,7 @@ describe Mumukit do
     Mumukit::Server::App.new
   end
 
-  it { expect { Mumukit.runner_url }.to raise_exception }
+  it { expect { Mumukit.runner_url }.to raise_exception(NoMethodError) }
 
   context '/info' do
     it "should respond with the request's url" do
@@ -31,7 +31,7 @@ describe Mumukit do
 
       response = JSON.parse(last_response.body)
       expect(response['exit']).to eq 'errored'
-      expect(response['out']).to match /Error parsing request body\. Cause: \d+: unexpected token at '{ BAD.JSON: 3 }'/
+      expect(response['out']).to match /Error parsing request body\. Cause: unexpected token at '{ BAD.JSON: 3 }'/
     end
 
     it 'should throw an error if the request has a non-existing locale' do
