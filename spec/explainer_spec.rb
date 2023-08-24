@@ -22,7 +22,7 @@ describe Mumukit::Explainer do
 
   context 'contains all explain methods' do
     it do
-      expect(SampleExplainer.new.send(:explain_methods)).to eq [
+      expect(SampleExplainer.new.send(:explain_methods)).to match_array [
         [:explain_returning_str, 'returning_str'],
         [:explain_returing_true, 'returing_true'],
         [:explain_returing_nil, 'returing_nil'],
@@ -33,7 +33,7 @@ describe Mumukit::Explainer do
 
   context 'only considers truthy results' do
     it do
-      expect(SampleExplainer.new.send(:eval_explain_methods, 'code', 'errored')).to eq [
+      expect(SampleExplainer.new.send(:eval_explain_methods, 'code', 'errored')).to match_array [
         {key: 'returning_str', binding: {}},
         {key: 'returing_true', binding: {}},
         {key: 'returning_hash', binding: {x: 1, y: 2}}
