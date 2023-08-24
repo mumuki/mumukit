@@ -99,7 +99,8 @@ module Mumukit::Metatest
     end
 
     def strip(string)
-      case @strip_mode
+      case strip_mode
+      when :strict then string
       when :right_only then string.rstrip
       when :right_and_internal then string.rstrip.squeeze(' ')
       when :left_and_right then string.strip
@@ -110,6 +111,10 @@ module Mumukit::Metatest
 
     def queries
       @queries ||= [query] + cookie
+    end
+
+    def strip_mode
+      @request.dig(:settings, :interactive_strip_mode) || @strip_mode
     end
   end
 end

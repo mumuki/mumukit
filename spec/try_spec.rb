@@ -143,6 +143,15 @@ describe Mumukit::Metatest::InteractiveChecker do
     end
   end
 
+  context 'try with last_query_matches goal, with full stripping overrides' do
+    let(:goal) { { kind: 'last_query_matches', regexp: '^echo hello$' } }
+
+    context 'and query that matches' do
+      let(:request) { struct query: '   echo      hello   ', goal: goal, settings: { interactive_strip_mode: :left_right_and_internal } }
+      it { expect(result[1]).to eq :passed }
+    end
+  end
+
   context 'try with queries_match' do
     let(:goal) { { kind: 'queries_match', regexps: ['echo hello', 'echo\W+world'] } }
 
@@ -244,6 +253,11 @@ describe Mumukit::Metatest::InteractiveChecker do
     context 'and cookie matches' do
       let(:request) { struct query: 'cat hello', goal: goal, cookie: ['echo hello', 'echo  world'] }
       it { expect(result[1]).to eq :passed }
+    end
+
+    context 'and cookie matches with strip override' do
+      let(:request) { struct query: 'cat hello', goal: goal, cookie: ['echo hello', 'echo  world'], settings: { interactive_strip_mode: :strict } }
+      it { expect(result[1]).to eq :failed }
     end
 
     context 'and cookie matches, unordered' do
