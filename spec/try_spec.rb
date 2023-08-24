@@ -77,6 +77,7 @@ describe Mumukit::Metatest::InteractiveChecker do
 
     context 'and query that does not match' do
       let(:request) { struct query: 'echo something else', goal: goal }
+      it { expect(result[0]).to eq "query should be 'echo something' but was 'echo something else'" }
       it { expect(result[1]).to eq :failed }
     end
   end
@@ -91,6 +92,7 @@ describe Mumukit::Metatest::InteractiveChecker do
 
     context 'and query that does not match' do
       let(:request) { struct query: 'cat somewhere', goal: goal }
+      it { expect(result[0]).to eq "query should match regexp /echo .*/, but was 'cat somewhere'" }
       it { expect(result[1]).to eq :failed }
     end
   end
@@ -105,6 +107,7 @@ describe Mumukit::Metatest::InteractiveChecker do
 
     context 'and query that does not match' do
       let(:request) { struct query: 'cat somewhere', goal: goal }
+      it { expect(result[0]).to eq "query should match regexp \"^echo .*\", but was 'cat somewhere'" }
       it { expect(result[1]).to eq :failed }
     end
   end
@@ -119,6 +122,7 @@ describe Mumukit::Metatest::InteractiveChecker do
 
     context 'and query that does not match' do
       let(:request) { struct query: '   echo world   ', goal: goal }
+      it { expect(result[0]).to eq "query should match regexp \"^echo hello$\", but was 'echo world'" }
       it { expect(result[1]).to eq :failed }
     end
   end
@@ -134,7 +138,17 @@ describe Mumukit::Metatest::InteractiveChecker do
 
     context 'and query that does not match' do
       let(:request) { struct query: '   echo hello   ', goal: goal }
+      it { expect(result[0]).to eq "query should match regexp \"^echo hello$\", but was '   echo hello'" }
       it { expect(result[1]).to eq :failed }
+    end
+  end
+
+  context 'try with last_query_matches goal, with full stripping overrides' do
+    let(:goal) { { kind: 'last_query_matches', regexp: '^echo hello$' } }
+
+    context 'and query that matches' do
+      let(:request) { struct query: '   echo      hello   ', goal: goal, settings: { interactive_strip_mode: :left_right_and_internal } }
+      it { expect(result[1]).to eq :passed }
     end
   end
 
@@ -192,6 +206,66 @@ describe Mumukit::Metatest::InteractiveChecker do
     end
   end
 
+  context 'try with queries_equal' do
+    before { hook.checker_options = { strip_mode: :left_right_and_internal } }
+    let(:goal) { { kind: 'queries_equal', values: ['echo hello', 'echo world'] } }
+
+    context 'and no query matches' do
+      let(:request) { struct query: 'echo foo', goal: goal }
+      it { expect(result[0]).to eq 'All the required queries must be executed' }
+      it { expect(result[1]).to eq :failed }
+    end
+
+    context 'and only one query matches' do
+      let(:request) { struct query: 'echo hello', goal: goal }
+      it { expect(result[0]).to eq 'All the required queries must be executed' }
+      it { expect(result[1]).to eq :failed }
+    end
+
+    context 'and only one query matches, with cookies' do
+      let(:request) { struct query: 'echo hello', goal: goal, cookie: ['date'] }
+      it { expect(result[0]).to eq 'All the required queries must be executed' }
+      it { expect(result[1]).to eq :failed }
+    end
+
+    context 'and query that does not match' do
+      let(:request) { struct query: 'cat somewhere', goal: goal }
+      it { expect(result[0]).to eq 'All the required queries must be executed' }
+      it { expect(result[1]).to eq :failed }
+    end
+
+    context 'and query that does not match, with cookies' do
+      let(:request) { struct query: 'cat somewhere', goal: goal, cookie: ['date'] }
+      it { expect(result[0]).to eq 'All the required queries must be executed' }
+      it { expect(result[1]).to eq :failed }
+    end
+
+    context 'and query and cookie matches' do
+      let(:request) { struct query: 'echo  world', goal: goal, cookie: ['echo hello'] }
+      it { expect(result[1]).to eq :passed }
+    end
+
+    context 'and query and cookie matches, unordered' do
+      let(:request) { struct query: 'echo hello', goal: goal, cookie: ['echo  world'] }
+      it { expect(result[1]).to eq :passed }
+    end
+
+    context 'and cookie matches' do
+      let(:request) { struct query: 'cat hello', goal: goal, cookie: ['echo hello', 'echo  world'] }
+      it { expect(result[1]).to eq :passed }
+    end
+
+    context 'and cookie matches with strip override' do
+      let(:request) { struct query: 'cat hello', goal: goal, cookie: ['echo hello', 'echo  world'], settings: { interactive_strip_mode: :strict } }
+      it { expect(result[1]).to eq :failed }
+    end
+
+    context 'and cookie matches, unordered' do
+      let(:request) { struct query: 'cat hello', goal: goal, cookie: ['echo hello', 'echo  world'] }
+      it { expect(result[1]).to eq :passed }
+    end
+  end
+
 
   context 'try with last_query_outputs goal' do
     let(:goal) { { kind: 'last_query_outputs', output: 'something' } }
@@ -205,12 +279,14 @@ describe Mumukit::Metatest::InteractiveChecker do
     context 'and query with a different output' do
       let(:structured_results) { { query: {result: 'something else'} } }
       let(:request) { struct goal: goal }
+      it { expect(result[0]).to eq "query output should be 'something' but was 'something else'" }
       it { expect(result[1]).to eq :failed }
     end
 
     context 'and query with no output' do
       let(:structured_results) { { query: {result: ''} } }
       let(:request) { struct goal: goal }
+      it { expect(result[0]).to eq "query output should be 'something' but was ''" }
       it { expect(result[1]).to eq :failed }
     end
   end
@@ -227,6 +303,7 @@ describe Mumukit::Metatest::InteractiveChecker do
     context 'and query with output that does not include it' do
       let(:structured_results) { { query: {result: 'nothing'} } }
       let(:request) { struct goal: goal }
+      it { expect(result[0]).to eq "query output should include 'something' but was 'nothing'" }
       it { expect(result[1]).to eq :failed }
     end
   end
@@ -243,6 +320,7 @@ describe Mumukit::Metatest::InteractiveChecker do
     context 'and query with output that is not like it' do
       let(:structured_results) { { query: {result: 'nothing'} } }
       let(:request) { struct goal: goal }
+      it { expect(result[0]).to eq "query output should be like 'Some thing' but was 'nothing'" }
       it { expect(result[1]).to eq :failed }
     end
   end
@@ -275,6 +353,7 @@ describe Mumukit::Metatest::InteractiveChecker do
     context 'nd query that does not make said query fail' do
       let(:structured_results) { { status: :failed } }
       let(:request) { struct goal: goal }
+      it { expect(result[0]).to eq "query 'cd somewhere' should pass but it failed" }
       it { expect(result[1]).to eq :failed }
     end
   end
@@ -300,13 +379,14 @@ describe Mumukit::Metatest::InteractiveChecker do
 
     context 'and query that passes' do
       let(:structured_results) { { query: {status: :passed} } }
-      let(:request) { struct goal: goal }
+      let(:request) { struct query: 'ls', goal: goal }
       it { expect(result[1]).to eq :passed }
     end
 
     context 'and query that fails' do
       let(:structured_results) { { query: {status: :failed} } }
-      let(:request) { struct goal: goal }
+      let(:request) { struct query: 'ls', goal: goal }
+      it { expect(result[0]).to eq "query should pass but it was 'ls' and failed" }
       it { expect(result[1]).to eq :failed }
     end
   end
@@ -316,13 +396,14 @@ describe Mumukit::Metatest::InteractiveChecker do
 
     context 'and query that fails' do
       let(:structured_results) { { query: {status: :failed} } }
-      let(:request) { struct goal: goal }
+      let(:request) { struct query: 'ls', goal: goal }
       it { expect(result[1]).to eq :passed }
     end
 
     context 'and query that passes' do
       let(:structured_results) { { query: {status: :passed} } }
-      let(:request) { struct goal: goal }
+      let(:request) { struct query: 'ls', goal: goal }
+      it { expect(result[0]).to eq "query should fail but it was 'ls' and passed" }
       it { expect(result[1]).to eq :failed }
     end
   end

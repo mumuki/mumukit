@@ -14,15 +14,22 @@ module Mumukit::Metatest
 
     def check_last_query_matches(_result, goal)
       regexp = goal[:regexp]
-      fail_t :check_last_query_matches, regexp: regexp.inspect unless query.match?(regexp)
+      actual = query
+      fail_t :check_last_query_matches, regexp: regexp.inspect, actual: actual unless query.match?(regexp)
     end
 
     def check_last_query_fails(result, _goal)
-      fail_t :check_last_query_fails unless result[:query][:status].failed?
+      actual = query
+      fail_t :check_last_query_fails, actual: actual unless result[:query][:status].failed?
+    end
+
+    def check_queries_equal(result, goal)
+      fail_t :check_queries_equal unless goal[:values].all? do |regexp|
+        queries.any? { |query| query == regexp }
+      end
     end
 
     def check_queries_match(result, goal)
-      queries = [query] + @request.cookie.to_a
       fail_t :check_queries_match unless goal[:regexps].all? do |regexp|
         queries.any? { |query| query.match? regexp }
       end
@@ -47,7 +54,8 @@ module Mumukit::Metatest
     end
 
     def check_last_query_passes(result, _goal)
-      fail_t :check_last_query_passes unless result[:query][:status].passed?
+      actual = query
+      fail_t :check_last_query_passes, actual: actual unless result[:query][:status].passed?
     end
 
     def check_query_passes(result, goal)
@@ -83,8 +91,30 @@ module Mumukit::Metatest
     private
 
     def query
-      query_s = @request.query.to_s
-      @strip_mode == :right_only ? query_s.rstrip : query_s.strip
+      strip @request.query.to_s
+    end
+
+    def cookie
+      @request.cookie.to_a.map { |it| strip it }
+    end
+
+    def strip(string)
+      case strip_mode
+      when :strict then string
+      when :right_only then string.rstrip
+      when :right_and_internal then string.rstrip.squeeze(' ')
+      when :left_and_right then string.strip
+      when :left_right_and_internal then string.strip.squeeze(' ')
+      else raise "Unsupported strip mode #{@strip_mode}"
+      end
+    end
+
+    def queries
+      @queries ||= [query] + cookie
+    end
+
+    def strip_mode
+      @request.dig(:settings, :interactive_strip_mode) || @strip_mode
     end
   end
 end
