@@ -24,15 +24,17 @@ module Mumukit::Metatest
     end
 
     def check_queries_equal(result, goal)
-      fail_t :check_queries_equal unless goal[:values].all? do |regexp|
-        queries.any? { |query| query == regexp }
-      end
+      matches = goal[:values].map do |value|
+        queries.find { |query| query == value }
+      end.compact
+      fail_queries_t :check_queries_equal, queries, matches, goal[:values]
     end
 
     def check_queries_match(result, goal)
-      fail_t :check_queries_match unless goal[:regexps].all? do |regexp|
-        queries.any? { |query| query.match? regexp }
-      end
+      matches = goal[:regexps].map do |regexp|
+        queries.find { |query| query.match? regexp }
+      end.compact
+      fail_queries_t :check_queries_match, queries, matches, goal[:regexps]
     end
 
     def check_last_query_outputs(result, goal)
@@ -89,6 +91,14 @@ module Mumukit::Metatest
     end
 
     private
+
+    def join_queries(queries)
+      queries.map { |it| "`#{it}`" }.join(", ").presence || '**∅**'
+    end
+
+    def fail_queries_t(key, queries, matches, expectations)
+      fail_t key, all: join_queries(queries), matches: join_queries(matches) unless matches.size == expectations.size
+    end
 
     def query
       strip @request.query.to_s

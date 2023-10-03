@@ -15,5 +15,5 @@ es-CL:
       check_query_outputs: "La consulta '%{query}' debería devolver '%{expected}' pero devolvió '%{actual}'"
       check_query_passes: "La consulta '%{query}' debería pasar pero falló"
       goal_passed: "El objetivo se cumplió exitosamente"
-      check_queries_match: "Se deben realizar todas las consultas solicitadas"
-      check_queries_equal: "Se deben realizar todas las consultas solicitadas"
+      check_queries_match: "Se deben realizar todas las consultas solicitadas. Se ejecutaron %{all} pero sólo %{matches} coinciden con las solicitadas"
+      check_queries_equal: "Se deben realizar todas las consultas solicitadas. Se ejecutaron %{all} pero sólo %{matches} coinciden con las solicitadas"
