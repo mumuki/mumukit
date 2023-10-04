@@ -14,6 +14,6 @@ pt:
       check_query_fails: "a consulta '%{query}' deve falhar, mas passou"
       check_query_outputs: "a consulta '%{query}' deve ser '%{expected}', mas foi '%{actual}'"
       check_query_passes: "a consulta '%{query}' deve passar, mas falhou"
-      check_queries_match: "Todas as consultas solicitadas devem ser feitas"
-      check_queries_equal: "Todas as consultas solicitadas devem ser feitas"
+      check_queries_match: "Todas as consultas solicitadas devem ser feitas. %{all} foram feitas mas só %{matches} correspondem com as solicitadas"
+      check_queries_equal: "Todas as consultas solicitadas devem ser feitas. %{all} foram feitas mas só %{matches} correspondem com as solicitadas"
       goal_passed: "O objetivo foi alcançado com sucesso"

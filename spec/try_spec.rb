@@ -157,31 +157,31 @@ describe Mumukit::Metatest::InteractiveChecker do
 
     context 'and no query matches' do
       let(:request) { struct query: 'echo foo', goal: goal }
-      it { expect(result[0]).to eq 'All the required queries must be executed' }
+      it { expect(result[0]).to eq 'All the required queries must be executed. Executed `echo foo` but only **∅** match the expectations' }
       it { expect(result[1]).to eq :failed }
     end
 
     context 'and only one query matches' do
       let(:request) { struct query: 'echo hello', goal: goal }
-      it { expect(result[0]).to eq 'All the required queries must be executed' }
+      it { expect(result[0]).to eq 'All the required queries must be executed. Executed `echo hello` but only `echo hello` match the expectations' }
       it { expect(result[1]).to eq :failed }
     end
 
     context 'and only one query matches, with cookies' do
       let(:request) { struct query: 'echo hello', goal: goal, cookie: ['date'] }
-      it { expect(result[0]).to eq 'All the required queries must be executed' }
+      it { expect(result[0]).to eq 'All the required queries must be executed. Executed `echo hello`, `date` but only `echo hello` match the expectations' }
       it { expect(result[1]).to eq :failed }
     end
 
     context 'and query that does not match' do
       let(:request) { struct query: 'cat somewhere', goal: goal }
-      it { expect(result[0]).to eq 'All the required queries must be executed' }
+      it { expect(result[0]).to eq 'All the required queries must be executed. Executed `cat somewhere` but only **∅** match the expectations' }
       it { expect(result[1]).to eq :failed }
     end
 
     context 'and query that does not match, with cookies' do
       let(:request) { struct query: 'cat somewhere', goal: goal, cookie: ['date'] }
-      it { expect(result[0]).to eq 'All the required queries must be executed' }
+      it { expect(result[0]).to eq 'All the required queries must be executed. Executed `cat somewhere`, `date` but only **∅** match the expectations' }
       it { expect(result[1]).to eq :failed }
     end
 
@@ -212,31 +212,31 @@ describe Mumukit::Metatest::InteractiveChecker do
 
     context 'and no query matches' do
       let(:request) { struct query: 'echo foo', goal: goal }
-      it { expect(result[0]).to eq 'All the required queries must be executed' }
+      it { expect(result[0]).to eq 'All the required queries must be executed. Executed `echo foo` but only **∅** match the expectations' }
       it { expect(result[1]).to eq :failed }
     end
 
     context 'and only one query matches' do
       let(:request) { struct query: 'echo hello', goal: goal }
-      it { expect(result[0]).to eq 'All the required queries must be executed' }
+      it { expect(result[0]).to eq 'All the required queries must be executed. Executed `echo hello` but only `echo hello` match the expectations' }
       it { expect(result[1]).to eq :failed }
     end
 
     context 'and only one query matches, with cookies' do
       let(:request) { struct query: 'echo hello', goal: goal, cookie: ['date'] }
-      it { expect(result[0]).to eq 'All the required queries must be executed' }
+      it { expect(result[0]).to eq 'All the required queries must be executed. Executed `echo hello`, `date` but only `echo hello` match the expectations' }
       it { expect(result[1]).to eq :failed }
     end
 
     context 'and query that does not match' do
       let(:request) { struct query: 'cat somewhere', goal: goal }
-      it { expect(result[0]).to eq 'All the required queries must be executed' }
+      it { expect(result[0]).to eq 'All the required queries must be executed. Executed `cat somewhere` but only **∅** match the expectations' }
       it { expect(result[1]).to eq :failed }
     end
 
     context 'and query that does not match, with cookies' do
       let(:request) { struct query: 'cat somewhere', goal: goal, cookie: ['date'] }
-      it { expect(result[0]).to eq 'All the required queries must be executed' }
+      it { expect(result[0]).to eq 'All the required queries must be executed. Executed `cat somewhere`, `date` but only **∅** match the expectations' }
       it { expect(result[1]).to eq :failed }
     end
 

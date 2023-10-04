@@ -15,5 +15,5 @@ en:
       check_query_outputs: "query '%{query}' output should be '%{expected}' but was '%{actual}'"
       check_query_passes: "query '%{query}' should pass but it failed"
       goal_passed: "goal was met successfully"
-      check_queries_match: "All the required queries must be executed"
-      check_queries_equal: "All the required queries must be executed"
+      check_queries_match: "All the required queries must be executed. Executed %{all} but only %{matches} match the expectations"
+      check_queries_equal: "All the required queries must be executed. Executed %{all} but only %{matches} match the expectations"
